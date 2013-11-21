@@ -291,3 +291,10 @@ article + section.article-links {
     content: '#'; /*(no space)*/
   }
 }
+.fb-share-button, .twitter-share-button {
+  float: left;
+}
+.fb-share-button {
+  margin-right: 10px;
+}
+
