@@ -1,0 +1,98 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><meta name="viewport" content="width=device-width"><title>Custom Scalable CSS Radio Buttons - DocuSign Dev Blog</title><link rel="alternate" href="undefined/feed.xml" type="application/rss+xml" title="Brought to you by the development teams at DocuSign"><link rel="stylesheet" href="/assets/css/bootstrap.min.css"><link rel="stylesheet" href="/assets/css/syntax.css"><link href="//fonts.googleapis.com/css?family=Inconsolata:400,700&amp;subset=latin,latin-ext" rel="stylesheet" type="text/css"><link href="//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css"><link rel="stylesheet" href="/assets/css/devblog.css"><link rel="icon" href="/favicon.ico"><link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon/docusigndev-favicon-32.png"><link rel="apple-touch-icon" sizes="114×114" href="/assets/img/favicon/docusigndev-favicon-114.png"><link rel="apple-touch-icon" sizes="72×72" href="/assets/img/favicon/docusigndev-favicon-72.png"><link rel="apple-touch-icon" href="/assets/img/favicon/docusigndev-favicon-57.png"><link rel="apple-touch-icon" sizes="512x512" href="/assets/img/favicon/docusigndev-favicon-512.png"></head><body class="article-detail"><div class="container"><header id="top-header" class="row"><div class="col-sm-12"><h1><a href="/">DocuSign Dev Blog</a></h1><h2>Brought to you by the development teams at DocuSign</h2></div></header><div class="row"><div id="left-col" class="col-sm-3 col-md-2"><nav><ul class="row"><li class="col-sm-12"><a href="/contributors/">Contributors</a></li><li class="col-sm-12"><a href="http://github.com/docusigndev">Code</a></li><li class="col-sm-12"><a href="http://www.docusign.com">DocuSign.com</a></li></ul></nav><section class="row about-author"><div class="col-sm-12"><a href="/contributors/azat/" class="author-name">Azat Mardanov</a></div><div class="col-xs-4 col-sm-12"><div class="author-pic"><a href="/contributors/azat/"><img alt="Azat Mardanov" src="//1.gravatar.com/avatar/bf96d0a97418613fcbd6ec2ec9a50f0d"></a></div></div><div class="col-xs-6 col-sm-12"><div class="author-twitter">Twitter:
+&nbsp;<a href="http://twitter.com/azat_co">@azat_co</a></div><div class="author-github">Github:
+&nbsp;<a href="http://github.com/azat-co">azat-co</a></div></div></section><section class="tags"><ul><li><a href="/topic/html/">html</a></li><li><a href="/topic/css/">css</a></li><li><a href="/topic/radio-buttons/">radio buttons</a></li></ul></section></div><main id="right-col" class="col-sm-8 col-sm-offset-1 col-md-9"><div class="article-meta"><div class="date">06 December 2013</div></div><h1>Custom Scalable CSS Radio Buttons</h1><article><section class="content"><p>Radio buttons are essential when building forms and dialogs. Sadly enough, there are limited options for styling them. Developers might use one of the following methods to a certain degree of&nbsp;success:</p>
+<ul>
+<li><a href="http://www.456bereastreet.com/lab/styling-form-controls-revisited/radio-button/">width and height</a>: unreliable</li>
+<li><a href="http://css-tricks.com/forums/topic/webkit-transform-scale-not-scaling-larger-than-1-0/">transform scale</a>: not scaling more than certain&nbsp;size</li>
+<li><a href="http://www.wufoo.com/2011/06/13/custom-radio-buttons-and-checkboxes/">images</a>: can’t scale graciously and can’t have&nbsp;gradients</li>
+</ul>
+<p>However, at DocuSign we have a very specific requirement — the user needs to be able to “zoom in” on the document and the radio buttons need to get&nbsp;bigger.</p>
+<p>We call this “scalable” css buttons, because we need many things to increase in size as we “zoom in” (such as the border&nbsp;thickness).</p>
+<p>We use <span class="caps">CSS</span> to re-draw the default <span class="caps">HTML</span> radio buttons. We did it by hiding the default <code>&lt;input&gt;</code> field, using <code>&lt;label&gt;</code>s with the <code>for</code> attribute and a nested div with <code>border-radius</code>. This way developers can control radio buttons to a pixel (presumably with server-side or front-end width/top/left manipulation).
+<span class="more"></span></p>
+<p>The custom scalable <span class="caps">CSS</span> radio buttons&nbsp;demo:</p>
+<p>
+<iframe width="100%" height="300" src="//jsfiddle.net/DSYz7/8/embedded/result,html,css/" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
+</p>
+
+<p>Try the <span class="caps">CSS</span> radio button example yourself in <a href="http://jsfiddle.net/DSYz7/4">JSFiddle</a>.</p>
+<p>To implement our custom <span class="caps">CSS</span> radio button, we’re using four&nbsp;containers:</p>
+<ol>
+<li>wrapper: <code>.radio-tagger</code></li>
+<li>grey circle: <code>.radio-outer</code></li>
+<li>gradient circle: <code>.radio-inner</code></li>
+<li>blue select circle: <code>.radio-select</code></li>
+</ol>
+<p>We hide the default <code>&lt;input&gt;</code> element (but still keep it in <span class="caps">DOM</span>) and put the circles inside of the <code>&lt;label&gt;</code>. This way when users click on the circles, the label will trigger a <code>change</code> event on the input&nbsp;element.</p>
+<p>This is accomplished via the <code>for</code> and <code>id</code> attributes on label and input&nbsp;respectively.</p>
+<p>Here is the <span class="caps">HTML</span> code for a single button with the size of 20&nbsp;pixels:</p>
+<pre><code class="lang-html">&lt;div class=&quot;radio-tagger&quot;&gt;
+  &lt;input type=&quot;radio&quot; name=&quot;Radio-Group-Small&quot; id=&quot;radio1&quot;&gt;
+    &lt;label for=&quot;radio1&quot;&gt;
+      &lt;div class=&quot;radio-outer&quot; style=&quot;top: 4px; bottom: 4px; left: 4px; right: 4px;&quot;&gt;
+      &lt;div class=&quot;radio-inner&quot; style=&quot;top: 1px; bottom: 1px; left: 1px; right: 1px;&quot;&gt;
+      &lt;div class=&quot;radio-selected&quot; style=&quot;top: 2px; bottom: 2px; left: 2px; right: 2px;&quot;&gt;
+      &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/label&gt;
+&lt;/div&gt;</code></pre>
+<p>We have inline styles because those elements are dynamically generated from a Backbone.js view. Changing of the button’s size is simple and could be done via jQuery, e.g.,</p>
+<pre><code class="lang-javascript">$(<span class="string">'radio-tagger'</span>).css({width:<span class="number">100</span>px;height:<span class="number">100</span>px});
+$(<span class="string">'radio-outer'</span>).css({
+  top: <span class="number">12</span>px;
+  bottom: <span class="number">12</span>px;
+  left: <span class="number">12</span>px;
+  right: <span class="number">12</span>px
+  });
+$(<span class="string">'radio-inner'</span>).css({
+  top: <span class="number">2</span>px;
+  bottom: <span class="number">2</span>px;
+  left: <span class="number">2</span>px;
+  right: <span class="number">2</span>px
+});
+$(<span class="string">'radio-selected'</span>).css({
+  top: <span class="number">5</span>px;
+  bottom: <span class="number">5</span>px;
+  left: <span class="number">5</span>px;
+  right: <span class="number">5</span>px
+});</code></pre>
+<p>As a result we’ll have a similar radio button (larger than the first) “perfectly” scaled with an increased border size when we “zoom&nbsp;in”:</p>
+<pre><code class="lang-html">&lt;div class=&quot;radio-tagger&quot;&gt;
+  &lt;input type=&quot;radio&quot; id=&quot;radio2&quot;&gt;
+    &lt;label for=&quot;radio2&quot;&gt;
+      &lt;div class=&quot;radio-outer&quot; style=&quot;top: 12px; bottom: 12px; left: 12px; right: 12px;&quot;&gt;
+        &lt;div class=&quot;radio-inner&quot; style=&quot;top: 2px; bottom: 2px; left: 2px; right: 2px;&quot;&gt;
+          &lt;div class=&quot;radio-selected&quot; style=&quot;top: 5px; bottom: 5px; left: 5px; right: 5px;&quot;&gt;
+          &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/label&gt;
+&lt;/div&gt;</code></pre>
+<div class="share-box"><div id="fb-button" data-href="http://docusigndev.github.io/articles/custom-scalable-css-radio-buttons/" data-type="button_count" class="fb-share-button"></div><div id="fb-root"><script>(function(d, s, id) {
+var js, fjs = d.getElementsByTagName(s)[0];
+if (d.getElementById(id)) return;
+js = d.createElement(s); js.id = id;
+js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=221822221222506";
+fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+</script></div><a id="twtr-button" href="https://twitter.com/share" data-url="http://docusigndev.github.io/articles/custom-scalable-css-radio-buttons/" data-via="docusigndev" class="twitter-share-button">Tweet<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+</script></a></div></section></article><section class="article-links"><ul class="pager"><li><a href="/articles/redis-sentinel-client-nodejs/">Building a Redis Sentinel Client for Node.js &raquo;</a></li></ul></section><section class="article-comments"><div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'docusigndev';
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</section></main></div><footer class="row"></footer></div><script>var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-38381866-1']);
+_gaq.push(['_trackPageview']);
+(function() {
+  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+  ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();</script></body></html>
