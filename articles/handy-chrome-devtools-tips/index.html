@@ -1,0 +1,65 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><meta name="viewport" content="width=device-width"><title>Chrome DevTools Tips - DocuSign Dev Blog</title><link rel="alternate" href="undefined/feed.xml" type="application/rss+xml" title="Brought to you by the development teams at DocuSign"><link rel="stylesheet" href="/assets/css/bootstrap.min.css"><link rel="stylesheet" href="/assets/css/syntax.css"><link href="//fonts.googleapis.com/css?family=Inconsolata:400,700&amp;subset=latin,latin-ext" rel="stylesheet" type="text/css"><link href="//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css"><link rel="stylesheet" href="/assets/css/devblog.css"><link rel="icon" href="/favicon.ico"><link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon/docusigndev-favicon-32.png"><link rel="apple-touch-icon" sizes="114×114" href="/assets/img/favicon/docusigndev-favicon-114.png"><link rel="apple-touch-icon" sizes="72×72" href="/assets/img/favicon/docusigndev-favicon-72.png"><link rel="apple-touch-icon" href="/assets/img/favicon/docusigndev-favicon-57.png"><link rel="apple-touch-icon" sizes="512x512" href="/assets/img/favicon/docusigndev-favicon-512.png"></head><body class="article-detail"><div class="container"><header id="top-header" class="row"><div class="col-sm-12"><h1><a href="/">DocuSign Dev Blog</a></h1><h2>Brought to you by the development teams at DocuSign</h2></div></header><div class="row"><div id="left-col" class="col-sm-3 col-md-2"><nav><ul class="row"><li class="col-sm-12"><a href="/contributors/">Contributors</a></li><li class="col-sm-12"><a href="http://github.com/docusigndev">Code</a></li><li class="col-sm-12"><a href="http://www.docusign.com">DocuSign.com</a></li></ul></nav><section class="row about-author"><div class="col-sm-12"><a href="/contributors/eric-levin/" class="author-name">Eric Levin</a></div><div class="col-xs-4 col-sm-12"><div class="author-pic"><a href="/contributors/eric-levin/"><img alt="Eric Levin" src="//s.gravatar.com/avatar/72d0c197a5a8942c8839c0a0a1de9b59"></a></div></div><div class="col-xs-6 col-sm-12"><div class="author-blurb">Software Engineer</div><div class="author-twitter">Twitter:
+&nbsp;<a href="http://twitter.com/ericrius1">@ericrius1</a></div><div class="author-github">Github:
+&nbsp;<a href="http://github.com/ericrius1">ericrius1</a></div></div></section><section class="tags"><ul><li><a href="/topic/chrome/">chrome</a></li><li><a href="/topic/tools/">tools</a></li><li><a href="/topic/mobile/">mobile</a></li></ul></section></div><main id="right-col" class="col-sm-8 col-sm-offset-1 col-md-9"><div class="article-meta"><div class="date">17 December 2013</div></div><h1>Chrome DevTools Tips</h1><article><section class="content"><h4 id="or-what-i-wish-i-had-known-when-i-began-my-journey-as-a-web-developer">Or what I wish I had known when I began my journey as a web&nbsp;developer</h4>
+<p>Learning how to use the <a href="https://developers.google.com/chrome-developer-tools/">Google Chrome dev tools</a> marked the inflection point in my journey towards becoming a web developer. When I started learning web development, I had heard vague rumblings of these tools, but didn’t put in too much time researching them, as I believed it was more important to first learn the “basics.” What is the <span class="caps">DOM</span>? How does it relate to <span class="caps">HTML</span>? How does <span class="caps">CSS</span> style an <span class="caps">HTML</span> element? And how does Javascript fit into all of this? I regret to report that I spent a lot of time reading through w3schools&nbsp;articles. </p>
+<p>I don’t think it’s an exaggeration to say that if I had just dove right in and started learning and playing with the dev tools, I would have learned so much more about all of these topics, and in a much more powerful, experiential way to boot.
+The dev tools don’t just <em>tell</em> you how the <span class="caps">DOM</span> works, they <em>show</em> you.</p>
+<p>For today’s post, I’d like to walk you through some of the tips I learned after having used dev tools for a while that I’d wish I’d been shown on day&nbsp;one.</p>
+<h3 id="toggle-element-state">Toggle Element&nbsp;State</h3>
+<p>First, we have the “Toggle Element State” feature. This is an incredibly helpful feature which allows you to force the state of a particular element. For example, let’s says your style sheet contains the following&nbsp;rule:</p>
+<pre><code class="lang-css"><span class="class">.magical</span><span class="pseudo">:hover</span><span class="rules">{
+  <span class="rule"><span class="attribute">color</span>:<span class="value"> red</span></span>;
+  <span class="rule"><span class="attribute">outline</span>:<span class="value">  ridge thick violet</span></span>;
+<span class="rule">}</span></span></code></pre>
+<p>What if we want to see how elements with the magical class behave when we hover over them, but also want to interact with dev tool’s incredibly useful representation of the element’s <a href="http://css-tricks.com/the-css-box-model/">box model</a> at the bottom of the “elements” panel? Well, normally we would lose the hover state styling when we move our mouse off the element, but with the dev tools, we can simply right click on the element, and select “:hover” from the “Force Element State” drop down&nbsp;menu.</p>
+<p><a href="http://i.imgur.com/UZxJ2t7.png"><img src="http://i.imgur.com/UZxJ2t7.png" alt="Hover"></a></p>
+<p>The diversity of devices to develop for has proliferated profusely in the past decade. Thankfully, A <a href="https://plus.google.com/u/0/+FrancoisBeaufort/posts/MxybHsjLjU6?cfem=1">brand new feature</a>, currently only available in Google’s cuttng edge browser, Chrome Canary, provides an effective way to test your website on multiple screens wihout needing to continuously move from device to device. Even cooler, the emulator contains a number of common device presets, which will automatically enable the following&nbsp;settings:</p>
+<ul>
+<li><strong>User&nbsp;agent</strong></li>
+<li><strong>Screen&nbsp;Resolution</strong></li>
+<li><strong>Device Pixel&nbsp;Ratio</strong></li>
+<li><strong>Emulate&nbsp;Viewport</strong></li>
+<li><strong>Text&nbsp;Autosizing</strong></li>
+<li><strong>Touch&nbsp;Screen</strong></li>
+</ul>
+<p>You can also emulate touch events, which is incredibly useful to avoid needing to push out code to a server and then load the new site on the device every time you make a change. To enable support for this&nbsp;feature:</p>
+<ol>
+<li>Open the emulation panel in the&nbsp;DevTools</li>
+<li>Enable “Emulate touch screen” in the Sensors&nbsp;pane.</li>
+</ol>
+<p>Now the relevant touch events: <code>touchstart</code>, <code>touchmove</code>, and <code>touchend</code>, will now be triggered by your mouse&nbsp;action!</p>
+<p><img src="/articles/handy-chrome-devtools-tips/viewport-emulation.gif" alt="Touch"></p>
+<h3 id="re-run-a-request-with-curl">Re-run a request with&nbsp;curl</h3>
+<p>Here at DocuSign, we are building our node-backbone front-end to communicate with a <span class="caps">REST</span> <span class="caps">API</span> built in .<span class="caps">NET</span>. Sometimes we get <span class="caps">API</span> errors, and when researching the problem or filing an <span class="caps">API</span> bug report, it is helpful to be able quickly replicate the request which caused the error. The network panel has a command that does just this- creating a cURL representation of an <span class="caps">HTTP</span> request with its <span class="caps">HTTP</span> headers, <span class="caps">SSL</span> certificated, and query string parameters into a link on your clipboard, ready to be pasted into the terminal and executed. To create the cURL command, simply right-click on any network request in the netowkr pane and select “Copy as cURL” from the&nbsp;menu.</p>
+<p><img src="/articles/handy-chrome-devtools-tips/curl.png" alt="curl"></p>
+<h3 id="frames-per-second">Frames Per&nbsp;Second</h3>
+<p>One of my favorite features, hands-down, is the <span class="caps">FPS</span> Counter/<span class="caps">HUD</span> Display tool, which is fantastic for being able to measure in real-time how your site is performing. You can enable this by navigating to the Settings Menu and checking “Show <span class="caps">FPS</span> meter” You will then see the following display appear in the top-right corner of your page. This is especially great if you are working on a an app which involves a lot of user-interaction- you can see what actions slow the page down as the user peforms them, instead of having to switch back and forth with the Timeline&nbsp;view. </p>
+<p><img src="/articles/handy-chrome-devtools-tips/chrome_fps.png" alt="FPS"></p>
+<p>I hope you enjoyed the Chrome Dev Tool Tips we covered in this post. There are so many more amazing ones out there- Google itself has an <a href="https://developers.google.com/chrome-developer-tools/docs/tips-and-tricks">extensive list</a>. Happy Hacking, and may the Chrome DevTools work forever in your&nbsp;favor!</p>
+<div class="share-box"><div id="fb-button" data-href="http://docusigndev.github.io/articles/handy-chrome-devtools-tips/" data-type="button_count" class="fb-share-button"></div><div id="fb-root"><script>(function(d, s, id) {
+var js, fjs = d.getElementsByTagName(s)[0];
+if (d.getElementById(id)) return;
+js = d.createElement(s); js.id = id;
+js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=221822221222506";
+fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+</script></div><a id="twtr-button" href="https://twitter.com/share" data-url="http://docusigndev.github.io/articles/handy-chrome-devtools-tips/" data-via="docusigndev" class="twitter-share-button">Tweet<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+</script></a></div></section></article><section class="article-links"><ul class="pager"><li><a href="/articles/custom-scalable-css-radio-buttons/">Custom Scalable CSS Radio Buttons &raquo;</a></li></ul></section><section class="article-comments"><div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'docusigndev';
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</section></main></div><footer class="row"></footer></div><script>var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-38381866-1']);
+_gaq.push(['_trackPageview']);
+(function() {
+  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+  ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();</script></body></html>
