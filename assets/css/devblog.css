@@ -48,7 +48,10 @@ article p,
 article ul,
 article ol {
   /* JK's magic text width */
-  max-width: 33em;
+  /* max-width: 33em; */
+  /* DB's magic text width needed for images to not be too small :( */
+  max-width: 45em;
+
 }
 
 header#top-header h1 {

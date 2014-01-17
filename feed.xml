@@ -1,8 +1,39 @@
-<?xml version="1.0" encoding="utf-8" ?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:wfw="http://wellformedweb.org/CommentAPI/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>DocuSign Dev Blog</title><atom:link href="undefined/feed.xml" rel="self" type="application/rss+xml"></atom:link><link></link><description>Brought to you by the development teams at DocuSign</description><pubDate>Mon, 16 Dec 2013 16:00:00 -0800</pubDate><generator>Wintersmith - https://github.com/jnordberg/wintersmith</generator><language>en</language><item><title>Chrome DevTools Tips</title><link>undefined/articles/handy-chrome-devtools-tips/</link><pubDate>Mon, 16 Dec 2013 16:00:00 -0800</pubDate><guid isPermaLink="true">undefined/articles/handy-chrome-devtools-tips/</guid><author></author><description>&lt;h4 id=&quot;or-what-i-wish-i-had-known-when-i-began-my-journey-as-a-web-developer&quot;&gt;Or what I wish I had known when I began my journey as a web developer&lt;/h4&gt;
+<?xml version="1.0" encoding="utf-8" ?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:wfw="http://wellformedweb.org/CommentAPI/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>DocuSign Dev Blog</title><atom:link href="undefined/feed.xml" rel="self" type="application/rss+xml"></atom:link><link></link><description>Brought to you by the development teams at DocuSign</description><pubDate>Wed, 15 Jan 2014 16:00:00 -0800</pubDate><generator>Wintersmith - https://github.com/jnordberg/wintersmith</generator><language>en</language><item><title>Absolutely Relatively, Floatless</title><link>undefined/articles/absolutely-relatively-floatless/</link><pubDate>Wed, 15 Jan 2014 16:00:00 -0800</pubDate><guid isPermaLink="true">undefined/articles/absolutely-relatively-floatless/</guid><author></author><description>&lt;h4 id=&quot;or-how-i-learned-to-stop-using-floats-and-love-absolute-positioning-&quot;&gt;Or how I learned to stop using floats and love absolute positioning.&lt;/h4&gt;
+&lt;h3 id=&quot;part-1-bootstrap-style-floats-without-floats&quot;&gt;Part 1: Bootstrap style floats without floats&lt;/h3&gt;
+&lt;p&gt;Lets say you want to have some things.&lt;/p&gt;
+&lt;p&gt;10 things.&lt;/p&gt;
+&lt;p&gt;Each thing has “words and stuff” in it.&lt;/p&gt;
+&lt;p&gt;Observe:&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;/articles/absolutely-relatively-floatless/1.gif&quot;&gt;&lt;img src=&quot;/articles/absolutely-relatively-floatless/1.gif&quot; alt=&quot;&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;script src=&quot;https://gist.github.com/proksoup/8448707.js&quot;&gt;&lt;/script&gt;
+
+&lt;p&gt;Lets say you want those things to be like a table.&lt;/p&gt;
+&lt;p&gt;With rows and columns.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;And&lt;/em&gt; you want less columns when you change width.&lt;/p&gt;
+&lt;p&gt;Observe:&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;/articles/absolutely-relatively-floatless/2.gif&quot;&gt;&lt;img src=&quot;/articles/absolutely-relatively-floatless/2.gif&quot; alt=&quot;&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;script src=&quot;https://gist.github.com/proksoup/8448714.js&quot;&gt;&lt;/script&gt;
+
+&lt;hr&gt;
+&lt;h3 id=&quot;part-2-what-does-this-have-to-do-with-position-absolute-&quot;&gt;Part 2: What does this have to do with position absolute?&lt;/h3&gt;
+&lt;p&gt;We use position relative on our table cell.&lt;/p&gt;
+&lt;p&gt;We use position absolute on our text and pic within the table cell.&lt;/p&gt;
+&lt;p&gt;Observe:&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;/articles/absolutely-relatively-floatless/3.gif&quot;&gt;&lt;img src=&quot;/articles/absolutely-relatively-floatless/3.gif&quot; alt=&quot;&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;script src=&quot;https://gist.github.com/proksoup/8448716.js&quot;&gt;&lt;/script&gt;
+
+&lt;p&gt;Check out the full code here: &lt;a href=&quot;http://codepen.io/proksoup/pen/oFhDj&quot;&gt;&lt;a href=&quot;http://codepen.io/proksoup/pen/oFhDj&quot;&gt;http://codepen.io/proksoup/pen/oFhDj&lt;/a&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;The idea here is to present an alternative to the CSS you’ve seen in other frameworks (with floats, padding, margin). I personally find it easier to read, easier to manipulate, and easier to control the variations that I want variations of when I avoid floats/margins/padding and instead I strictly use position absolute techniques like this post demonstrates.&lt;/p&gt;
+&lt;p&gt;I find this specific technique valuable personally, so I wanted to share it with the internet.&lt;/p&gt;
+&lt;p&gt;- Derek&lt;/p&gt;
+&lt;hr&gt;
+</description></item><item><title>Chrome DevTools Tips</title><link>undefined/articles/handy-chrome-devtools-tips/</link><pubDate>Mon, 16 Dec 2013 16:00:00 -0800</pubDate><guid isPermaLink="true">undefined/articles/handy-chrome-devtools-tips/</guid><author></author><description>&lt;h4 id=&quot;or-what-i-wish-i-had-known-when-i-began-my-journey-as-a-web-developer&quot;&gt;Or what I wish I had known when I began my journey as a web developer&lt;/h4&gt;
 &lt;p&gt;Learning how to use the &lt;a href=&quot;https://developers.google.com/chrome-developer-tools/&quot;&gt;Google Chrome dev tools&lt;/a&gt; marked the inflection point in my journey towards becoming a web developer. When I started learning web development, I had heard vague rumblings of these tools, but didn’t put in too much time researching them, as I believed it was more important to first learn the “basics.” What is the DOM? How does it relate to HTML? How does CSS style an HTML element? And how does Javascript fit into all of this? I regret to report that I spent a lot of time reading through w3schools articles. &lt;/p&gt;
 &lt;p&gt;I don’t think it’s an exaggeration to say that if I had just dove right in and started learning and playing with the dev tools, I would have learned so much more about all of these topics, and in a much more powerful, experiential way to boot.
 The dev tools don’t just &lt;em&gt;tell&lt;/em&gt; you how the DOM works, they &lt;em&gt;show&lt;/em&gt; you.&lt;/p&gt;
-&lt;p&gt;For today’s post, I’d like to walk you through some of the tips I learned after having used dev tools for a while that I’d wish I’d been shown on day one.&lt;/p&gt;
+&lt;p&gt;For today’s post, I’d like to walk you through some of the tips I learned after having used dev tools for a while that I’d wish I’d been shown on day one.
+&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;&lt;/p&gt;
 &lt;h3 id=&quot;toggle-element-state&quot;&gt;Toggle Element State&lt;/h3&gt;
 &lt;p&gt;First, we have the “Toggle Element State” feature. This is an incredibly helpful feature which allows you to force the state of a particular element. For example, let’s says your style sheet contains the following rule:&lt;/p&gt;
 &lt;pre&gt;&lt;code class=&quot;lang-css&quot;&gt;&lt;span class=&quot;class&quot;&gt;.magical&lt;/span&gt;&lt;span class=&quot;pseudo&quot;&gt;:hover&lt;/span&gt;&lt;span class=&quot;rules&quot;&gt;{
