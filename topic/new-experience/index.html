@@ -1,0 +1,53 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><meta name="viewport" content="width=device-width"><title>DocuSign Dev Blog</title><link rel="alternate" href="undefined/feed.xml" type="application/rss+xml" title="Brought to you by the development teams at DocuSign"><link rel="stylesheet" href="/assets/css/bootstrap.min.css"><link rel="stylesheet" href="/assets/css/syntax.css"><link href="//fonts.googleapis.com/css?family=Inconsolata:400,700&amp;subset=latin,latin-ext" rel="stylesheet" type="text/css"><link href="//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css"><link rel="stylesheet" href="/assets/css/devblog.css"><link rel="icon" href="/favicon.ico"><link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon/docusigndev-favicon-32.png"><link rel="apple-touch-icon" sizes="114×114" href="/assets/img/favicon/docusigndev-favicon-114.png"><link rel="apple-touch-icon" sizes="72×72" href="/assets/img/favicon/docusigndev-favicon-72.png"><link rel="apple-touch-icon" href="/assets/img/favicon/docusigndev-favicon-57.png"><link rel="apple-touch-icon" sizes="512x512" href="/assets/img/favicon/docusigndev-favicon-512.png"></head><body><div class="container"><header id="top-header" class="row"><div class="col-sm-12"><h1><a href="/">DocuSign Dev Blog</a></h1><h2>Brought to you by the development teams at DocuSign</h2></div></header><div class="row"><div id="left-col" class="col-sm-3 col-md-2"><nav><ul class="row"><li class="col-sm-12"><a href="/contributors/">Contributors</a></li><li class="col-sm-12"><a href="http://github.com/docusigndev">Code</a></li><li class="col-sm-12"><a href="https://twitter.com/docusigndev">Follow</a></li><li class="col-sm-12"><a href="http://www.docusign.com">DocuSign.com</a></li></ul></nav></div><main id="right-col" class="col-sm-8 col-sm-offset-1 col-md-9"><div class="row tag-page"><div class="col-sm-8"><h1 class="page-tag">Topic: New-experience</h1></div></div><section class="articles"><section class="small-article"><div class="row"><div class="col-sm-8 left"><h2><a href="/articles/the-new-docusign-experience-all-in-javascript/">The new DocuSign experience, all in Javascript</a></h2><section class="about-author"><a href="/contributors/ben-buckman/" class="author-name"><span>by Ben Buckman</span></a></section><article><section class="content"><p><a href="https://www.docusign.com/new-experience"><img src="/articles/the-new-docusign-experience-all-in-javascript/ndse_screenshot2.png" alt="Screenshot of The New DocuSign Experience"></a></p>
+<p>We recently <a href="https://www.docusign.com/blog/accelerating-the-digital-transformation-journey-with-the-docusign-spring-14-release?utm_source=HOOTSUITE&amp;utm_medium=SOCIALPOSTS&amp;utm_campaign=SEPTEMBER">launched</a> 
+<strong><a href="https://www.docusign.com/new-experience">The New DocuSign Experience</a></strong>,
+a reimagining of our primary web application used by 45 million&nbsp;users.</p>
+<p>The app is built in Node.js and uses the <a href="https://www.docusign.com/developer-center/quick-start/overview"><span class="caps">REST</span> <span class="caps">API</span></a>
+as its data store. We’re proud to have built the entire app on an open-source stack, 
+and plan to share a lot of our code in the coming&nbsp;months.</p>
+<p>We aimed to follow best practices throughout:
+<a href="http://en.wikipedia.org/wiki/Don%27t_repeat_yourself"><span class="caps">DRY</span></a> modular code;
+automated deployment, provisioning, and continuous integration;
+(a goal of) 100% automated front-end testing;
+two-week sprints and releases, with scrums combining dev+<span class="caps">QA</span>+<span class="caps">UX</span>+product;
+utilizing the latest browser capabilities while degrading gracefully for older browsers;
+and using Git-flow and Github-style&nbsp;workflows.</p>
+<p>The project first began in June 2012 with one developer and a vision of
+building the next-generation web app as a front-end layer on top of the
+<span class="caps">API</span>. After a period of prototyping and setting the
+groundwork, the project (codenamed <em>“Martini”</em>) kicked into high gear
+around a year ago. The team now consists of twelve developers, including three
+dedicated to <span class="caps">QA</span> automation; a team of designers, two product managers,
+and all the other amazing support (ops, program management, facilities)
+that keep the servers humming and the stars&nbsp;aligned.</p>
+<p>We launched a public beta in September, and became DocuSign Beta; now
+we’re official, but we still affectionately call the project and team <em>Martini</em>. </p>
+<h3 id="ubiquitous-javascript">Ubiquitous&nbsp;Javascript</h3>
+<p>Martini is built on an all-Javascript (actually <a href="http://coffeescript.org/">CoffeeScript</a>) stack.
+On the backend that includes <a href="http://nodejs.org/">Node.js</a>,
+<a href="http://expressjs.com/">Express</a>, <a href="https://github.com/mikeal/request">Request</a>,
+and <a href="https://github.com/flatiron/winston">Winston</a>, among many other libraries.
+Ubiquitous <span class="caps">JS</span> means we can share code and patterns between the front- and back-ends:
+<a href="http://backbonejs.org/">Backbone.js</a> handles models, views, and routing client-side, as well as
+parallel models server-side. All our coffee/js files use the same module
+pattern, bundled by <a href="https://github.com/sstephenson/stitch">Stitch</a> for the browser.
+Templates on both sides are in <a href="http://jade-lang.com/">Jade</a>.
+<a href="http://learnboost.github.io/stylus/">Stylus</a> preprocesses our <span class="caps">CSS</span>.
+We use <a href="http://redis.io/">Redis</a> for sessions and
+caching. The app uses the 
+<a href="https://www.docusign.com/developer-center/quick-start/overview">DocuSign <span class="caps">REST</span> <span class="caps">API</span></a>
+(a highly scalable, <a href="http://en.wikipedia.org/wiki/Carrier_grade">carrier grade</a> 
+system built on the .<span class="caps">NET</span> stack) as its data store,
+so we don’t need a full&nbsp;database.   </p>
+<p>To support the entire new experience, <a href="https://www.docusign.com/developer-center/quick-start/overview">our <span class="caps">API</span></a>
+grew from serving a relatively
+narrow set of third-party use cases to supporting every customer-facing application function.
+Not all of these <span class="caps">API</span> features are public yet, but they will be soon.
+<p class="more"><a href="/articles/the-new-docusign-experience-all-in-javascript/">more &raquo;</a></p></section></article></div></div></section></section></main></div><footer class="row"><ul class="pager"></ul></footer></div><script>var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-38381866-1']);
+_gaq.push(['_trackPageview']);
+(function() {
+  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+  ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();</script></body></html>

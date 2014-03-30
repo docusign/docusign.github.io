@@ -1,4 +1,117 @@
-<?xml version="1.0" encoding="utf-8" ?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:wfw="http://wellformedweb.org/CommentAPI/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>DocuSign Dev Blog</title><atom:link href="undefined/feed.xml" rel="self" type="application/rss+xml"></atom:link><link></link><description>Brought to you by the development teams at DocuSign</description><pubDate>Wed, 15 Jan 2014 16:00:00 -0800</pubDate><generator>Wintersmith - https://github.com/jnordberg/wintersmith</generator><language>en</language><item><title>Absolutely Relatively, Floatless</title><link>undefined/articles/absolutely-relatively-floatless/</link><pubDate>Wed, 15 Jan 2014 16:00:00 -0800</pubDate><guid isPermaLink="true">undefined/articles/absolutely-relatively-floatless/</guid><author></author><description>&lt;h4 id=&quot;or-how-i-learned-to-stop-using-floats-and-love-absolute-positioning-&quot;&gt;Or how I learned to stop using floats and love absolute positioning.&lt;/h4&gt;
+<?xml version="1.0" encoding="utf-8" ?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:wfw="http://wellformedweb.org/CommentAPI/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>DocuSign Dev Blog</title><atom:link href="undefined/feed.xml" rel="self" type="application/rss+xml"></atom:link><link></link><description>Brought to you by the development teams at DocuSign</description><pubDate>Sat, 29 Mar 2014 17:00:00 -0700</pubDate><generator>Wintersmith - https://github.com/jnordberg/wintersmith</generator><language>en</language><item><title>The new DocuSign experience, all in Javascript</title><link>undefined/articles/the-new-docusign-experience-all-in-javascript/</link><pubDate>Sat, 29 Mar 2014 17:00:00 -0700</pubDate><guid isPermaLink="true">undefined/articles/the-new-docusign-experience-all-in-javascript/</guid><author></author><description>&lt;p&gt;&lt;a href=&quot;https://www.docusign.com/new-experience&quot;&gt;&lt;img src=&quot;/articles/the-new-docusign-experience-all-in-javascript/ndse_screenshot2.png&quot; alt=&quot;Screenshot of The New DocuSign Experience&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;We recently &lt;a href=&quot;https://www.docusign.com/blog/accelerating-the-digital-transformation-journey-with-the-docusign-spring-14-release?utm_source=HOOTSUITE&amp;amp;utm_medium=SOCIALPOSTS&amp;amp;utm_campaign=SEPTEMBER&quot;&gt;launched&lt;/a&gt; 
+&lt;strong&gt;&lt;a href=&quot;https://www.docusign.com/new-experience&quot;&gt;The New DocuSign Experience&lt;/a&gt;&lt;/strong&gt;,
+a reimagining of our primary web application used by 45 million users.&lt;/p&gt;
+&lt;p&gt;The app is built in Node.js and uses the &lt;a href=&quot;https://www.docusign.com/developer-center/quick-start/overview&quot;&gt;REST API&lt;/a&gt;
+as its data store. We’re proud to have built the entire app on an open-source stack, 
+and plan to share a lot of our code in the coming months.&lt;/p&gt;
+&lt;p&gt;We aimed to follow best practices throughout:
+&lt;a href=&quot;http://en.wikipedia.org/wiki/Don%27t_repeat_yourself&quot;&gt;DRY&lt;/a&gt; modular code;
+automated deployment, provisioning, and continuous integration;
+(a goal of) 100% automated front-end testing;
+two-week sprints and releases, with scrums combining dev+QA+UX+product;
+utilizing the latest browser capabilities while degrading gracefully for older browsers;
+and using Git-flow and Github-style workflows.&lt;/p&gt;
+&lt;p&gt;The project first began in June 2012 with one developer and a vision of
+building the next-generation web app as a front-end layer on top of the
+API. After a period of prototyping and setting the
+groundwork, the project (codenamed &lt;em&gt;“Martini”&lt;/em&gt;) kicked into high gear
+around a year ago. The team now consists of twelve developers, including three
+dedicated to QA automation; a team of designers, two product managers,
+and all the other amazing support (ops, program management, facilities)
+that keep the servers humming and the stars aligned.&lt;/p&gt;
+&lt;p&gt;We launched a public beta in September, and became DocuSign Beta; now
+we’re official, but we still affectionately call the project and team &lt;em&gt;Martini&lt;/em&gt;. &lt;/p&gt;
+&lt;h3 id=&quot;ubiquitous-javascript&quot;&gt;Ubiquitous Javascript&lt;/h3&gt;
+&lt;p&gt;Martini is built on an all-Javascript (actually &lt;a href=&quot;http://coffeescript.org/&quot;&gt;CoffeeScript&lt;/a&gt;) stack.
+On the backend that includes &lt;a href=&quot;http://nodejs.org/&quot;&gt;Node.js&lt;/a&gt;,
+&lt;a href=&quot;http://expressjs.com/&quot;&gt;Express&lt;/a&gt;, &lt;a href=&quot;https://github.com/mikeal/request&quot;&gt;Request&lt;/a&gt;,
+and &lt;a href=&quot;https://github.com/flatiron/winston&quot;&gt;Winston&lt;/a&gt;, among many other libraries.
+Ubiquitous JS means we can share code and patterns between the front- and back-ends:
+&lt;a href=&quot;http://backbonejs.org/&quot;&gt;Backbone.js&lt;/a&gt; handles models, views, and routing client-side, as well as
+parallel models server-side. All our coffee/js files use the same module
+pattern, bundled by &lt;a href=&quot;https://github.com/sstephenson/stitch&quot;&gt;Stitch&lt;/a&gt; for the browser.
+Templates on both sides are in &lt;a href=&quot;http://jade-lang.com/&quot;&gt;Jade&lt;/a&gt;.
+&lt;a href=&quot;http://learnboost.github.io/stylus/&quot;&gt;Stylus&lt;/a&gt; preprocesses our CSS.
+We use &lt;a href=&quot;http://redis.io/&quot;&gt;Redis&lt;/a&gt; for sessions and
+caching. The app uses the 
+&lt;a href=&quot;https://www.docusign.com/developer-center/quick-start/overview&quot;&gt;DocuSign REST API&lt;/a&gt;
+(a highly scalable, &lt;a href=&quot;http://en.wikipedia.org/wiki/Carrier_grade&quot;&gt;carrier grade&lt;/a&gt; 
+system built on the .NET stack) as its data store,
+so we don’t need a full database.   &lt;/p&gt;
+&lt;p&gt;To support the entire new experience, &lt;a href=&quot;https://www.docusign.com/developer-center/quick-start/overview&quot;&gt;our API&lt;/a&gt;
+grew from serving a relatively
+narrow set of third-party use cases to supporting every customer-facing application function.
+Not all of these API features are public yet, but they will be soon.
+&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;h3 id=&quot;beautiful-user-interface&quot;&gt;Beautiful user interface&lt;/h3&gt;
+&lt;p&gt;Our in-house design team did incredible work designing the interactions and visuals of the new experience.
+Our first developer, Derek, has an incredible passion
+for pixel-perfection and seamless UI’s that led to a wonderful dev-design collaboration.
+We used CSS3 (and where necessary, jQuery animations)
+to bring the designs to life. If you’re using the app and are impressed by
+a smooth transition or subtle effect, Derek is the main reason.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://www.docusign.com/new-experience&quot;&gt;&lt;img src=&quot;/articles/the-new-docusign-experience-all-in-javascript/ndse_screenshot1.png&quot; alt=&quot;Screenshot of Tagger interface&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&quot;data-router&quot;&gt;Data router&lt;/h3&gt;
+&lt;p&gt;We built a layer on top of &lt;a href=&quot;http://backbonejs.org/&quot;&gt;Backbone.js&lt;/a&gt; which enables modular, re-usable components and
+a very snappy UI. Models are the basic building blocks and their
+types and hierarchy are shared between client and server. Routes are defined in a
+“route data” mapping, with the models and attributes that belong to each route.
+The server processes this mapping through Express middleware, and the client through the Backbone
+router. On initial load, the server knows all the data that the client
+wants and gets it from the API; when the browser asks for the same data
+a moment later, the data is either already in Redis to be
+delivered instantly, or on its way. Subsequent routes are handled
+entirely on the client when possible (degrading gracefully back to IE8).&lt;/p&gt;
+&lt;p&gt;The models have views associated with them in the route-data mapping;
+each view attaches itself to a parent element, down from the thin layout
+rendered on the server to any level deep of client-side nesting.
+Everything is decoupled and DOM elements that should persist
+from one route to another are left intact.&lt;/p&gt;
+&lt;p&gt;We plan to extract this framework from the app and open source it. We
+think it is well suited to apps like ours: API-backed, client-heavy
+(everything is authenticated so we have no need to render from the
+server to search engines), with a complex data hierarchy and multi-use
+components.&lt;/p&gt;
+&lt;h3 id=&quot;automated-testing&quot;&gt;Automated testing&lt;/h3&gt;
+&lt;p&gt;This has been one of the most challenging parts of the journey so far,
+and while we we haven’t quite achieved 100% automated
+test coverage, we are getting close, and in the process we have built a
+testing tool chain that we want to open-source. Our test runner parallelizes
+multiple &lt;a href=&quot;http://visionmedia.github.io/mocha/&quot;&gt;Mocha&lt;/a&gt;
+tests simultaneously and aggregates the results into a
+single XUnit file for &lt;a href=&quot;http://jenkins-ci.org/&quot;&gt;Jenkins&lt;/a&gt;. Our “driver wrapper” adds a layer of
+utilities to the &lt;a href=&quot;https://github.com/admc/wd&quot;&gt;WD&lt;/a&gt; module. We’ve added syntactic sugar on top of Mocha
+to define test levels (smoke, acceptance, etc) inline. The tests can run
+in &lt;a href=&quot;http://phantomjs.org/&quot;&gt;PhantomJS&lt;/a&gt; via &lt;a href=&quot;https://github.com/detro/ghostdriver&quot;&gt;GhostDriver&lt;/a&gt;
+(which we’ve improved to &lt;a href=&quot;https://github.com/detro/ghostdriver/pull/324&quot;&gt;handle file uploads&lt;/a&gt;)
+or via a real browser using Selenium, as well as with numerous
+virtual browsers via &lt;a href=&quot;https://saucelabs.com/&quot;&gt;SauceLabs&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 id=&quot;redis-sentinel-client&quot;&gt;Redis Sentinel client&lt;/h3&gt;
+&lt;p&gt;As we &lt;a href=&quot;http://engineering.docusign.com/articles/redis-sentinel-client-nodejs/&quot;&gt;wrote a few months ago&lt;/a&gt;, 
+we are using &lt;a href=&quot;http://redis.io/topics/sentinel&quot;&gt;Redis Sentinel&lt;/a&gt; with
+master/slaves for failover and redundancy, and we wrote a
+&lt;a href=&quot;https://github.com/DocuSignDev/node-redis-sentinel-client&quot;&gt;node.js client&lt;/a&gt;
+to make Sentinel seamless, working the same as a regular Redis client.
+(We’re also looking forward to Redis Cluster and hoping it will take
+Redis reliability to the next level.)&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;The last few months have been heads-down in the code finishing the
+features and fixing bugs for our launch. Now that we’re live, we’re
+looking forward to taking a deep breath and a step back, and re-imagining
+even more. We made assumptions and decisions a year ago that we might
+make differently on a blank slate today. We wrote a lot of code that
+serves general use cases, and we want to share that with the open source
+community, to give back and get valuable feedback. Like any big software
+project, we have technical debt to clean up and test suites to
+finish. And of course, we still have tons of features to build, known
+and yet-unknown, for the future of 
+&lt;a href=&quot;https://www.docusign.com/how-it-works/digital-transaction-management&quot;&gt;Digital Transaction Management&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;So &lt;strong&gt;&lt;a href=&quot;https://www.docusign.com/trial&quot;&gt;sign up for an account&lt;/a&gt;&lt;/strong&gt; and try it out! We hope you love the new experience
+and look forward to learning from all your feedback.&lt;/p&gt;
+&lt;p&gt;Also, &lt;strong&gt;&lt;a href=&quot;https://www.docusign.com/company/careers&quot;&gt;we’re hiring more developers&lt;/a&gt;&lt;/strong&gt;!
+If you’re a software engineer and this product and tech stack excite you, please &lt;a href=&quot;https://www.docusign.com/company/careers&quot;&gt;get in touch&lt;/a&gt;.&lt;/p&gt;
+</description></item><item><title>Absolutely Relatively, Floatless</title><link>undefined/articles/absolutely-relatively-floatless/</link><pubDate>Wed, 15 Jan 2014 16:00:00 -0800</pubDate><guid isPermaLink="true">undefined/articles/absolutely-relatively-floatless/</guid><author></author><description>&lt;h4 id=&quot;or-how-i-learned-to-stop-using-floats-and-love-absolute-positioning-&quot;&gt;Or how I learned to stop using floats and love absolute positioning.&lt;/h4&gt;
 &lt;h3 id=&quot;part-1-bootstrap-style-floats-without-floats&quot;&gt;Part 1: Bootstrap style floats without floats&lt;/h3&gt;
 &lt;p&gt;Lets say you want to have some things.&lt;/p&gt;
 &lt;p&gt;10 things.&lt;/p&gt;

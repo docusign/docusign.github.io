@@ -26,6 +26,13 @@ header h2 {
   color: #999;
 }
 
+.small-article h2 {
+  margin-bottom: 5px;
+}
+.small-article section.about-author {
+  margin-bottom: 10px;
+}
+
 .about-author .author-name,
 .about-author .author-name a {
   color: #1c4c9f;
@@ -50,8 +57,13 @@ article ol {
   /* JK's magic text width */
   /* max-width: 33em; */
   /* DB's magic text width needed for images to not be too small :( */
-  max-width: 45em;
+  max-width: 50em;
+}
 
+/* native code blocks are full width, but gists in derek's post would be better narrow.
+try all gists narrow and see what happens. */
+article > .content > .gist {
+  max-width: 50em;
 }
 
 header#top-header h1 {
@@ -118,6 +130,7 @@ header#top-header h2 {
 #left-col section.tags ul li {
   margin-bottom: 2px;
   font-size: 1.2em;
+  white-space: nowrap;
 }
 #left-col section.tags ul li:before {
   content: '# ';
@@ -209,6 +222,10 @@ article > .content > div > img {
   margin-bottom: .5em;
 }
 
+article > .content h3 {
+  font-size: 22px;
+}
+
 .article-meta {
   color: #999;
   margin-top: 1em;
@@ -264,9 +281,9 @@ article + section.article-links {
   margin-top: 3em;
 }
 
-.about-author.visible-xs {
+/*.about-author.visible-xs {
   margin-bottom: 1em;
-}
+}*/
 
 
 

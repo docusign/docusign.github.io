@@ -1,0 +1,141 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><meta name="viewport" content="width=device-width"><title>The new DocuSign experience, all in Javascript - DocuSign Dev Blog</title><link rel="alternate" href="undefined/feed.xml" type="application/rss+xml" title="Brought to you by the development teams at DocuSign"><link rel="stylesheet" href="/assets/css/bootstrap.min.css"><link rel="stylesheet" href="/assets/css/syntax.css"><link href="//fonts.googleapis.com/css?family=Inconsolata:400,700&amp;subset=latin,latin-ext" rel="stylesheet" type="text/css"><link href="//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css"><link rel="stylesheet" href="/assets/css/devblog.css"><link rel="icon" href="/favicon.ico"><link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicon/docusigndev-favicon-32.png"><link rel="apple-touch-icon" sizes="114×114" href="/assets/img/favicon/docusigndev-favicon-114.png"><link rel="apple-touch-icon" sizes="72×72" href="/assets/img/favicon/docusigndev-favicon-72.png"><link rel="apple-touch-icon" href="/assets/img/favicon/docusigndev-favicon-57.png"><link rel="apple-touch-icon" sizes="512x512" href="/assets/img/favicon/docusigndev-favicon-512.png"></head><body class="article-detail"><div class="container"><header id="top-header" class="row"><div class="col-sm-12"><h1><a href="/">DocuSign Dev Blog</a></h1><h2>Brought to you by the development teams at DocuSign</h2></div></header><div class="row"><div id="left-col" class="col-sm-3 col-md-2"><nav><ul class="row"><li class="col-sm-12"><a href="/contributors/">Contributors</a></li><li class="col-sm-12"><a href="http://github.com/docusigndev">Code</a></li><li class="col-sm-12"><a href="https://twitter.com/docusigndev">Follow</a></li><li class="col-sm-12"><a href="http://www.docusign.com">DocuSign.com</a></li></ul></nav><section class="row about-author"><div class="col-sm-12"><a href="/contributors/ben-buckman/" class="author-name">Ben Buckman</a></div><div class="col-xs-4 col-sm-12"><div class="author-pic"><a href="/contributors/ben-buckman/"><img alt="Ben Buckman" src="/assets/img/ben-buckman.jpg"></a></div></div><div class="col-xs-6 col-sm-12"><div class="author-blurb">Lead Engineer / Scrum Lead</div><div class="author-twitter">Twitter:
+&nbsp;<a href="http://twitter.com/thebuckst0p">@thebuckst0p</a></div><div class="author-github">Github:
+&nbsp;<a href="http://github.com/benbuckman">benbuckman</a></div></div></section><section class="tags"><ul><li><a href="/topic/new-experience/">new-experience</a></li><li><a href="/topic/nodejs/">nodejs</a></li><li><a href="/topic/coffeescript/">coffeescript</a></li><li><a href="/topic/redis/">redis</a></li></ul></section></div><main id="right-col" class="col-sm-8 col-sm-offset-1 col-md-9"><div class="article-meta"><div class="date">30 March 2014</div></div><h1>The new DocuSign experience, all in Javascript</h1><article><section class="content"><p><a href="https://www.docusign.com/new-experience"><img src="/articles/the-new-docusign-experience-all-in-javascript/ndse_screenshot2.png" alt="Screenshot of The New DocuSign Experience"></a></p>
+<p>We recently <a href="https://www.docusign.com/blog/accelerating-the-digital-transformation-journey-with-the-docusign-spring-14-release?utm_source=HOOTSUITE&amp;utm_medium=SOCIALPOSTS&amp;utm_campaign=SEPTEMBER">launched</a> 
+<strong><a href="https://www.docusign.com/new-experience">The New DocuSign Experience</a></strong>,
+a reimagining of our primary web application used by 45 million&nbsp;users.</p>
+<p>The app is built in Node.js and uses the <a href="https://www.docusign.com/developer-center/quick-start/overview"><span class="caps">REST</span> <span class="caps">API</span></a>
+as its data store. We’re proud to have built the entire app on an open-source stack, 
+and plan to share a lot of our code in the coming&nbsp;months.</p>
+<p>We aimed to follow best practices throughout:
+<a href="http://en.wikipedia.org/wiki/Don%27t_repeat_yourself"><span class="caps">DRY</span></a> modular code;
+automated deployment, provisioning, and continuous integration;
+(a goal of) 100% automated front-end testing;
+two-week sprints and releases, with scrums combining dev+<span class="caps">QA</span>+<span class="caps">UX</span>+product;
+utilizing the latest browser capabilities while degrading gracefully for older browsers;
+and using Git-flow and Github-style&nbsp;workflows.</p>
+<p>The project first began in June 2012 with one developer and a vision of
+building the next-generation web app as a front-end layer on top of the
+<span class="caps">API</span>. After a period of prototyping and setting the
+groundwork, the project (codenamed <em>“Martini”</em>) kicked into high gear
+around a year ago. The team now consists of twelve developers, including three
+dedicated to <span class="caps">QA</span> automation; a team of designers, two product managers,
+and all the other amazing support (ops, program management, facilities)
+that keep the servers humming and the stars&nbsp;aligned.</p>
+<p>We launched a public beta in September, and became DocuSign Beta; now
+we’re official, but we still affectionately call the project and team <em>Martini</em>. </p>
+<h3 id="ubiquitous-javascript">Ubiquitous&nbsp;Javascript</h3>
+<p>Martini is built on an all-Javascript (actually <a href="http://coffeescript.org/">CoffeeScript</a>) stack.
+On the backend that includes <a href="http://nodejs.org/">Node.js</a>,
+<a href="http://expressjs.com/">Express</a>, <a href="https://github.com/mikeal/request">Request</a>,
+and <a href="https://github.com/flatiron/winston">Winston</a>, among many other libraries.
+Ubiquitous <span class="caps">JS</span> means we can share code and patterns between the front- and back-ends:
+<a href="http://backbonejs.org/">Backbone.js</a> handles models, views, and routing client-side, as well as
+parallel models server-side. All our coffee/js files use the same module
+pattern, bundled by <a href="https://github.com/sstephenson/stitch">Stitch</a> for the browser.
+Templates on both sides are in <a href="http://jade-lang.com/">Jade</a>.
+<a href="http://learnboost.github.io/stylus/">Stylus</a> preprocesses our <span class="caps">CSS</span>.
+We use <a href="http://redis.io/">Redis</a> for sessions and
+caching. The app uses the 
+<a href="https://www.docusign.com/developer-center/quick-start/overview">DocuSign <span class="caps">REST</span> <span class="caps">API</span></a>
+(a highly scalable, <a href="http://en.wikipedia.org/wiki/Carrier_grade">carrier grade</a> 
+system built on the .<span class="caps">NET</span> stack) as its data store,
+so we don’t need a full&nbsp;database.   </p>
+<p>To support the entire new experience, <a href="https://www.docusign.com/developer-center/quick-start/overview">our <span class="caps">API</span></a>
+grew from serving a relatively
+narrow set of third-party use cases to supporting every customer-facing application function.
+Not all of these <span class="caps">API</span> features are public yet, but they will be soon.
+<span class="more"></span></p>
+<h3 id="beautiful-user-interface">Beautiful user&nbsp;interface</h3>
+<p>Our in-house design team did incredible work designing the interactions and visuals of the new experience.
+Our first developer, Derek, has an incredible passion
+for pixel-perfection and seamless <span class="caps">UI</span>’s that led to a wonderful dev-design collaboration.
+We used <span class="caps">CSS3</span> (and where necessary, jQuery animations)
+to bring the designs to life. If you’re using the app and are impressed by
+a smooth transition or subtle effect, Derek is the main&nbsp;reason.</p>
+<p><a href="https://www.docusign.com/new-experience"><img src="/articles/the-new-docusign-experience-all-in-javascript/ndse_screenshot1.png" alt="Screenshot of Tagger interface"></a></p>
+<h3 id="data-router">Data&nbsp;router</h3>
+<p>We built a layer on top of <a href="http://backbonejs.org/">Backbone.js</a> which enables modular, re-usable components and
+a very snappy <span class="caps">UI</span>. Models are the basic building blocks and their
+types and hierarchy are shared between client and server. Routes are defined in a
+“route data” mapping, with the models and attributes that belong to each route.
+The server processes this mapping through Express middleware, and the client through the Backbone
+router. On initial load, the server knows all the data that the client
+wants and gets it from the <span class="caps">API</span>; when the browser asks for the same data
+a moment later, the data is either already in Redis to be
+delivered instantly, or on its way. Subsequent routes are handled
+entirely on the client when possible (degrading gracefully back to&nbsp;<span class="caps">IE8</span>).</p>
+<p>The models have views associated with them in the route-data mapping;
+each view attaches itself to a parent element, down from the thin layout
+rendered on the server to any level deep of client-side nesting.
+Everything is decoupled and <span class="caps">DOM</span> elements that should persist
+from one route to another are left&nbsp;intact.</p>
+<p>We plan to extract this framework from the app and open source it. We
+think it is well suited to apps like ours: <span class="caps">API</span>-backed, client-heavy
+(everything is authenticated so we have no need to render from the
+server to search engines), with a complex data hierarchy and multi-use&nbsp;components.</p>
+<h3 id="automated-testing">Automated&nbsp;testing</h3>
+<p>This has been one of the most challenging parts of the journey so far,
+and while we we haven’t quite achieved 100% automated
+test coverage, we are getting close, and in the process we have built a
+testing tool chain that we want to open-source. Our test runner parallelizes
+multiple <a href="http://visionmedia.github.io/mocha/">Mocha</a>
+tests simultaneously and aggregates the results into a
+single XUnit file for <a href="http://jenkins-ci.org/">Jenkins</a>. Our “driver wrapper” adds a layer of
+utilities to the <a href="https://github.com/admc/wd"><span class="caps">WD</span></a> module. We’ve added syntactic sugar on top of Mocha
+to define test levels (smoke, acceptance, etc) inline. The tests can run
+in <a href="http://phantomjs.org/">PhantomJS</a> via <a href="https://github.com/detro/ghostdriver">GhostDriver</a>
+(which we’ve improved to <a href="https://github.com/detro/ghostdriver/pull/324">handle file uploads</a>)
+or via a real browser using Selenium, as well as with numerous
+virtual browsers via <a href="https://saucelabs.com/">SauceLabs</a>.</p>
+<h3 id="redis-sentinel-client">Redis Sentinel&nbsp;client</h3>
+<p>As we <a href="http://engineering.docusign.com/articles/redis-sentinel-client-nodejs/">wrote a few months ago</a>, 
+we are using <a href="http://redis.io/topics/sentinel">Redis Sentinel</a> with
+master/slaves for failover and redundancy, and we wrote a
+<a href="https://github.com/DocuSignDev/node-redis-sentinel-client">node.js client</a>
+to make Sentinel seamless, working the same as a regular Redis client.
+(We’re also looking forward to Redis Cluster and hoping it will take
+Redis reliability to the next&nbsp;level.)</p>
+<hr>
+<p>The last few months have been heads-down in the code finishing the
+features and fixing bugs for our launch. Now that we’re live, we’re
+looking forward to taking a deep breath and a step back, and re-imagining
+even more. We made assumptions and decisions a year ago that we might
+make differently on a blank slate today. We wrote a lot of code that
+serves general use cases, and we want to share that with the open source
+community, to give back and get valuable feedback. Like any big software
+project, we have technical debt to clean up and test suites to
+finish. And of course, we still have tons of features to build, known
+and yet-unknown, for the future of 
+<a href="https://www.docusign.com/how-it-works/digital-transaction-management">Digital Transaction&nbsp;Management</a>.</p>
+<p>So <strong><a href="https://www.docusign.com/trial">sign up for an account</a></strong> and try it out! We hope you love the new experience
+and look forward to learning from all your&nbsp;feedback.</p>
+<p>Also, <strong><a href="https://www.docusign.com/company/careers">we’re hiring more developers</a></strong>!
+If you’re a software engineer and this product and tech stack excite you, please <a href="https://www.docusign.com/company/careers">get in&nbsp;touch</a>.</p>
+<div class="share-box"><div id="fb-button" data-href="http://engineering.docusign.com/articles/the-new-docusign-experience-all-in-javascript/" data-type="button_count" style="width:auto !important;" class="fb-share-button"></div><div id="fb-root"><script>(function(d, s, id) {
+var js, fjs = d.getElementsByTagName(s)[0];
+if (d.getElementById(id)) return;
+js = d.createElement(s); js.id = id;
+js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=221822221222506";
+fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+</script></div><a id="twtr-button" href="https://twitter.com/share" data-url="http://engineering.docusign.com/articles/the-new-docusign-experience-all-in-javascript/" data-via="docusigndev" class="twitter-share-button">Tweet<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+</script></a></div></section></article><section class="article-links"><ul class="pager"><li><a href="/articles/absolutely-relatively-floatless/">Absolutely Relatively, Floatless &raquo;</a></li></ul></section><section class="article-comments"><div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'docusigndev';
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</section></main></div><footer class="row"></footer></div><script>var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-38381866-1']);
+_gaq.push(['_trackPageview']);
+(function() {
+  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+  ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();</script></body></html>
