@@ -1,4 +1,100 @@
-<?xml version="1.0" encoding="utf-8" ?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:wfw="http://wellformedweb.org/CommentAPI/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>DocuSign Dev Blog</title><atom:link href="undefined/feed.xml" rel="self" type="application/rss+xml"></atom:link><link></link><description>Brought to you by the development teams at DocuSign</description><pubDate>Sat, 29 Mar 2014 17:00:00 -0700</pubDate><generator>Wintersmith - https://github.com/jnordberg/wintersmith</generator><language>en</language><item><title>The new DocuSign experience, all in Javascript</title><link>undefined/articles/the-new-docusign-experience-all-in-javascript/</link><pubDate>Sat, 29 Mar 2014 17:00:00 -0700</pubDate><guid isPermaLink="true">undefined/articles/the-new-docusign-experience-all-in-javascript/</guid><author></author><description>&lt;p&gt;&lt;a href=&quot;https://www.docusign.com/new-experience&quot;&gt;&lt;img src=&quot;/articles/the-new-docusign-experience-all-in-javascript/ndse_screenshot2.png&quot; alt=&quot;Screenshot of The New DocuSign Experience&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" ?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:wfw="http://wellformedweb.org/CommentAPI/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>DocuSign Dev Blog</title><atom:link href="undefined/feed.xml" rel="self" type="application/rss+xml"></atom:link><link></link><description>Brought to you by the development teams at DocuSign</description><pubDate>Mon, 02 Jun 2014 17:00:00 -0700</pubDate><generator>Wintersmith - https://github.com/jnordberg/wintersmith</generator><language>en</language><item><title>Jeeves, an Open Source Webdriver</title><link>undefined/articles/jeeves-an-open-source-webdriver/</link><pubDate>Mon, 02 Jun 2014 17:00:00 -0700</pubDate><guid isPermaLink="true">undefined/articles/jeeves-an-open-source-webdriver/</guid><author></author><description>&lt;p&gt;Our &lt;a href=&quot;http://engineering.docusign.com/articles/the-new-docusign-experience-all-in-javascript/&quot;&gt;previous post&lt;/a&gt; covered
+a high-level overview of the tech stack behind the &lt;a href=&quot;https://www.docusign.com/new-experience&quot;&gt;New DocuSign Experience&lt;/a&gt;
+(or as it’s still called internally, &lt;em&gt;Martini&lt;/em&gt;). Today, we’re excited to announce the release of our open source webdriver,
+&lt;a href=&quot;https://github.com/DocuSignDev/Jeeves&quot;&gt;Jeeves&lt;/a&gt;, a tool that helps ease the pain of writing automated browser UI tests.
+This tool is the cornerstone of our test framework and drives nearly all of our UI automation for the New DocuSign Experience.
+This post explains the reasons why we built it, and how it differs from other currently available tools.&lt;/p&gt;
+&lt;h2 id=&quot;why-did-we-build-jeeves-&quot;&gt;Why did we build Jeeves?&lt;/h2&gt;
+&lt;p&gt;To fully understand why we built Jeeves, it will help to explain the problems we faced before it was built. With any
+large-scale enterprise software product, automated testing is an absolute must. This is especially true if the goal is to
+rapidly iterate based on feedback and release often. Initially our automated test suite used the official
+&lt;a href=&quot;https://www.npmjs.org/package/selenium-webdriver&quot;&gt;&lt;code&gt;selenium-webdriver&lt;/code&gt;&lt;/a&gt; module. We experienced flakiness with its promises implementation, and our thin abtraction layer over it was rife with explicit waits, inconsistent interfaces, and unexplained timeouts 
+which translated to an unreliable test suite. This led to extremely low productivity for our QA engineers while they spent time
+trying to discern if a failure was real or just the result of some unexpected timeout. Since there were only two QA engineers
+on the Martini team at that time, all the time we wasted chasing down intermittent test failures due to problems with the
+framework meant that we were struggling to keep up with our automation coverage goals.&lt;/p&gt;
+&lt;p&gt;Frustrated by the problems with the existing test framework architecture, I wanted to design something that would not only
+solve our problems with test reliability, but also reduce complexity and make it easier for non-QA engineers to write and debug
+tests. To improve our test reliability, we needed to start with a foundation that is maintained regularly and works across
+different browsers. The obvious choice to fill this need was &lt;a href=&quot;https://github.com/admc/wd&quot;&gt;&lt;code&gt;wd&lt;/code&gt;&lt;/a&gt;, which implements the
+&lt;a href=&quot;https://code.google.com/p/selenium/wiki/JsonWireProtocol&quot;&gt;Selenium JSON Wire Protocol&lt;/a&gt;
+while still supporting &lt;a href=&quot;http://phantomjs.org/&quot;&gt;PhantomJS&lt;/a&gt;.
+We also needed a solution that would work with our existing tests (all written in the Node.js callback style), and we wanted
+something that would simplify the introduction to our test framework for new team members.&lt;/p&gt;
+&lt;h2 id=&quot;how-is-jeeves-different-&quot;&gt;How is Jeeves different?&lt;/h2&gt;
+&lt;p&gt;With the amazing &lt;code&gt;wd&lt;/code&gt; module at the core of Jeeves, the logical question you might ask is, “Why not just &lt;code&gt;wd&lt;/code&gt; instead of
+building a wrapper?” While this is a valid concern, &lt;code&gt;wd&lt;/code&gt; alone did not strike at the heart of the secondary problem I was
+trying to solve: to make writing UI tests quick &amp;amp; easy. While &lt;code&gt;wd&lt;/code&gt; is extremely flexible in terms of the browser &amp;amp; element
+interactions it provides, it still lacks some nice-to-have features which can somewhat deter or hinder the average feature
+developer from effectively writing tests with it.
+&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Jeeves answers this by offering some helpful additions which include:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Detailed logging on all method calls, and optionally displayed logging from &lt;code&gt;wd&lt;/code&gt; itself.&lt;ul&gt;
+&lt;li&gt;Extra logging allows for quicker debugging from the console output, even while the tests are still running!&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Simple abstraction for writing a named series of steps&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Jeeves.namedSteps&lt;/code&gt; is a nifty wrapper around &lt;a href=&quot;https://github.com/caolan/async#seriestasks-callback&quot;&gt;&lt;code&gt;async.series&lt;/code&gt;&lt;/a&gt;
+with extra logging that can happen before/after each step in the series.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/DocuSignDev/Jeeves/blob/master/examples/saucelabs.coffee&quot;&gt;An example of this feature&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Hassle-free screenshots! &lt;code&gt;Jeeves.takeScreenshot&lt;/code&gt; handles saving the raw image buffer to a configurable directory.&lt;ul&gt;
+&lt;li&gt;Saving screenshots from image buffers is not hard, but it shouldn’t clutter your test code&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Jeeves also implements two methods for element drag &amp;amp; drop even though this feature is not directly supported
+by &lt;code&gt;wd&lt;/code&gt; or Selenium JSON Wire Protocol&lt;/li&gt;
+&lt;li&gt;Jeeves provides two ways for interacting with elements.&lt;ul&gt;
+&lt;li&gt;You can use the traditional method of finding the element first, and then calling a separate method to interact with it.&lt;ul&gt;
+&lt;li&gt;E.g.:&lt;pre&gt;&lt;code class=&quot;lang-coffeescript&quot;&gt;it &lt;span class=&quot;string&quot;&gt;'should click the div'&lt;/span&gt;, &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;params&quot;&gt;(done)&lt;/span&gt; -&amp;gt;&lt;/span&gt;
+  Jeeves.getElementByCss &lt;span class=&quot;string&quot;&gt;'div.clickable'&lt;/span&gt;, &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;params&quot;&gt;(err, elem)&lt;/span&gt; -&amp;gt;&lt;/span&gt;
+    Jeeves.clickElement elem, &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;params&quot;&gt;(err)&lt;/span&gt; -&amp;gt;&lt;/span&gt;
+      done err&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Or you can append one of the convenience suffixes to make the method do the element finding for you.&lt;ul&gt;
+&lt;li&gt;Such as:&lt;ul&gt;
+&lt;li&gt;ByClassName&lt;/li&gt;
+&lt;li&gt;ByCssSelector&lt;/li&gt;
+&lt;li&gt;ById&lt;/li&gt;
+&lt;li&gt;ByName&lt;/li&gt;
+&lt;li&gt;ByLinkText&lt;/li&gt;
+&lt;li&gt;ByPartialLinkText&lt;/li&gt;
+&lt;li&gt;ByTagName&lt;/li&gt;
+&lt;li&gt;ByXPath&lt;/li&gt;
+&lt;li&gt;ByCss&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;E.g.:&lt;pre&gt;&lt;code class=&quot;lang-coffeescript&quot;&gt;it &lt;span class=&quot;string&quot;&gt;'should click the div'&lt;/span&gt;, &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;params&quot;&gt;(done)&lt;/span&gt; -&amp;gt;&lt;/span&gt;
+  Jeeves.clickElementByCss &lt;span class=&quot;string&quot;&gt;'div.clickable'&lt;/span&gt;, &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;params&quot;&gt;(err)&lt;/span&gt; -&amp;gt;&lt;/span&gt;
+    done err&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;UI tests are not synchronous, so we need to wait for elements, URL changes, and the occasional attribute.&lt;ul&gt;
+&lt;li&gt;Jeeves extends &lt;code&gt;wd&lt;/code&gt;‘s &lt;code&gt;waitFor&lt;/code&gt; pattern to wait for more than just elements:&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Jeeves.waitForUrlToChange&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Jeeves.waitForVisibleElementBy...&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Jeeves.waitForElementToHideBy...&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Jeeves.waitForAttributeBy...&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Jeeves.waitForAnyTextBy...&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Jeeves.waitForSpecificTextBy...&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Jeeves.waitForAndGetTextBy...&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Jeeves.waitForAndClickElementBy...&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;These enhancements which Jeeves adds on top of the reliable &lt;code&gt;wd&lt;/code&gt; core have proven to be powerful tools for maintaining a
+large suite of automated browser UI tests. Check out our &lt;a href=&quot;https://github.com/DocuSignDev/Jeeves/tree/master/examples&quot;&gt;examples&lt;/a&gt;
+to see how you can get started.&lt;/p&gt;
+</description></item><item><title>The new DocuSign experience, all in Javascript</title><link>undefined/articles/the-new-docusign-experience-all-in-javascript/</link><pubDate>Sat, 29 Mar 2014 17:00:00 -0700</pubDate><guid isPermaLink="true">undefined/articles/the-new-docusign-experience-all-in-javascript/</guid><author></author><description>&lt;p&gt;&lt;a href=&quot;https://www.docusign.com/new-experience&quot;&gt;&lt;img src=&quot;/articles/the-new-docusign-experience-all-in-javascript/ndse_screenshot2.png&quot; alt=&quot;Screenshot of The New DocuSign Experience&quot;&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;We recently &lt;a href=&quot;https://www.docusign.com/blog/accelerating-the-digital-transformation-journey-with-the-docusign-spring-14-release?utm_source=HOOTSUITE&amp;amp;utm_medium=SOCIALPOSTS&amp;amp;utm_campaign=SEPTEMBER&quot;&gt;launched&lt;/a&gt; 
 &lt;strong&gt;&lt;a href=&quot;https://www.docusign.com/new-experience&quot;&gt;The New DocuSign Experience&lt;/a&gt;&lt;/strong&gt;,
 a reimagining of our primary web application used by 45 million users.&lt;/p&gt;
