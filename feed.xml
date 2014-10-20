@@ -1,4 +1,43 @@
-<?xml version="1.0" encoding="utf-8" ?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:wfw="http://wellformedweb.org/CommentAPI/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>DocuSign Dev Blog</title><atom:link href="undefined/feed.xml" rel="self" type="application/rss+xml"></atom:link><link></link><description>Brought to you by the development teams at DocuSign</description><pubDate>Mon, 02 Jun 2014 17:00:00 -0700</pubDate><generator>Wintersmith - https://github.com/jnordberg/wintersmith</generator><language>en</language><item><title>Jeeves, an Open Source Webdriver</title><link>undefined/articles/jeeves-an-open-source-webdriver/</link><pubDate>Mon, 02 Jun 2014 17:00:00 -0700</pubDate><guid isPermaLink="true">undefined/articles/jeeves-an-open-source-webdriver/</guid><author></author><description>&lt;p&gt;Our &lt;a href=&quot;http://engineering.docusign.com/articles/the-new-docusign-experience-all-in-javascript/&quot;&gt;previous post&lt;/a&gt; covered
+<?xml version="1.0" encoding="utf-8" ?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:wfw="http://wellformedweb.org/CommentAPI/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>DocuSign Dev Blog</title><atom:link href="undefined/feed.xml" rel="self" type="application/rss+xml"></atom:link><link></link><description>Brought to you by the development teams at DocuSign</description><pubDate>Thu, 16 Oct 2014 17:00:00 -0700</pubDate><generator>Wintersmith - https://github.com/jnordberg/wintersmith</generator><language>en</language><item><title>Americano, made with an improved Espresso machine.</title><link>undefined/articles/americano-made-with-an-improved-espresso-machine/</link><pubDate>Thu, 16 Oct 2014 17:00:00 -0700</pubDate><guid isPermaLink="true">undefined/articles/americano-made-with-an-improved-espresso-machine/</guid><author></author><description>&lt;p&gt;Today we are publishing &lt;a href=&quot;https://github.com/DocuSignDev/americano&quot;&gt;Americano&lt;/a&gt;, an open source Android library of helpers to build on top of &lt;a href=&quot;https://code.google.com/p/android-test-kit&quot;&gt;Espresso&lt;/a&gt;, an Android API by Google for writing reliable UI tests. Along with the release of Americano, we also want to cover the useful improvements we’ve made to &lt;a href=&quot;https://github.com/DocuSignDev/android-test-kit&quot;&gt;our own fork of Espresso&lt;/a&gt;. &lt;/p&gt;
+&lt;p&gt;The two are meant to be used together, but if need be, Americano can be used completely with the current version of Espresso released by Google.&lt;/p&gt;
+&lt;h2 id=&quot;espresso-faster-running-and-debugging&quot;&gt;Espresso: Faster Running and Debugging&lt;/h2&gt;
+&lt;h3 id=&quot;speed&quot;&gt;Speed&lt;/h3&gt;
+&lt;p&gt;When running functional UI tests, the biggest drain is almost always time. At first we felt an excessive drain with Espresso, especially if any test required a &lt;code&gt;waitFor(time, assert)&lt;/code&gt; assertion. We found that if the app moved between root windows at all during the test (e.g. started a new activity, or opened a dialog) the assertion would wait for the full time requested before finding the most present window and performing the assertion.&lt;/p&gt;
+&lt;p&gt;To fix this, Espresso now maintains multiple root windows and listens for them to be added rather than waiting to update the selected window at specific times. This allows us to follow all view hierarchy changes and assert as soon as the view we are looking for is present.&lt;/p&gt;
+&lt;h3 id=&quot;screenshots&quot;&gt;Screenshots&lt;/h3&gt;
+&lt;p&gt;Possibly the most useful of the improvements, Espresso will now capture screenshots leading up to a test failure and the final screenshot of where an assertion or attempted action failed. This makes debugging the view hierarchy that is printed to the console by Espresso quick and easier to understand. Espresso will dump only the failure screenshots into the &lt;a href=&quot;https://github.com/DocuSignDev/android-test-kit#screenshots&quot;&gt;test results directory.&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&quot;americano-describing-the-finer-details&quot;&gt;Americano: Describing the Finer Details&lt;/h2&gt;
+&lt;p&gt;With Americano, our goal was to provide a few more useful methods for describing a specific view among a giant group of similar views. For that, we’ve added a few different types of &lt;a href=&quot;https://code.google.com/p/android-test-kit/source/browse/espresso/lib/src/main/java/com/google/android/apps/common/testing/ui/espresso/matcher/ViewMatchers.java&quot;&gt;View “Matchers”&lt;/a&gt; for Espresso.&lt;/p&gt;
+&lt;h3 id=&quot;dimensional-matchers&quot;&gt;Dimensional Matchers&lt;/h3&gt;
+&lt;p&gt;These are meant to help locate a view that should be next, overlapping or under another view. For this, we’ve added the &lt;code&gt;DimensionalMatchers&lt;/code&gt; class. The dimensional matchers will find you any view that has the relation requested to your view.&lt;/p&gt;
+&lt;p&gt;Below, the matcher &lt;code&gt;entirelyAbove&lt;/code&gt; is returning all views that are above and not overlapping “Forgot Password?”, and then asserting that “Log In” is one of them.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;lang-java&quot;&gt;onView(withText(&lt;span class=&quot;string&quot;&gt;&quot;Log In&quot;&lt;/span&gt;))
+    .check(matches(is(entirelyAbove(withText(&lt;span class=&quot;string&quot;&gt;&quot;Forgot Password?&quot;&lt;/span&gt;)))));&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Full list of dimensional helpers:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;above&lt;/code&gt;, &lt;code&gt;entirelyAbove&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;below&lt;/code&gt;, &lt;code&gt;entirelyBelow&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;leftOf&lt;/code&gt;, &lt;code&gt;entirelyLeftOf&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;rightOf&lt;/code&gt;, &lt;code&gt;entirelyRightOf&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&quot;ranking-matchers&quot;&gt;Ranking Matchers&lt;/h3&gt;
+&lt;p&gt;Along with the relational helpers, there is also a class of &lt;code&gt;RankingMatchers&lt;/code&gt;. The ranking matchers will find the leftmost, lowest or even widest view by the description given.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;lang-java&quot;&gt;onView(lowest(withText(&lt;span class=&quot;string&quot;&gt;&quot;Log In&quot;&lt;/span&gt;)))
+    .perform(click());&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Full list of ranking matchers:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;mostleft&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;mostright&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;lowest&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;highest&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;widest&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;skinniest&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;tallest&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;shortest&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;These improvements to Espresso and additions of Americano have helped immensely while creating a robust and reliable test suite for Android. Have a look at &lt;a href=&quot;https://github.com/DocuSignDev/americano&quot;&gt;Americano&lt;/a&gt; and our &lt;a href=&quot;https://github.com/DocuSignDev/android-test-kit&quot;&gt;Espresso fork&lt;/a&gt; to get going.&lt;/p&gt;
+&lt;p&gt;Be sure to send any virtual high fives to the developers that made this happen: &lt;a href=&quot;https://github.com/tophyr&quot;&gt;@tophyr&lt;/a&gt;, &lt;a href=&quot;https://github.com/abeatte&quot;&gt;@abeatte&lt;/a&gt; and &lt;a href=&quot;https://github.com/stephenparish&quot;&gt;@stephenparish&lt;/a&gt;.&lt;/p&gt;
+</description></item><item><title>Jeeves, an Open Source Webdriver</title><link>undefined/articles/jeeves-an-open-source-webdriver/</link><pubDate>Mon, 02 Jun 2014 17:00:00 -0700</pubDate><guid isPermaLink="true">undefined/articles/jeeves-an-open-source-webdriver/</guid><author></author><description>&lt;p&gt;Our &lt;a href=&quot;http://engineering.docusign.com/articles/the-new-docusign-experience-all-in-javascript/&quot;&gt;previous post&lt;/a&gt; covered
 a high-level overview of the tech stack behind the &lt;a href=&quot;https://www.docusign.com/new-experience&quot;&gt;New DocuSign Experience&lt;/a&gt;
 (or as it’s still called internally, &lt;em&gt;Martini&lt;/em&gt;). Today, we’re excited to announce the release of our open source webdriver,
 &lt;a href=&quot;https://github.com/DocuSignDev/Jeeves&quot;&gt;Jeeves&lt;/a&gt;, a tool that helps ease the pain of writing automated browser UI tests.
