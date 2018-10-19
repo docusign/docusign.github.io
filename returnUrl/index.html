@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+	<!--
+		Parse event value from URLs like this:
+		  https://docusigndev.github.io/returnUrl/?event=session_timeout&e=16e6c226...
+		  https://docusigndev.github.io/returnUrl/?event=signing_complete
+	  -->
+	<script>
+	  function displayEvent(url)
+	  {
+ 	    var queryPart = url.split('?');
+	    if (queryPart.length > 1)
+	    {
+	      var event = queryPart[1].split('&')[0].split('=')[1].replace('_',' ');
+	      document.getElementsByTagName('h1')[0].innerText = event;
+	    }
+	  }
+	</script>
+	<style type="text/css">
+	  .text-center {
+	    text-align: center;
+	  }
+	  body {
+	    margin: 0px;
+	  }
+	  h1, h4 {
+	    font-family: 'Maven Pro',sans-serif;
+  	    font-weight: 700;
+	    text-transform: capitalize;
+	  }
+	  #psHeader {
+	    height: 300px;
+	    background: #3867b6;
+	    color: white;
+	  }
+	  #psHeader img {
+	    width: 110px;
+  	    margin: 20px;
+	    vertical-align: middle;
+	    border: 0px;
+	  }
+	</style>
+  </head>
+  <body>
+	<div id="psHeader">
+	  <img src="https://postsign.docusign.com/media/img/logo.docusign.png">
+	  <h1 class="text-center">you're done</h1>
+	  <h4 class="text-center">Thanks for using DocuSign.</h4>
+	</div>
+	<script>displayEvent(location.href)</script>
+  </body>
+</html>
+
