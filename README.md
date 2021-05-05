@@ -9,3 +9,5 @@ The hosted page parses event URLs like:
 - https://docusign.github.io/returnUrl/?event=signing_complete
 
 And displays the status (Signing Complete, Session Timeout etc.) in the page body.
+
+![screen shot](https://github.com/docusign/docusign.github.io/blob/master/doc/docusign.github.io_screenshot.png?raw=true)
