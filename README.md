@@ -1,5 +1,6 @@
 # docusign.github.io
-DocuSign Signing Complete page
+
+## DocuSign Signing Complete page
 
 This repo exists to provide as Github Pages returnUrl page for DocuSign API remote signing calls.
 
@@ -11,3 +12,10 @@ The hosted page parses event URLs like:
 And displays the status (Signing Complete, Session Timeout etc.) in the page body.
 
 ![screen shot](https://github.com/docusign/docusign.github.io/blob/master/doc/docusign.github.io_screenshot.png?raw=true)
+
+## Individual Consent Thank You page
+
+Page https://docusign.github.io/thankyou shows a thank you page for
+people who have granted consent to an application.
+
+The page removes any query parameters from the URL resulting from the OAuth Authorization Grant flow.

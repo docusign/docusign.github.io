@@ -1,0 +1,49 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Thank you for granting consent</title>
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+  <link rel="manifest" href="site.webmanifest"> 
+  <style type="text/css">
+    body {
+      margin: 0px;
+      margin-top: 2.5em;
+      background-color: #1c1506;
+    }
+    h1, h2 {
+      font-family: 'Maven Pro',sans-serif;
+      font-weight: 700;
+      color: wheat;
+      text-align: center;
+    }
+    #main img {
+      display: block;
+      border: 0px;
+      margin-left: auto;
+      margin-right: auto;
+      width: 50%;
+    }
+  </style>
+
+  <script>
+    // Remove any query parameters
+    if (window.location.search &&  window.location.search !== "") {
+        window.history.replaceState(null, '', window.location.origin + window.location.pathname);
+    }
+  </script>
+</head>
+
+<body>
+    <div id="main">
+        <h1>Thank you for granting consent to the application</h1>
+        <img src="thank_you_506x539.png"  alt="Thank you!" width="506" height="539"/>
+        <h2>Please close this browser tab</h2>
+    </div>
+</body>
+</html>
