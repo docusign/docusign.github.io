@@ -19,3 +19,7 @@ Page https://docusign.github.io/thankyou shows a thank you page for
 people who have granted consent to an application.
 
 The page removes any query parameters from the URL resulting from the OAuth Authorization Grant flow.
+
+## CodePen example assets
+The /examples directory includes documents and templates used by the CodePen examples. 
+See [codepen.io/docusign](https://codepen.io/docusign)
