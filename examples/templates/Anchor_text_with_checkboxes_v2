@@ -97,13 +97,6 @@
 				"agentCanEditEmail": "false",
 				"agentCanEditName": "false",
 				"defaultRecipient": "false",
-				"recipientSignatureProviders": [
-					{
-						"sealDocumentsWithTabsOnly": "false",
-						"signatureProviderName": "universalsignaturepen_imageonly",
-						"signatureProviderOptions": {}
-					}
-				],
 				"requireUploadSignature": "false",
 				"signInEachLocation": "false",
 				"tabs": {
