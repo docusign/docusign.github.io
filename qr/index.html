@@ -1,19 +1,19 @@
-<!DOCTYPE html>
 <html lang="en">
   <head>
 	<!--
 		Parse event value from URLs like this:
-		  https://docusign.github.io/returnUrl/?event=session_timeout&e=16e6c226...
-		  https://docusign.github.io/returnUrl/?event=signing_complete
+		  https://docusign.github.io/returnUrl/?Envelope_ID=123
 	  -->
 	<script>
 	  function displayEvent(url)
 	  {
- 	    var queryPart = url.split('?');
+ 	    let queryPart = url.split('?');
 	    if (queryPart.length > 1)
 	    {
-	      var event = queryPart[1].split('&')[0].split('=')[1].replace('_',' ');
-	      document.getElementsByTagName('h1')[0].innerText = event;
+	      let qp1 = queryPart[1].split('&')[0];
+	      let name = qp1.split('=')[0].replace('_',' ');
+	      let val = qp1.split('=')[1].replace('_',' ');
+	      document.getElementsByTagName('h1')[0].innerText = `${name} = ${val}`;
 	    }
 	  }
 	</script>
@@ -42,9 +42,8 @@
   </head>
   <body>
 	<div id="psHeader">
-	  <img src="https://postsign.docusign.com/media/img/logo.docusign.png">
 	  <h1>you're done</h1>
-	  <h4>Thanks for using DocuSign.</h4>
+	  <h4>The QR code enables easy lookup and verification of a signed document.</h4>
 	</div>
 	<script>displayEvent(location.href)</script>
   </body>
