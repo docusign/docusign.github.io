@@ -1,14 +1,16 @@
 // Copyright © 2022 DocuSign, Inc.
 // License: MIT Open Source https://opensource.org/licenses/MIT
 // Set basic variables
-const oAuthServiceProvider = "https://account-d.docusign.com"; // demo
+//const oAuthServiceProvider = "https://account-d.docusign.com"; // demo
 //const oAuthServiceProvider = "https://account-s.docusign.com"; // stage
+const oAuthServiceProvider = "https://account.docusign.com"; // prod
 const implicitGrantPath = "/oauth/auth";
 const userInfoPath = "/oauth/userinfo";
 // Client IDs are NOT secrets. See
 // https://www.rfc-editor.org/rfc/rfc6749.html#section-2.2
-const oAuthClientID = "f399b5fa-1807-4cc2-8498-2fba58d14759"; // demo
+//const oAuthClientID = "f399b5fa-1807-4cc2-8498-2fba58d14759"; // demo
 //const oAuthClientID = "75db0d4b-a09f-47c0-af54-8d533dd59ea5"; // stage
+const oAuthClientID = "8dd0204d-d969-4097-b121-f4bc77b81a44"; // prod
 const oAuthScopes = "signature cors";
 const eSignBase = "/restapi/v2.1";
 const oAuthReturnUrl =
