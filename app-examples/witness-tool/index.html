@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Application Example: Template Report</title>
+    <meta name="author" content="DocuSign Examples">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.0.1/mdb.min.css">
+    <link rel="stylesheet" href="css.css">
+</head>
+<body>
+<container class="c">
+    <!-- top element -->
+    <container class="ctop">
+      <container class="fixh">
+        <container class="col2parent">
+          <h3 class="child1">
+            Envelope List and Update</h3>
+          <div id="login" class="child2">
+            <a id="btnOauth" class="btn btn-primary" type="button" role="button">
+              Login with DocuSign</a>
+            <p>
+              Use your DocuSign Developer Account.<br />Don't have one?
+              <a href="https://go.docusign.com/o/sandbox/?utm_campaign=GBL_XX_DEV_NEW_2208_ExternalProgrammingTools&utm_medium=display&utm_source=jsfiddle" target="_blank">Free signup!</a>
+            </p>
+          </div>
+  
+        </container>
+        <div id="blurb">
+          <p>
+            This app shows the <i>Sent</i> Envelopes. You can run a command against the envelope. 
+        </p>
+        <p>Current command: Clean orphan witness recipients</p>
+        </div>
+        <section id="spinner" class="hide">
+          <div class="spinner">
+            <div class="rect1"></div>
+            <div class="rect2"></div>
+            <div class="rect3"></div>
+            <div class="rect4"></div>
+            <div class="rect5"></div>
+          </div>
+        </section>
+        <div id="doit" class="hide">
+          <a id="btnDoit" class="btn btn-primary" type="button" role="button">
+            Sent Envelopes Status</a>
+          &nbsp;&nbsp;&nbsp;&nbsp;
+          <label for="statuses">Envelope status options: </label>
+            <select id="statuses" style="width:15em;">
+                <option value="any" selected>All</option>
+                <option value="sent">Only “Waiting for others”</option>
+            </select>
+        </div>
+        <section id="cardsSec" class="hide mt-4">
+          <div id="cards" class="cards">
+          </div>
+        </section>
+  
+      </container>
+    </container>
+  
+    <!-- The resizer -->
+    <div class="resizer" id="dragMe"></div>
+    <!-- Right element -->
+    <container class="cbottom">
+      <container class="fixh">
+        <h3>
+          Log
+        </h3>
+        <p id="log">
+          You can adjust the height of the sections.
+        </p>
+        <div id="msg">
+        </div>
+      </container>
+    </container>
+  </container>
+  
+  <!-- envelope modal -->
+  <div class="modal fade" id="envelopeModal" tabindex="-1" aria-labelledby="Envelope Details" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h6 class="modal-title"></h6>
+          <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- json modal -->
+  <div class="modal fade" id="jsonModal" tabindex="-1" aria-labelledby="Envelope JSON" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h6 class="modal-title"></h6>
+          <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.0.1/mdb.min.js"></script>
+  <script src="script.js" type="module"></script>
+  </body>
+  </html>
+  

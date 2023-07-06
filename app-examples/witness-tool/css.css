@@ -1,0 +1,162 @@
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+container.c {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  border: 1px solid #cbd5e0;
+  height: 100%;
+  width: 100%;
+}
+
+container.ctop {
+  display: flex;
+  height: 37rem;
+  padding: 1em;
+  overflow-y: scroll;
+}
+
+container.cbottom {
+  display: flex;
+  flex: 1;
+  padding: 1em;
+  overflow-y: scroll;
+}
+
+container.fixh {
+  width: 100%;
+}
+
+container.col2parent {
+  display: flex;
+  flex-direction: row;
+}
+
+.child1 {
+  width: 50%;
+}
+
+.child2 {
+  width: 50%;
+}
+
+/* CARDS
+ * Responsive layout from 
+ * https://getflywheel.com/layout/flexbox-create-modern-card-design-layout/
+ */
+.cards {
+    display: flex;
+    flex-wrap: wrap;
+ }
+ 
+.card {
+    flex: 1 0 500px;
+    box-sizing: border-box;
+    margin: 1rem .25em;
+}
+@media screen and (min-width: 40em) {
+    .card {
+       max-width: calc(50% -  1em);
+    }
+}
+ 
+@media screen and (min-width: 60em) {
+    .card {
+        max-width: calc(25% - 1em);
+    }
+}
+
+.card p, .envHeader p, .recipientDetails p {margin-bottom: 0;}
+
+/* Resizer */
+div.resizer {
+  width: 100%;
+  cursor: row-resize;
+  height: 3px;
+  background-color: #cbd5e0;
+}
+
+pre {
+  text-align: left;
+  background-color: aliceblue;
+  font-size: smaller;
+  margin: 15px;
+}
+
+.panel {
+  margin: 50px 75px;
+}
+
+.hide {
+  display: none;
+}
+
+/* From http://tobiasahlin.com/spinkit/ */
+.spinner {
+  margin: auto;
+  width: 150px;
+  height: 140px;
+  text-align: center;
+  font-size: 10px;
+}
+
+.spinner>div {
+  background-color: blueviolet;
+  height: 100%;
+  width: 6px;
+  display: inline-block;
+  -webkit-animation: sk-stretchdelay 1.2s infinite ease-in-out;
+  animation: sk-stretchdelay 1.2s infinite ease-in-out;
+}
+
+.spinner .rect2 {
+  -webkit-animation-delay: -1.1s;
+  animation-delay: -1.1s;
+}
+
+.spinner .rect3 {
+  -webkit-animation-delay: -1.0s;
+  animation-delay: -1.0s;
+}
+
+.spinner .rect4 {
+  -webkit-animation-delay: -0.9s;
+  animation-delay: -0.9s;
+}
+
+.spinner .rect5 {
+  -webkit-animation-delay: -0.8s;
+  animation-delay: -0.8s;
+}
+
+@-webkit-keyframes sk-stretchdelay {
+
+  0%,
+  40%,
+  100% {
+    -webkit-transform: scaleY(0.4)
+  }
+
+  20% {
+    -webkit-transform: scaleY(1.0)
+  }
+}
+
+@keyframes sk-stretchdelay {
+
+  0%,
+  40%,
+  100% {
+    transform: scaleY(0.4);
+    -webkit-transform: scaleY(0.4);
+  }
+
+  20% {
+    transform: scaleY(1.0);
+    -webkit-transform: scaleY(1.0);
+  }
+}
