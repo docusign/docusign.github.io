@@ -186,7 +186,7 @@ $(function () {
      * Create cards from the array
      */
     function makeCards(results) {
-        envelopes = results.envelopes;
+        envelopes = results.envelopes || [];
         const cardsEl = $("#cards");
         $(".card-btn").off();
         cardsEl.empty();
