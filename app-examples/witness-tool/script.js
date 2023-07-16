@@ -71,7 +71,8 @@ $(function () {
             order_by: qp_order_by,
             order: qp_order,
             folder_types: qp_folder_types,
-            include_purge_information: qp_include_purge_information
+            include_purge_information: qp_include_purge_information,
+            status: $("#statuses").val()
         });
         $("#doit").removeClass("hide");
         workingUpdate(false);
@@ -95,7 +96,8 @@ $(function () {
         order_by,
         order,
         folder_types,
-        include_purge_information
+        include_purge_information,
+        status
     }) {
         let qp = {
             start_position: start_position,
@@ -107,7 +109,8 @@ $(function () {
             order_by: order_by,
             order: order,
             folder_types: folder_types,
-            include_purge_information: include_purge_information
+            include_purge_information: include_purge_information,
+            status: status
         };
 
         // Make the API call
