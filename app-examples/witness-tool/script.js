@@ -127,7 +127,7 @@ $(function () {
             return false;
         }
         msg(
-            `ListStatusChanges API call succeeded: ${results.envelopes.length} envelopes.`
+            `ListStatusChanges API call succeeded: ${results.totalSetSize} envelopes.`
         );
         nextUri = results.nextUri;
         if (nextUri) {
