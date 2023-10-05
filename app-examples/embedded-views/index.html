@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Application Example: Template Report</title>
+    <meta name="author" content="DocuSign Examples">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.0.1/mdb.min.css">
+    <link rel="stylesheet" href="css.css">
+</head>
+<body>
+<container class="c">
+    <!-- top element -->
+    <container class="ctop">
+        <container class="fixh">
+            <container class="col2parent">
+                <h3 class="child1">
+                    Embedded Views</h3>
+                <div class="child2">
+                    <div id="login">
+                        <a id="btnOauth" class="btn btn-primary" type="button" role="button">
+                            Login with DocuSign</a>
+                        <p>
+                            Use your DocuSign <b>Developer Account.</b><br/>Don't have one?
+                            <a href="https://go.docusign.com/o/sandbox/?utm_campaign=GBL_XX_DEV_NEW_2208_ExternalProgrammingTools&utm_medium=display&utm_source=jsfiddle" target="_blank">Free signup!</a>
+                        </p>
+                    </div>
+
+                    <div id="loggedin" class="hide">
+                        <p id="lname" class="lname mb-0"></p>
+                        <p id="lemail" class="mb-0"></p>
+                        <p id="laccount" class="mb-0"></p>
+                        <p id="laccountname" class="mb-1"></p>
+                        <p id="saccount" class="hide">
+                            <a data-mdb-toggle="modal"
+                               data-mdb-target="#switchAccountModal">
+                                Switch Account</a>
+                        </p>
+                    </div>
+                </div>
+            </container>
+            <noscript>
+                <h1>Problem! This page <i>requires</i> JavaScript support. 
+                    Please update your browser settings.
+                </h1>
+            </noscript>
+            <p>
+                This example demonstrates embedded views.</p>
+
+            <section id="spinner" class="hide">
+                <div class="spinner">
+                    <div class="rect1"></div>
+                    <div class="rect2"></div>
+                    <div class="rect3"></div>
+                    <div class="rect4"></div>
+                    <div class="rect5"></div>
+                </div>
+            </section>
+            <div id="doit" class="hide mb-3">
+                <a id="btnDoit" class="btn btn-primary" type="button" role="button">
+                    Embedded Envelope Send</a>
+                <a id="btnDoit2" class="btn btn-primary mlb" type="button" role="button">
+                    Embedded Template Edit</a>                
+            </div>
+
+            <p><small> A template is used to create the envelope.
+            </small></p>
+        </container>
+    </container>
+
+    <!-- The resizer -->
+    <div class="resizer" id="dragMe"></div>
+    <!-- Right element -->
+    <container class="cbottom">
+        <container class="fixh">
+            <h3>
+                Log
+            </h3>
+            <p id="log">
+                You can adjust the height of the sections.
+            </p>
+            <div id="msg">
+            </div>
+        </container>
+    </container>
+</container>
+
+<!-- Switch account modal -->
+<div class="modal fade" id="switchAccountModal" tabindex="-1" aria-labelledby="Switch Account" aria-hidden="true">
+  <div class="modal-dialog modal-l modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Select an Account</h4>
+        <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body accountModal-body">
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.0.1/mdb.min.js"></script>
+<script src="script.js" type="module"></script>
+</body>
+</html>
