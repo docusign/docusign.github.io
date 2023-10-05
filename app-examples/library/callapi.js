@@ -1,9 +1,10 @@
 // Copyright © 2022 DocuSign, Inc.
 // License: MIT Open Source https://opensource.org/licenses/MIT
 // Set basic variables
-//const oAuthServiceProvider = "https://account-d.docusign.com"; // demo
-//const oAuthServiceProvider = "https://account-s.docusign.com"; // stage
-const oAuthServiceProvider = "https://account.docusign.com"; // prod
+const oAuthServiceProviderProd = "https://account.docusign.com"; // prod
+const oAuthServiceProviderDemo = "https://account-d.docusign.com"; 
+const oAuthServiceProviderStage = "https://account-s.docusign.com"; 
+const oAuthServiceProvider = oAuthServiceProviderProd; // prod
 const implicitGrantPath = "/oauth/auth";
 const userInfoPath = "/oauth/userinfo";
 // Client IDs are NOT secrets. See
@@ -45,9 +46,16 @@ class ImplicitGrant {
 
         // set ClientId
         if (args.clientId) {
-            if (args.clientId === "prod") {this.oAuthClientID = oAuthClientIDprod}
-            else if (args.clientId === "demo") {this.oAuthClientID = oAuthClientIDdemo}
-            else if (args.clientId === "stage") {this.oAuthClientID = oAuthClientIDstage}
+            if (args.clientId === "prod") {
+                this.oAuthServiceProvider = oAuthServiceProviderProd;
+                this.oAuthClientID = oAuthClientIDprod
+            } else if (args.clientId === "demo") {
+                this.oAuthServiceProvider = oAuthServiceProviderDemo;
+                this.oAuthClientID = oAuthClientIDdemo
+            } else if (args.clientId === "stage") {
+                this.oAuthServiceProvider = oAuthServiceProviderStage;
+                this.oAuthClientID = oAuthClientIDstage
+            }
         }
 
         // public variables
