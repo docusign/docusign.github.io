@@ -22,6 +22,7 @@ import {
 import { CheckTemplates } from "https://docusign.github.io/app-examples/library/checkTemplates.js";
 
 $(function () {
+    const clientId = "demo";
     // Viewing settings 
     const dsReturnUrl = "https://docusign.github.io/jsfiddleDsResponse.html";
     const qpSender = {     //}, foo = {
@@ -560,7 +561,8 @@ $(function () {
     if (usingHttps()) {
         adjustRows();
         data.implicitGrant = new ImplicitGrant({
-            workingUpdateF: workingUpdate
+            workingUpdateF: workingUpdate,
+            clientId: clientId
         });
 
         window.addEventListener("message", messageListener);
