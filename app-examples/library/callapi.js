@@ -4,7 +4,7 @@
 const oAuthServiceProviderProd = "https://account.docusign.com"; // prod
 const oAuthServiceProviderDemo = "https://account-d.docusign.com"; 
 const oAuthServiceProviderStage = "https://account-s.docusign.com"; 
-const oAuthServiceProvider = oAuthServiceProviderProd; // prod
+let oAuthServiceProvider = oAuthServiceProviderProd; // prod
 const implicitGrantPath = "/oauth/auth";
 const userInfoPath = "/oauth/userinfo";
 // Client IDs are NOT secrets. See
@@ -37,26 +37,26 @@ const logLevel = 0; // 0 is terse; 9 is verbose
  */
 class ImplicitGrant {
     constructor(args) {
+        // set ClientId
+        if (args.clientId) {
+            if (args.clientId === "prod") {
+                oAuthServiceProvider = oAuthServiceProviderProd;
+                oAuthClientID = oAuthClientIDprod
+            } else if (args.clientId === "demo") {
+                oAuthServiceProvider = oAuthServiceProviderDemo;
+                oAuthClientID = oAuthClientIDdemo
+            } else if (args.clientId === "stage") {
+                oAuthServiceProvider = oAuthServiceProviderStage;
+                oAuthClientID = oAuthClientIDstage
+            }
+        }
+
         this.oAuthServiceProvider = oAuthServiceProvider;
         this.implicitGrantPath = implicitGrantPath;
         this.oAuthClientID = oAuthClientID;
         this.oAuthScopes = oAuthScopes;
         this.oAuthReturnUrl = oAuthReturnUrl;
         this.workingUpdateF = args.workingUpdateF || null;
-
-        // set ClientId
-        if (args.clientId) {
-            if (args.clientId === "prod") {
-                this.oAuthServiceProvider = oAuthServiceProviderProd;
-                this.oAuthClientID = oAuthClientIDprod
-            } else if (args.clientId === "demo") {
-                this.oAuthServiceProvider = oAuthServiceProviderDemo;
-                this.oAuthClientID = oAuthClientIDdemo
-            } else if (args.clientId === "stage") {
-                this.oAuthServiceProvider = oAuthServiceProviderStage;
-                this.oAuthClientID = oAuthClientIDstage
-            }
-        }
 
         // public variables
         this.working = false;
