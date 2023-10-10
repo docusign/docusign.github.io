@@ -172,7 +172,7 @@ $(function () {
      * Update the form from this page's QP
      */
     function setQp() {
-        if (!window.location.) {return}
+        if (!window.location.hash) {return}
         const hash = window.location.hash.substring(1);
         let query = {};
         const pairs = hash.split('&');
