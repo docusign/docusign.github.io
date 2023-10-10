@@ -24,26 +24,45 @@ import { CheckTemplates } from "https://docusign.github.io/app-examples/library/
 $(function () {
     const clientId = "demo";
     // Viewing settings 
-    const dsReturnUrl = "https://docusign.github.io/jsfiddleDsResponse.html";
-    const qpSender = {     //}, foo = {
+    const dsReturnUrlDefault = "https://docusign.github.io/jsfiddleDsResponse.html";
+    let dsReturnUrl = dsReturnUrlDefault;
+    let qpSender = { // defaults
           sendButtonAction: "send" // "redirect"
         , backButtonAction: "previousPage" // "redirect"
         , showBackButton: "true" // "false"
-        , showEditRecipients: "false" // "true"
-        , showEditDocuments: "true" // "true"
-        , showEditDocumentVisibility: "true"
-        , showEditPages: "true"
-        , showMatchingTemplatesPrompt: "true" 
-        , showHeaderActions: "true"
-        , showDiscardAction: "true"
+        , showEditRecipients: "true" // "false"
+        , showEditDocuments: "true" // "false"
+        , showEditDocumentVisibility: "true" // "false"
+        , showEditPages: "true" // "false"
+        , showMatchingTemplatesPrompt: "true" // "false" 
+        , showHeaderActions: "true" // "false"
+        , showDiscardAction: "true" // "false"
         , send: "1" // 0 - start in prepare, 1 - start in tagger
-        , showTabPalette: "true"
+        , showTabPalette: "true" // "false"
         , tabPaletteType: "custom" //  standard, custom, merge, notary
     }            // seals, smartcontracts, annotations, smartSections
+    let comment = ""; // The user's comment about this config
     
+    const qpSenderOptions = {
+        sendButtonAction: ["send", "redirect"]
+      , backButtonAction: ["previousPage", "redirect"]
+      , showBackButton: ["true", "false"]
+      , showEditRecipients: ["true", "false"]
+      , showEditDocuments: ["true", "false"]
+      , showEditDocumentVisibility: ["true", "false"]
+      , showEditPages: ["true", "false"]
+      , showMatchingTemplatesPrompt: ["true", "false"] 
+      , showHeaderActions: ["true", "false"]
+      , showDiscardAction: ["true", "false"]
+      , send: ["0", "1"] // 0 - start in prepare, 1 - start in tagger
+      , showTabPalette: ["true", "false"]
+      , tabPaletteType: ["standard", "custom", "merge", "notary",
+            "seals", "smartcontracts", "annotations", "smartSections"]
+  }
+
     // Set basic variables
     const logLevel = 0; // 0 is terse; 9 is verbose
-    let senderViewWindow = null;
+    let embeddedViewWindow = null;
     let accountName, accountId, accountExternalId, 
         accountBaseUrl, accountIsDefault, corsError; // current account info
 
@@ -71,6 +90,7 @@ $(function () {
             return;
         }
         workingUpdate(true);
+        updateQp();
         const signer = {
             name: data.userInfo.name,
             email: data.userInfo.email,
@@ -100,6 +120,7 @@ $(function () {
             return;
         }
         workingUpdate(true);
+        updateQp();
         await embeddedTemplateEdit({
             templateId: templates[0].templateId,
         });
@@ -107,6 +128,20 @@ $(function () {
         workingUpdate(false);
     };
     doit2 = doit2.bind(this);
+
+    /**
+     * 
+     * Update the QP obj from the form 
+     */
+    function updateQp() {
+
+
+    }
+
+    /**
+     * Update the form from this page's QP
+     */
+    function setQp() {}
 
     /*
      *  Create the envelope from a template
@@ -213,13 +248,13 @@ $(function () {
         const resultsUrl = results.url.replace(/&send=[01]/,''); // remove "&send=1"
         const senderUrl = `${resultsUrl}&${qp.toString()}`;
         msg(`Displaying sender view: ${senderUrl}`); 
-        senderViewWindow = window.open(senderUrl, "_blank");
-        if(!senderViewWindow || senderViewWindow.closed || 
-           typeof senderViewWindow.closed=='undefined') {
+        embeddedViewWindow = window.open(senderUrl, "_blank");
+        if(!embeddedViewWindow || embeddedViewWindow.closed || 
+           typeof embeddedViewWindow.closed=='undefined') {
             // popup blocked
             alert ("Please enable the popup window");
         }
-        senderViewWindow.focus();
+        embeddedViewWindow.focus();
         return true;
     }
     
@@ -255,13 +290,13 @@ $(function () {
         const resultsUrl = results.url.replace(/&send=[01]/,''); // remove "&send=1"
         const senderUrl = `${resultsUrl}&${qp.toString()}`;
         msg(`Displaying template edit view: ${senderUrl}`); 
-        senderViewWindow = window.open(senderUrl, "_blank");
-        if(!senderViewWindow || senderViewWindow.closed || 
-           typeof senderViewWindow.closed=='undefined') {
+        embeddedViewWindow = window.open(senderUrl, "_blank");
+        if(!embeddedViewWindow || embeddedViewWindow.closed || 
+           typeof embeddedViewWindow.closed=='undefined') {
             // popup blocked
             alert ("Please enable the popup window");
         }
-        senderViewWindow.focus();
+        embeddedViewWindow.focus();
         return true;
     }
 
@@ -283,7 +318,7 @@ $(function () {
         if (data.source !== "dsResponse") {
             return; // Sanity check
         }
-        senderViewWindow.close(); // close the browser tab
+        embeddedViewWindow.close(); // close the browser tab
         const href = data.href; // "http://localhost:3000/?event=signing_complete"
         const sections = href.split("?");
         const hasEvents = sections.length === 2;
@@ -380,6 +415,7 @@ $(function () {
                 htmlMsg(errHtml);
             }
         }
+        setQp()
         return ok
     }
 
