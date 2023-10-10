@@ -138,7 +138,7 @@ $(function () {
         for (const property in qpSender) {
             url += `${property}=${encodeURIComponent(qpSender[property]).replace(/\%20/g, '+')}&`;
         }
-        url += `dsReturnUrl=` + dsReturnUrl === dsReturnUrlDefault ? "true&" : "false&";
+        url += `dsReturnUrl=${dsReturnUrl === dsReturnUrlDefault ? "true&" : "false&"}`;
         url += `comment=${encodeURIComponent(comment).replace(/\%20/g, '+')}`;
         await navigator.clipboard.writeText(url);
         Toastify({ // https://github.com/apvarun/toastify-js/blob/master/README.md
