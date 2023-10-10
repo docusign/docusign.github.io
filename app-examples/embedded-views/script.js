@@ -26,6 +26,7 @@ $(function () {
     // Viewing settings 
     const dsReturnUrlDefault = "https://docusign.github.io/jsfiddleDsResponse.html";
     let dsReturnUrl = dsReturnUrlDefault;
+    let comment = ""; // The user's comment about this config
     let qpSender = { // defaults
           sendButtonAction: "send" // "redirect"
         , backButtonAction: "previousPage" // "redirect"
@@ -41,7 +42,6 @@ $(function () {
         , showTabPalette: "true" // "false"
         , tabPaletteType: "custom" //  standard, custom, merge, notary
     }            // seals, smartcontracts, annotations, smartSections
-    let comment = ""; // The user's comment about this config
     
     const qpSenderOptions = {
         sendButtonAction: ["send", "redirect"]
@@ -129,19 +129,71 @@ $(function () {
     };
     doit2 = doit2.bind(this);
 
+    /*
+     * The doit3 function copies the config to the clipboard as a URL.
+     */
+    let doit3 = async function doit3f(event) {
+        updateQp();
+        let url = window.location.origin + window.location.pathname + "#";
+        for (const property in qpSender) {
+            url += `${property}=${encodeURIComponent(qpSender[property]).replace(/\%20/g, '+')}&`;
+        }
+        url += `dsReturnUrl=${encodeURIComponent(dsReturnUrl).replace(/\%20/g, '+')}&`;
+        url += `comment=${encodeURIComponent(comment).replace(/\%20/g, '+')}`;
+        await navigator.clipboard.writeText(url);
+        Toastify({ // https://github.com/apvarun/toastify-js/blob/master/README.md
+            text: "Copied to the Clipboard!",
+            duration: 5000,
+            close: true,
+            gravity: "top", // `top` or `bottom`
+            position: "center", // `left`, `center` or `right`
+            stopOnFocus: true, // Prevents dismissing of toast on hover
+            style: {
+              background: "linear-gradient(to right, #00b09b, #96c93d)",
+            },
+          }).showToast();
+          
+
+    };
+    doit2 = doit2.bind(this);
+
     /**
-     * 
      * Update the QP obj from the form 
      */
     function updateQp() {
-
-
+        dsReturnUrl = $("#dsReturnUrl").val() === "true" ? dsReturnUrlDefault : "";
+        comment = $("#comment").val();
+        for (const property in qpSender) {
+            qpSender[property] = $(`#${property}`).val();
+        }
     }
 
     /**
      * Update the form from this page's QP
      */
-    function setQp() {}
+    function setQp() {
+        if (!window.location.) {return}
+        const hash = window.location.hash.substring(1);
+        let query = {};
+        const pairs = hash.split('&');
+        for (let i = 0; i < pairs.length; i++) {
+            const pair = pairs[i].split('=');
+            query[decodeURIComponent(pair[0])] = 
+                decodeURIComponent(pair[1].replace(/\+/g, '%20') || '');
+        }
+
+        if ("dsReturnUrl" in query) {
+            $("#dsReturnUrl").val(query["dsReturnUrl"]);
+        }
+        if ("comment" in query) {
+            $("#comment").val(query["dsReturnUrl"]);
+        }
+        for (const property in query) {
+            if (property in qpSender) {
+                $(`#${property}`).val(query[property]);
+            }
+        }
+    }
 
     /*
      *  Create the envelope from a template
@@ -605,6 +657,7 @@ $(function () {
         $("#btnOauth").click(login);
         $("#btnDoit").click(doit);
         $("#btnDoit2").click(doit2);
+        $("#btnDoit3").click(doit3);
         $("#saccount a").click(switchAccountsButton);
         $("#switchAccountModal .modal-body").click(accountClicked);
 
