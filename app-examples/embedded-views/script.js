@@ -138,7 +138,7 @@ $(function () {
         for (const property in qpSender) {
             url += `${property}=${encodeURIComponent(qpSender[property]).replace(/\%20/g, '+')}&`;
         }
-        url += `dsReturnUrl=${encodeURIComponent(dsReturnUrl).replace(/\%20/g, '+')}&`;
+        url += `dsReturnUrl=` + dsReturnUrl === dsReturnUrlDefault ? "true&" : "false&";
         url += `comment=${encodeURIComponent(comment).replace(/\%20/g, '+')}`;
         await navigator.clipboard.writeText(url);
         Toastify({ // https://github.com/apvarun/toastify-js/blob/master/README.md
@@ -186,7 +186,7 @@ $(function () {
             $("#dsReturnUrl").val(query["dsReturnUrl"]);
         }
         if ("comment" in query) {
-            $("#comment").val(query["dsReturnUrl"]);
+            $("#comment").val(query["comment"]);
         }
         for (const property in query) {
             if (property in qpSender) {
