@@ -22,7 +22,7 @@ import {
 import { CheckTemplates } from "https://docusign.github.io/app-examples/library/checkTemplates.js";
 
 $(function () {
-    const clientId = "demo";
+    let clientId = "demo";
     // Viewing settings 
     const dsReturnUrlDefault = "https://docusign.github.io/jsfiddleDsResponse.html";
     let dsReturnUrl = dsReturnUrlDefault;
@@ -588,13 +588,29 @@ $(function () {
     }
     
     /*
-     * Login button was clicked
+     * Login or LoginStage button was clicked
      */
     let login = async function loginf(event) {
         $("#login").addClass("hide");
+        clientId = "demo";
+        data.implicitGrant = new ImplicitGrant({
+            workingUpdateF: workingUpdate,
+            clientId: clientId
+        });
         await data.implicitGrant.login();
     };
     login = login.bind(this);
+
+    let loginStage = async function loginStagef(event) {
+        $("#login").addClass("hide");
+        clientId = "stage";
+        data.implicitGrant = new ImplicitGrant({
+            workingUpdateF: workingUpdate,
+            clientId: clientId
+        });
+        await data.implicitGrant.login();
+    };
+    loginStage = loginStage.bind(this);
     
     /*
      * Switch Accounts was clicked
@@ -648,13 +664,9 @@ $(function () {
     // The mainline
     if (usingHttps()) {
         adjustRows();
-        data.implicitGrant = new ImplicitGrant({
-            workingUpdateF: workingUpdate,
-            clientId: clientId
-        });
-
         window.addEventListener("message", messageListener);
         $("#btnOauth").click(login);
+        $("#btnOauthStage").click(loginStage);
         $("#btnDoit").click(doit);
         $("#btnDoit2").click(doit2);
         $("#btnDoit3").click(doit3);
