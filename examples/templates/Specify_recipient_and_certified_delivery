@@ -1,0 +1,121 @@
+{
+    "allowComments": "true",
+    "allowMarkup": "false",
+    "allowReassign": "true",
+    "anySigner": null,
+    "authoritativeCopy": "false",
+    "autoNavigation": "true",
+    "brandLock": "false",
+    "disableResponsiveDocument": "false",
+    "emailBlurb": "",
+    "emailSubject": "Specify certified delivery",
+    "enableWetSign": "true",
+    "enforceSignerVisibility": "false",
+    "envelopeIdStamping": "true",
+    "envelopeLocation": "current_site",
+    "messageLock": "false",
+    "notification": {
+        "expirations": {
+            "expireAfter": "120",
+            "expireEnabled": "true",
+            "expireWarn": "0"
+        },
+        "reminders": {
+            "reminderDelay": "0",
+            "reminderEnabled": "false",
+            "reminderFrequency": "0"
+        }
+    },
+    "recipients": {
+        "agents": [
+            {
+                "accessCode": "",
+                "completedCount": "0",
+                "deliveryMethod": "email",
+                "inheritEmailNotificationConfiguration": "false",
+                "note": "",
+                "recipientId": "96759437",
+                "recipientIdGuid": "00000000-0000-0000-0000-000000000000",
+                "recipientType": "agent",
+                "requireIdLookup": "false",
+                "roleName": "signer",
+                "routingOrder": "1",
+                "templateAccessCodeRequired": "false",
+                "templateLocked": "false",
+                "templateRequired": "false",
+                "email": "",
+                "name": ""
+            }
+        ],
+        "carbonCopies": [],
+        "certifiedDeliveries": [
+            {
+                "accessCode": "",
+                "completedCount": "0",
+                "deliveryMethod": "email",
+                "inheritEmailNotificationConfiguration": "false",
+                "note": "",
+                "recipientId": "54436617",
+                "recipientIdGuid": "00000000-0000-0000-0000-000000000000",
+                "recipientType": "certifieddelivery",
+                "requireIdLookup": "false",
+                "roleName": "cd",
+                "routingOrder": "2",
+                "templateAccessCodeRequired": "false",
+                "templateLocked": "false",
+                "templateRequired": "false",
+                "email": "",
+                "name": "",
+                "agentCanEditEmail": "false",
+                "agentCanEditName": "false"
+            }
+        ],
+        "editors": [],
+        "inPersonSigners": [],
+        "intermediaries": [],
+        "notaries": [],
+        "recipientCount": "2",
+        "seals": [],
+        "signers": [],
+        "witnesses": []
+    },
+    "recipientsLock": "false",
+    "signingLocation": "Online",
+    "autoMatch": "false",
+    "autoMatchSpecifiedByUser": "false",
+    "created": "2023-11-07T12:45:05.4230000Z",
+    "description": "",
+    "documents": [
+        {
+            "display": "inline",
+            "documentBase64": "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",
+            "documentId": "1",
+            "includeInDownload": "true",
+            "name": "doc1.pdf",
+            "order": "1",
+            "pages": "1",
+            "signerMustAcknowledge": "no_interaction",
+            "templateLocked": "false",
+            "templateRequired": "false",
+            "uri": "/envelopes/3c9f394a-77b7-47f1-a6a1-7650a63ce590/documents/1"
+        }
+    ],
+    "folderId": "86be25cd-b2e5-4341-9d3d-19d65e70914e",
+    "folderIds": [
+        "86be25cd-b2e5-4341-9d3d-19d65e70914e"
+    ],
+    "folderName": "Templates",
+    "lastModified": "2023-11-07T12:49:42.7400000Z",
+    "lastUsed": "2023-11-07T12:45:05.8270000Z",
+    "name": "TT-6237 Specify Recipient and Certified Delivery",
+    "owner": {
+        "email": "jim@example.com",
+        "userId": "00000000-0000-0000-0000-000000000000",
+        "userName": "Jim"
+    },
+    "pageCount": "1",
+    "passwordProtected": "false",
+    "shared": "false",
+    "templateId": "3c9f394a-77b7-47f1-a6a1-7650a63ce590",
+    "uri": "/templates/3c9f394a-77b7-47f1-a6a1-7650a63ce590"
+}
