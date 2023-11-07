@@ -38,7 +38,7 @@
                 "recipientIdGuid": "00000000-0000-0000-0000-000000000000",
                 "recipientType": "agent",
                 "requireIdLookup": "false",
-                "roleName": "signer",
+                "roleName": "agent",
                 "routingOrder": "1",
                 "templateAccessCodeRequired": "false",
                 "templateLocked": "false",
