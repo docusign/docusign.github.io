@@ -23,6 +23,7 @@ $(function() {
 
     let loadZipFileModal = null;
     let settings = settingsGet();
+    let faqPoured = false; // has the FAQ modal been set?
     
     // upload and process a zip file in the browser
     async function loadZipFile(e) {
@@ -65,11 +66,15 @@ $(function() {
     }
 
     // FAQ display
+    // The FAQ is in Markdown format.
+    // Convert it to HTML and update the modal's body
     function faqDisplay() {
+        if (faqPoured) {return} // EARLY return
+        faqPoured = true;
         const converter = new showdown.Converter();
-        const text = ""; 
-        const html = converter.makeHtml(mdtext);
-
+        const html = converter.makeHtml(window.faqmd); // see lib/faq.md.js
+        $("#modalFaq .modal-body").html(html);
+        $("#modalFaq .modal-body a").attr("target", "_blank");
     }
 
     function startup() {
@@ -81,8 +86,8 @@ $(function() {
         })
         $("#modalLoadZip .btn-primary").on("click", loadZipFile.bind(this));
         $("#modalSettings .btn-primary").on("click", saveSettings.bind(this));
+        $("#modalFaq").on("show.bs.modal", faqDisplay.bind(this));
 
-        
         // Proactively open the LoadZipFile modal upon startup
         // The user can also open via the top nav item
         loadZipFileModal = new bootstrap.Modal("#modalLoadZip");
