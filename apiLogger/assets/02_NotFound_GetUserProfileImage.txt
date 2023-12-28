@@ -1,0 +1,36 @@
+GET https://eu.docusign.net:8801/restapi/v2.1/accounts/d98f9546-xxxx-443d-8e12-xxxxxxxxxx/users/fc26bc69-xxxx-4531-xxxx-xxxxxxxxxxxx/profile/image
+
+TraceToken: c139e540-3441-46fb-a342-d5928ebcc37b
+Timestamp: 2020-01-23T14:38:37.6558014Z
+
+Content-Length: 0
+Connection: keep-alive
+Accept: application/json;text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5
+Accept-Language: en-GBen-US; q=0.9en; q=0.8la; q=0.7
+Authorization: Bearer [omitted]
+Host: eu.docusign.net
+Referer: https://app.docusign.com/preferences/security
+User-Agent: Mozilla/5.0(Windows NT 10.0; Win64; x64)AppleWebKit/537.36(KHTML, like Gecko)Chrome/79.0.3945.130Safari/537.36
+x-docusign-clienttransactionid: c8598e5d-c63e-4171-9d11-e5e10931fafd
+x-csrf-token: 7f0021ac0b4e5966c3cbdd9e632892d4
+sec-fetch-site: same-origin
+sec-fetch-mode: cors
+x-forwarded-for: 5.148.133.129, 185.81.101.11
+x-docusign-prettyprint: false
+content-transfer-encoding: base64
+x-forwarded-for-martini: 5.148.133.129
+x-docusign-diagnostics: {"storedProcedureEventLogThreshold":"300"}
+x-docusign-timetrack: CONN_START,2020-01-23T14:38:37.596Z;;REQ_SENT,2020-01-23T14:38:37.599Z;REST0_Start,2020-01-23T14:38:37.6245701Z
+x-docusign-correlationtoken: c8598e5d-c63e-4171-9d11-e5e10931fafd
+X-SecurityProtocol-Version: TLSv1.2
+X-SecurityProtocol-CipherSuite: ECDHE-RSA-AES256-GCM-SHA384
+
+
+404 NotFound
+Content-Type: application/json; charset=utf-8
+Content-Length: 95
+X-DocuSign-ClientTransactionId: c8598e5d-c63e-4171-9d11-e5e10931fafd
+X-DocuSign-TimeTrack: CONN_START,2020-01-23T14:38:37.596Z;;REQ_SENT,2020-01-23T14:38:37.599Z;;REST0_Start,2020-01-23T14:38:37.6245701Z;REST0_End,2020-01-23T14:38:37.6558014Z
+X-DocuSign-TraceToken: c139e540-3441-46fb-a342-d5928ebcc37b
+
+{"errorCode":"RESOURCE_NOT_FOUND","message":"The URL provided does not resolve to a resource."}

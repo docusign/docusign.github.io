@@ -1,0 +1,78 @@
+/**
+ * Copyright (c) 2023 - DocuSign, Inc. (https://www.docusign.com)
+ * License: The MIT License. See the LICENSE file.
+ */
+
+/**
+ * File: css.css
+ */
+
+ pre {
+    text-align: left;
+    background-color: aliceblue;
+    font-size: smaller;
+    margin: 15px;
+  }
+  
+  .panel {
+    margin: 50px 75px;
+  }
+  
+  .hide {
+    display: none;
+  }
+  
+/* Toast */
+.toast-body, .timer {display: none;}
+.toast-header {
+    color: white;
+    border-bottom-left-radius: calc(var(--bs-toast-border-radius) - var(--bs-toast-border-width));
+    border-bottom-right-radius: calc(var(--bs-toast-border-radius) - var(--bs-toast-border-width));
+}
+.toast-success {background-color: #198754; color: #fff;}
+.toast-danger {background-color: #dc3545; color: #fff;}
+.toast-warning {background-color: #ffc107; color: #000;}
+.toast-info {background-color: #0dcaf0; color: #000;}
+
+/* grid formatting */
+.pill {
+    border: none;
+    padding: 2px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 16px;
+    font-size: small;
+  }
+.get {
+    color: white;
+    background-color: rgb(0, 105, 236);
+}
+.post {
+    color: white;
+    background-color: rgb(17, 188, 105);
+}
+.put {
+    color: white;
+    background-color: rgb(240, 179, 0);
+}
+.delete {
+    color: white;
+    background-color: rgb(231, 37, 1);
+}
+.center {
+    margin: auto;
+    width: 99%;
+}
+  
+/* log entry formats */
+.allcaps {text-transform: capitalize;
+    /*font-size: smaller;*/
+    font-variant-caps: small-caps;
+}
+.whitebgnd {background-color: white;} 
+#log-body-intro {margin-bottom: .5em;}
+.btnimg, .btnimg img {border: none; background-color: white;}
+

@@ -1,0 +1,259 @@
+<!doctype html>
+<!--
+/**
+ * Copyright (c) 2023 - DocuSign, Inc. (https://www.docusign.com)
+ * License: The MIT License. See the LICENSE file.
+ */
+
+/**
+ * File: index.html
+ * The primary (and only!) html file for the project. 
+ * Note that no log data is sent to a server or third-party, it is 
+ * all processed in the browser.
+ */
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>DocuSign eSignature API Logger</title>
+
+    <!-- Favicons -->
+    <link rel="icon" href="assets/favicons/favicon-32x32.png" type="image/png"/>
+    <link rel="manifest" href="manifest.webmanifest" crossorigin="anonymous"/>
+    <link rel="apple-touch-icon" sizes="48x48" href="assets/favicons/icon-48x48.png"/>
+    <link rel="apple-touch-icon" sizes="72x72" href="assets/favicons/icon-72x72.png"/>
+    <link rel="apple-touch-icon" sizes="96x96" href="assets/favicons/icon-96x96.png"/>
+    <link rel="apple-touch-icon" sizes="144x144" href="assets/favicons/icon-144x144.png"/>
+    <link rel="apple-touch-icon" sizes="192x192" href="assets/favicons/icon-192x192.png"/>
+    <link rel="apple-touch-icon" sizes="256x256" href="assets/favicons/icon-256x256.png"/>
+    <link rel="apple-touch-icon" sizes="384x384" href="assets/favicons/icon-384x384.png"/>
+    <link rel="apple-touch-icon" sizes="512x512" href="assets/favicons/icon-512x512.png"/>
+
+    <link rel="stylesheet" href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-toaster/5.1.0/css/bootstrap-toaster.min.css" integrity="sha512-613efYxCWhUklTCFNFaiPW4q6XXoogGNsn5WZoa0bwOBlVM02TJ/JH7o7SgWBnJIQgz1MMnmhNEcAVGb/JDefw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <link href="css.css" rel="stylesheet">
+  </head>
+<body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">eSignature API Logger</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" 
+            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" 
+            aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#" data-bs-toggle="modal" 
+                data-bs-target="#modalLoadZip" id="modalLoadZipBtn">Load a Zip File</a>
+              </li>
+              <!--
+              <li class="nav-item">
+                <a class="nav-link" href="#">Link</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Dropdown
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="#">Action</a></li>
+                  <li><a class="dropdown-item" href="#">Another action</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item" href="#">Something else here</a></li>
+                </ul>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+              </li>
+              -->
+            </ul>
+            <!--
+            <form class="d-flex" role="search">
+              <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+              <button class="btn btn-outline-success" type="submit">Search</button>
+            </form> -->
+            <a class="nav-link active" aria-current="page" href="#" data-bs-toggle="modal" 
+            data-bs-target="#modalSettings" >Settings</a>
+          </div>
+        </div>
+      </nav>
+<main>
+    <div id="grid"></div>
+</main>
+
+<!-- Modal modalLoadZip -->
+<div class="modal fade" id="modalLoadZip" tabindex="-1" aria-labelledby="modalLoadZipLabel" 
+    aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="modalLoadZipLabel">Load API Log zip file</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form>
+                <div>
+
+                    <label for="loadZipFile">Choose an API log zip file:</label>
+                    <input type="file" id="loadZipFile" class="form-control mt-4" 
+                    accept=".zip" multiple="false"/>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Load</button>
+        </div>
+      </div>
+    </div>
+</div>
+    
+<!-- Modal modalLogEntry -->
+<div class="modal fade" id="modalLogEntry" tabindex="-1" aria-labelledby="modalLogEntryLabel" 
+    aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen modal-dialog-scrollable"> <!-- or modal-xl  -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="modalLogEntryLabel"></h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="log-body-intro" id="log-body-intro"></p>
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="request-tab" data-bs-toggle="tab" data-bs-target="#request-tab-pane" 
+                        type="button" role="tab" aria-controls="request-tab-pane" aria-selected="true">Request</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="response-tab" data-bs-toggle="tab" data-bs-target="#response-tab-pane" 
+                        type="button" role="tab" aria-controls="response-tab-pane" aria-selected="false">Response</button>
+                    </li>
+                  </ul>
+                  <div class="tab-content" id="myTabContent">
+                      <div class="tab-pane fade show active" id="request-tab-pane" role="tabpanel" 
+                      aria-labelledby="request-tab" tabindex="0">Working...</div>
+                      <div class="tab-pane fade" id="response-tab-pane" role="tabpanel" 
+                      aria-labelledby="response-tab" tabindex="0">Working...</div>
+                  </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal modalSettings -->
+<div class="modal fade" id="modalSettings" tabindex="-1" aria-labelledby="modalSettingsLabel" 
+    aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="modalSettingsLabel">Settings</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form>
+                <p>
+                    Optional: the <b>S</b> (Save log entry) button on the log table can be changed.
+                </p>
+                <p>
+                    If you decide to change the <b>S</b> button:
+                </p>
+                <ol>
+                    <li>The log entry can still be saved via the 
+                        <b>Copy Log Entry to Clipboard</b> button in the log entry's view 
+                        (using the <b>V</b> button.)</li>
+                    <li>You can change the <b>S</b> button's label to a different letter.</li>
+                    <li>The new button action will also be available on the log entry's view
+                        screen via a new button. (You choose the button label.)</li>
+                    <li>The new button behavior is to copy the template (below)
+                        to the clipboard. Some log entry data values can be substituted 
+                        into your template text.</li>
+                    <li>The new button behavior is stored locally in your browser's local storage.</li>
+                </ol>
+                <div class="mb-3" style="width:20em;">
+                    <select id="useCustomSbutton" class="form-select">
+                      <option value="true" selected>Custom S button action</option>
+                      <option value="false">Default S button action</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="customBtnLetter" class="form-label">Custom button letter</label>
+                    <select style="width:4em;" id="customBtnLetter" class="form-select">
+                        <option>A</option>
+                        <option>B</option>
+                        <option>C</option>
+                        <option>D</option>
+                        <option>E</option>
+                        <option>F</option>
+                        <option>G</option>
+                        <option>H</option>
+                        <option>I</option>
+                        <option>J</option>
+                        <option selected>K</option>
+                        <option>L</option>
+                        <option>M</option>
+                        <option>N</option>
+                        <option>O</option>
+                        <option>P</option>
+                        <option>Q</option>
+                        <option>R</option>
+                        <option>S</option>
+                        <option>T</option>
+                        <option>U</option>
+                        <option>V</option>
+                        <option>W</option>
+                        <option>X</option>
+                        <option>Y</option>
+                        <option>Z</option>
+                    </select>  
+                </div>
+                    <div class="mb-3" style="width:20em;">
+                        <label for="customBtnLabel" class="form-label">Custom button label</label>
+                        <input type="text" class="form-control" id="customBtnLabel" />
+                    </div>
+                    <div class="mb-3" style="width:90%;">
+                        <p>
+                            Enter your template for the custom button below. 
+                            <br />Values from the log entry can be substituted
+                            into the template. Include the curly braces!
+                        </p>
+                        <ul>
+                            <li><b>{TraceToken}</b> The trace token ID</li>
+                            <li><b>{Timestamp}</b> The timestamp</li>
+                        </ul>
+                        <label for="customTemplate" class="form-label">Custom action template</label>
+                        <textarea type="text" class="form-control" id="customTemplate"
+                        style="height:13em;"autocomplete="off" wrap="off"></textarea>
+                    </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Save</button>
+        </div>
+      </div>
+    </div>
+</div>
+
+
+  
+<script src="https://code.jquery.com/jquery-3.7.1.slim.min.js" integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+<!--  https://stuk.github.io/jszip/documentation/examples.html -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" integrity="sha512-XMVd28F1oH/O71fzwBnV7HucLxVwtxf26XV8P4wPk26EDxuGZ91N8bsOttmnomcCD3CS5ZMRL50H0GgOHvegtg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<!--  https://nhn.github.io/tui.grid/latest/ -->
+<script src="https://uicdn.toast.com/grid/latest/tui-grid.min.js"></script>
+<!-- <script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<!-- https://github.com/showdownjs/showdown -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/<version tag>/showdown.min.js"></script>
+<script src="lib/bootstrap-toaster.js"></script>
+<script src="index.js" type="module"></script>
+</body>
+</html>
