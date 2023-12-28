@@ -64,6 +64,14 @@ $(function() {
         }
     }
 
+    // FAQ display
+    function faqDisplay() {
+        const converter = new showdown.Converter();
+        const text = ""; 
+        const html = converter.makeHtml(mdtext);
+
+    }
+
     function startup() {
         //modal autofocus. See https://getbootstrap.com/docs/5.3/components/modal/#how-it-works
         const myModal1 = document.getElementById('modalLoadZip')
@@ -73,6 +81,7 @@ $(function() {
         })
         $("#modalLoadZip .btn-primary").on("click", loadZipFile.bind(this));
         $("#modalSettings .btn-primary").on("click", saveSettings.bind(this));
+
         
         // Proactively open the LoadZipFile modal upon startup
         // The user can also open via the top nav item

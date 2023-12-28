@@ -51,6 +51,10 @@
                 <a class="nav-link active" aria-current="page" href="#" data-bs-toggle="modal" 
                 data-bs-target="#modalLoadZip" id="modalLoadZipBtn">Load a Zip File</a>
               </li>
+              <li class="nav-item ms-5">
+                <a class="nav-link active" aria-current="page" href="#" data-bs-toggle="modal" 
+                data-bs-target="#modalFaq" id="modalLoadZipBtn">FAQ</a>
+              </li>
               <!--
               <li class="nav-item">
                 <a class="nav-link" href="#">Link</a>
@@ -112,6 +116,24 @@
     </div>
 </div>
     
+<!-- Modal modalFaq -->
+<div class="modal fade" id="modalFaq" tabindex="-1" aria-labelledby="modalFaqLabel" 
+    aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="modalFaqLabel">Frequently Asked Questions</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+</div>
+
 <!-- Modal modalLogEntry -->
 <div class="modal fade" id="modalLogEntry" tabindex="-1" aria-labelledby="modalLogEntryLabel" 
     aria-hidden="true">
@@ -242,7 +264,7 @@
 </div>
 
 
-  
+<script id="faqMd" src="https://docusign.github.io/apiLogger/lib/faq.md" type="text/markdown"></script>
 <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js" integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 <!--  https://stuk.github.io/jszip/documentation/examples.html -->
@@ -252,7 +274,7 @@
 <!-- <script src="https://uicdn.toast.com/grid/latest/tui-grid.js"></script> -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 <!-- https://github.com/showdownjs/showdown -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/<version tag>/showdown.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js" integrity="sha512-LhccdVNGe2QMEfI3x4DVV3ckMRe36TfydKss6mJpdHjNFiV07dFpS2xzeZedptKZrwxfICJpez09iNioiSZ3hA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="lib/bootstrap-toaster.js"></script>
 <script src="index.js" type="module"></script>
 </body>
