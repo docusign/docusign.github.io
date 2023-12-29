@@ -37,7 +37,8 @@ window.faqmd = `
     A: The table shows the log entries from the zip file. One row per log entry. 
     (Each file in the zip file is one log entry.) Column definitions:
 
-    * **Action** The **V** button opens a view to the complete information for the log entry.
+    * **Action** The **V** button opens a view to the complete information for the log entry. 
+      The view includes the request and response headers and API bodies.
 
       The **C** button creates a plain text version of the log entry and copies it to the 
       system clip board. You can then *paste* the log entry into a text editor or email.
@@ -69,7 +70,23 @@ window.faqmd = `
    A: Yes! Click on the small up/down arrows next to the column name. By default, the 
       table is sorted by the log entries' timestamps, in ascending order.
 
+1. Q: What are the Settings options?
 
+   A: Use the **Setting** (top navigation, right corner) to set the application's settings.
+   The settings enables you to redefine the **S** buttons on the grid, and to add a new
+   button to the log entry view pages. Note: this feature is mostly of use to DocuSign 
+   support staff.
+
+    * **Custom or Default S button action** choice. Select **Custom** to enable the button
+    redefinition.
+   
+    * **Custom button letter** -- What letter should be used for the grid buttons. 
+
+    * **Custom button label** -- The label for the new button on the log entry view pages.
+
+    * **Custom action template** -- Add your template text to the textarea. You can include the 
+    substitution strings ***{TraceToken}*** and ***{Timestamp}*** one or more times in the
+    template body.
 
 1. Q: How is it possible to "upload" a ***zip*** file to a browser page, decode, and display its 
    multiple files?
