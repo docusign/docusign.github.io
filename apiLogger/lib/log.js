@@ -311,6 +311,7 @@ class Log {
      */
     asText() {
         let out = [];
+        out.push(`API log filename: ${this.fileName}`);
         out.push(
             `TraceToken: ${this.traceToken}\nTimestamp: ${this.timestamp}\nAPI method: ${this.name}`);
         out.push(this.requestHeaders);

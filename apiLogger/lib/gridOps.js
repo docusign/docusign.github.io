@@ -65,6 +65,14 @@ class GridOps {
             columns: this.columns
         });
         $("#modalLogEntry").on("hidden.bs.modal", this.modalHidden.bind(this));
+        $("#modalLogEntry").on("hide.bs.modal", this.modalChange.bind(this));
+        $("#modalLogEntry").on("show.bs.modal", this.modalChange.bind(this));
+        // Use the window.history object so the backbutton will work as
+        // people expect it to with respect to the full page View modal
+        // See https://medium.com/@george.norberg/history-api-getting-started-36bfc82ddefc
+        // Initialize
+        window.history.replaceState({modalStateOpen: false}, null, "");
+        window.onpopstate = this.onPopState.bind(this);
     }
 
     eventDispatcher (e) {
@@ -181,7 +189,7 @@ class GridOps {
         }
 
         // Set header row of the modal
-        let title = `<span class="me-5">${logEntry.timestamp}</span>`;
+        let title = `<span class="me-5">${logEntry.fileName}</span>`;
         if (logEntry.docsUrl) {
             title += `<a href="${logEntry.docsUrl}" target="_blank">${logEntry.name}</a>`
         } else {
@@ -214,7 +222,8 @@ class GridOps {
         )
         $("#btn-trace-copy").on("click", this.buttonCopyTraceToClipboard.bind(this));
         $("#request-tab-pane").empty().append(
-            `<p><pre class="whitebgnd">${logEntry.requestHeaders}</pre></p>${requestBody}`);
+            `<p><pre class="whitebgnd">Timestamp: ${logEntry.timestamp}\n\n` + 
+            `${logEntry.requestHeaders}</pre></p>${requestBody}`);
         $("#response-tab-pane").empty().append(
             `<p><pre class="whitebgnd">${logEntry.responseHeaders}</pre></p>${responseBody}`);
         hljs.highlightAll(); // Add highlighting https://highlightjs.org/
@@ -255,6 +264,26 @@ class GridOps {
         $("#btn-trace-copy").off("click");
     }
 
+    /**
+     * Manage the window history
+     */
+    modalChange(event) {
+        // Called both when the modal is opening and closing
+        if (event.type === "show") {
+            window.history.pushState({modalStateOpen: true}, null, "");
+        } else if (event.type === "hide") {
+            if (window.history.state.modalStateOpen) {
+                window.history.back()
+            }
+        }
+        
+        console.log(event)
+    }
+    onPopState(event) {
+        // The user pressed the back button.
+        // Close the modal. (Calling hide while hidden is a nop.)
+        bootstrap.Modal.getInstance("#modalLogEntry").hide();
+    }
 }
 
 
