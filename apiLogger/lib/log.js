@@ -20,6 +20,7 @@
 const specialInternalNames = {
     AddEnvelopeTabs: {op: "POST", urlIncludes: "/templates/", correctName: "TemplateRecipientTabs:create"},
     DeleteEnvelopeTabs: {op: "DELETE", urlIncludes: "/templates/", correctName: "TemplateRecipientTabs:delete"},
+    GetDocumentImage: {op: "GET", urlIncludes: "/templates/", correctName: "Templates:getDocumentPageImage"}
 };
 
 // Identify unknown API methods via their Operation and URL pattern
@@ -213,6 +214,7 @@ class Log {
 
         // Special handling for some internalName corner cases
         if (this.internalName) {
+            // See if we need to correct the internalName
             const special = specialInternalNames[this.internalName];
             if (special && this.operation === special.op && this.url.includes(special.urlIncludes)) {
                 this.internalName = special.correctName;
