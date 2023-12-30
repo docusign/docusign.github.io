@@ -20,7 +20,10 @@
 const specialInternalNames = {
     AddEnvelopeTabs: {op: "POST", urlIncludes: "/templates/", correctName: "TemplateRecipientTabs:create"},
     DeleteEnvelopeTabs: {op: "DELETE", urlIncludes: "/templates/", correctName: "TemplateRecipientTabs:delete"},
-    GetDocumentImage: {op: "GET", urlIncludes: "/templates/", correctName: "Templates:getDocumentPageImage"}
+    GetDocumentImage: {op: "GET", urlIncludes: "/templates/", correctName: "Templates:getDocumentPageImage"},
+    GetEnvelopeNotification: {op: "GET", urlIncludes: "/templates/", correctName: "Templates:getNotificationSettings"},
+    GetEnvelopeRecipients: {op: "GET", urlIncludes: "/templates/", correctName: "TemplateRecipients:list"},
+
 };
 
 // Identify unknown API methods via their Operation and URL pattern
