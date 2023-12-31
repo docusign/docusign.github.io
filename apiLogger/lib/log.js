@@ -23,7 +23,9 @@ const specialInternalNames = {
     GetDocumentImage: {op: "GET", urlIncludes: "/templates/", correctName: "Templates:getDocumentPageImage"},
     GetEnvelopeNotification: {op: "GET", urlIncludes: "/templates/", correctName: "Templates:getNotificationSettings"},
     GetEnvelopeRecipients: {op: "GET", urlIncludes: "/templates/", correctName: "TemplateRecipients:list"},
-
+    GetBrand: {op: "GET", urlIncludes: "/logos/", correctName: "AccountBrands:getLogo"},
+    SetEnvelopeLock: {op: "POST", urlIncludes: "/templates/", correctName: "TemplateLocks:create"},
+    UpdateEnvelopeRecipients: {op: "PUT", urlIncludes: "/templates/", correctName: "TemplateRecipients:update"},
 };
 
 // Identify unknown API methods via their Operation and URL pattern
@@ -194,7 +196,7 @@ class Log {
         this.timestamp = parts[0].match(/Timestamp: (.*)/)[1];
         const tsparts = this.timestamp.split(".");
         const tstamp = new Date(Date.parse(tsparts[0]));
-        this.timeMicroSeconds = (tstamp.valueOf() * 1000.0) + parseInt(tsparts[1]);
+        this.timeMicroSeconds = (tstamp.valueOf() * 1000.0) + parseInt(tsparts[1]/10.0);
 
         // parts[1] is the requestHeaders
         this.requestHeaders = parts[1];
