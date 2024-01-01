@@ -50,7 +50,7 @@ class Log {
      * operation ("GET", "DEL", "POST")
      * cors -- boolean
      * multipart -- does the log entry use multipart encoding?
-     * internalName -- eg CreateAndSendEnvelope
+     * internalName -- eg CreateAndSendEnvelope. Sometimes munged.
      * name -- eg Envelopes:create (or internalName if unknown)
      * html -- name as html with link to docs
      * docsUrl -- url for the docs (or null)
