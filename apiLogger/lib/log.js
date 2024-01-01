@@ -196,7 +196,9 @@ class Log {
         this.timestamp = parts[0].match(/Timestamp: (.*)/)[1];
         const tsparts = this.timestamp.split(".");
         const tstamp = new Date(Date.parse(tsparts[0]));
-        this.timeMicroSeconds = (tstamp.valueOf() * 1000.0) + parseInt(tsparts[1]/10.0);
+        // change "0534526Z" to number of microseconds
+        this.timeMicroSeconds = (tstamp.valueOf() * 1000.0) +
+            parseInt(tsparts[1].slice(0,-1))/10.0;
 
         // parts[1] is the requestHeaders
         this.requestHeaders = parts[1];
