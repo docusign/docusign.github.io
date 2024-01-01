@@ -20,7 +20,6 @@ import {
 
 // Using jQuery
 $(function() {
-
     let loadZipFileModal = null;
     let settings = settingsGet();
     let faqPoured = false; // has the FAQ modal been set?
@@ -31,6 +30,7 @@ $(function() {
         const file = el.files[0];
         
         if (file) {
+            $("#currentfile").text(`File: ${file.name}`); // nav bar file name
             toast (`Loading ${file.name}...`);
             await logger.loadZipFile(file);
         } else {
