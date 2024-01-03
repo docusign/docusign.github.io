@@ -27,30 +27,30 @@ function toast (msg, status="INFO") {
 /**
  * Retrieve the settings from local storage
  */
-const settingsKey = "apiLogger"
-function settingsGet() {
-    let settings;
+const kustoSettingsKey = "apiLogger"
+function kustoSettingsGet() {
+    let kustoSettings;
     try {
-        settings = localStorage.getItem(settingsKey);
-        settings = JSON.parse(settings);
+        kustoSettings = localStorage.getItem(kustoSettingsKey);
+        kustoSettings = JSON.parse(kustoSettings);
     } catch (error) {
-        settings = {}
+        kustoSettings = {}
     }
-    if (!settings) {settings = {}}
-    return settings
+    if (!kustoSettings) {kustoSettings = {}}
+    return kustoSettings
 }
 
 /**
- * Store the settings to local storage
+ * Store the kustoSettings to local storage
  */
-function settingsSave(settings) {
+function kustoSettingsSave(kustoSettings) {
     try {
-        const s = JSON.stringify(settings);
-        localStorage.setItem(settingsKey, s);
+        const s = JSON.stringify(kustoSettings);
+        localStorage.setItem(kustoSettingsKey, s);
         toast(`Settings saved!`, "SUCCESS")
     } catch (error) {
         toast(`Could not save settings: ${error.message}`, "DANGER")
     }
 }
 
-export {toast, settingsGet, settingsSave}
+export {toast, kustoSettingsGet, kustoSettingsSave}

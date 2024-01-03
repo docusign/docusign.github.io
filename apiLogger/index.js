@@ -15,13 +15,13 @@ import {
     GridOps
 } from "./lib/gridOps.js";
 import {
-    toast, settingsSave, settingsGet
+    toast, kustoSettingsSave, kustoSettingsGet
 } from "./lib/utils.js";
 
 // Using jQuery
 $(function() {
     let loadZipFileModal = null;
-    let settings = settingsGet();
+    let kustoSettings = kustoSettingsGet();
     let faqPoured = false; // has the FAQ modal been set?
     
     // upload and process a zip file in the browser
@@ -38,30 +38,30 @@ $(function() {
         }
     }
 
-    // Save the settings in local browser storage
+    // Save the kustoSettings in local browser storage
     function saveSettings(e) {
-        settings = {
+        kustoSettings = {
             ver: 1,
             useCustomSbutton: $("#useCustomSbutton").val() === "true", // convert to boolean
             customBtnLetter: $("#customBtnLetter").val(),
             customBtnLabel: $("#customBtnLabel").val(),
             customTemplate: $("#customTemplate").val()
         }
-        if (!settings.useCustomSbutton) {settings = {}}; // reset
-        settingsSave(settings);
+        if (!kustoSettings.useCustomSbutton) {kustoSettings = {}}; // reset
+        kustoSettingsSave(kustoSettings);
         // refresh the grid
-        gridOps.refresh(settings);
+        gridOps.refresh(kustoSettings);
     }
 
-    // set settings modal to the current settings
+    // set kustoSettings modal to the current kustoSettings
     function currentSettings() {
-        if (!settings.ver) {
+        if (!kustoSettings.ver) {
             $("#useCustomSbutton").val("false");
         } else {
-            $("#useCustomSbutton").val(settings.useCustomSbutton ? "true" : "false");
-            $("#customBtnLetter").val(settings.customBtnLetter);
-            $("#customBtnLabel").val(settings.customBtnLabel);
-            $("#customTemplate").val(settings.customTemplate);
+            $("#useCustomSbutton").val(kustoSettings.useCustomSbutton ? "true" : "false");
+            $("#customBtnLetter").val(kustoSettings.customBtnLetter);
+            $("#customBtnLabel").val(kustoSettings.customBtnLabel);
+            $("#customTemplate").val(kustoSettings.customTemplate);
         }
     }
 
@@ -96,6 +96,6 @@ $(function() {
     }
 
     const logger = new Logger();
-    const gridOps = new GridOps(logger, settings);
+    const gridOps = new GridOps(logger, kustoSettings);
     startup();
 });
