@@ -68,8 +68,13 @@ window.faqmd = `
 1. Q: Can I sort the table by a column?
 
    A: Yes! Click on the small up/down arrows next to the column name. By default, the 
-      table is sorted by the log entries' timestamps, in ascending order 
-      (the oldest log entry is listed first).
+       table is sorted by the log entries' timestamps, in ascending order 
+       (the oldest log entry is listed first).
+ 
+1. Q: Can I choose the columns shown in the grid?
+
+   A: Yes! Click on the **Columns** link in the top navigation bar (right side) to choose
+   the columns that will be shown in the grid.
 
 1. Q: What are the Settings options?
 
