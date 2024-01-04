@@ -20,10 +20,9 @@ import {
 
 // Using jQuery
 $(function() {
-    let loadZipFileModal = null;
-    let kustoSettings = kustoSettingsGet();
-    let columnSettings = columnSettingsGet()
-    let faqPoured = false; // has the FAQ modal been set?
+    // columnSettingsAttributes is in index.js and gridOps.js
+    const columnSettingsAttributes = ["timestamp", "filename", "traceToken", "status", 
+    "statusCodeString", "operation", "cors", "multipart", "name", "ndse", "url"];
     
     // upload and process a zip file in the browser
     async function loadZipFile(e) {
@@ -68,14 +67,10 @@ $(function() {
 
     // Save the columnSettings in local browser storage
     function saveColumnSettings(e) {
-        columnSettings = {
-            ver: 1,
-            useCustomSbutton: $("#useCustomSbutton").val() === "true", // convert to boolean
-            customBtnLetter: $("#customBtnLetter").val(),
-            customBtnLabel: $("#customBtnLabel").val(),
-            customTemplate: $("#customTemplate").val()
-        }
-        if (!columnSettings.useCustomSbutton) {columnSettings = {}}; // reset
+        columnSettings = {ver: 1};
+        columnSettingsAttributes.forEach(attr => {
+            columnSettings[attr] = $(`#${attr}Ck`).is(":checked")
+        });
         columnSettingsSave(columnSettings);
         // refresh the grid
         gridOps.refresh(kustoSettings, columnSettings);
@@ -83,14 +78,9 @@ $(function() {
 
     // set columnSettings modal to the current columnSettings
     function currentColumnSettings() {
-        if (!kustoSettings.ver) {
-            $("#useCustomSbutton").val("false");
-        } else {
-            $("#useCustomSbutton").val(kustoSettings.useCustomSbutton ? "true" : "false");
-            $("#customBtnLetter").val(kustoSettings.customBtnLetter);
-            $("#customBtnLabel").val(kustoSettings.customBtnLabel);
-            $("#customTemplate").val(kustoSettings.customTemplate);
-        }
+        columnSettingsAttributes.forEach(attr => {
+            $(`#${attr}Ck`).prop('checked', columnSettings[attr])
+        });
     }
 
     // FAQ display
@@ -125,7 +115,14 @@ $(function() {
         currentColumnSettings();
     }
 
+    //// The MAINLINE ////
+    let loadZipFileModal = null;
+    let kustoSettings = kustoSettingsGet();
+    let columnSettings; // Set below
+    let faqPoured = false; // has the FAQ modal been set?
     const logger = new Logger();
-    const gridOps = new GridOps(logger, kustoSettings, columnSettings);
+    const gridOps = new GridOps(logger, kustoSettings);
+    columnSettings = columnSettingsGet()
+    columnSettings = gridOps.initializeColumnSettings(columnSettings);
     startup();
 });

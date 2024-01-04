@@ -76,9 +76,9 @@ function columnSettingsSave(columnSettings) {
     try {
         const s = JSON.stringify(columnSettings);
         localStorage.setItem(columnSettingsKey, s);
-        toast(`Settings saved!`, "SUCCESS")
+        toast(`Column settings saved!`, "SUCCESS")
     } catch (error) {
-        toast(`Could not save settings: ${error.message}`, "DANGER")
+        toast(`Could not save column settings: ${error.message}`, "DANGER")
     }
 }
 
