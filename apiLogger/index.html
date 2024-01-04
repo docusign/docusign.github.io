@@ -82,6 +82,9 @@
               <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
               <button class="btn btn-outline-success" type="submit">Search</button>
             </form> -->
+            <a class="nav-link active me-3" aria-current="page" href="#" data-bs-toggle="modal" 
+            data-bs-target="#modalColumns" >Columns</a>
+
             <a class="nav-link active" aria-current="page" href="#" data-bs-toggle="modal" 
             data-bs-target="#modalSettings" >Settings</a>
           </div>
@@ -118,6 +121,73 @@
     </div>
 </div>
     
+<!-- Modal modalColumns -->
+<div class="modal fade" id="modalColumns" tabindex="-1" aria-labelledby="modalColumnsLabel" 
+    aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="modalColumnsLabel">Grid Columns</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form>
+                <div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="timestampCk">
+                        <label class="form-check-label" for="timestampCk">Timestamp</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="filenameCk">
+                        <label class="form-check-label" for="filenameCk">Filename</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="traceTokenCk">
+                        <label class="form-check-label" for="traceTokenCk">Trace Token</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="statusCk">
+                        <label class="form-check-label" for="statusCk">Status</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="statusCodeStringCk">
+                        <label class="form-check-label" for="statusCodeStringCk">Status Code</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="operationCk">
+                        <label class="form-check-label" for="operationCk">Operation</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="corsCk">
+                        <label class="form-check-label" for="corsCk">CORS</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="multipartCk">
+                        <label class="form-check-label" for="multipartCk">Multipart</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="nameCk">
+                        <label class="form-check-label" for="nameCk">Name</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="ndseCk">
+                        <label class="form-check-label" for="ndseCk">NDSE</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="urlCk">
+                        <label class="form-check-label" for="urlCk">URL</label>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Save</button>
+        </div>
+      </div>
+    </div>
+</div>
+
 <!-- Modal modalFaq -->
 <div class="modal fade" id="modalFaq" tabindex="-1" aria-labelledby="modalFaqLabel" 
     aria-hidden="true">

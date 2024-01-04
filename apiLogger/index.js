@@ -15,13 +15,14 @@ import {
     GridOps
 } from "./lib/gridOps.js";
 import {
-    toast, kustoSettingsSave, kustoSettingsGet
+    toast, kustoSettingsSave, kustoSettingsGet, columnSettingsGet, columnSettingsSave
 } from "./lib/utils.js";
 
 // Using jQuery
 $(function() {
     let loadZipFileModal = null;
     let kustoSettings = kustoSettingsGet();
+    let columnSettings = columnSettingsGet()
     let faqPoured = false; // has the FAQ modal been set?
     
     // upload and process a zip file in the browser
@@ -39,7 +40,7 @@ $(function() {
     }
 
     // Save the kustoSettings in local browser storage
-    function saveSettings(e) {
+    function saveKustoSettings(e) {
         kustoSettings = {
             ver: 1,
             useCustomSbutton: $("#useCustomSbutton").val() === "true", // convert to boolean
@@ -50,11 +51,38 @@ $(function() {
         if (!kustoSettings.useCustomSbutton) {kustoSettings = {}}; // reset
         kustoSettingsSave(kustoSettings);
         // refresh the grid
-        gridOps.refresh(kustoSettings);
+        gridOps.refresh(kustoSettings, columnSettings);
     }
 
     // set kustoSettings modal to the current kustoSettings
-    function currentSettings() {
+    function currentKustoSettings() {
+        if (!kustoSettings.ver) {
+            $("#useCustomSbutton").val("false");
+        } else {
+            $("#useCustomSbutton").val(kustoSettings.useCustomSbutton ? "true" : "false");
+            $("#customBtnLetter").val(kustoSettings.customBtnLetter);
+            $("#customBtnLabel").val(kustoSettings.customBtnLabel);
+            $("#customTemplate").val(kustoSettings.customTemplate);
+        }
+    }
+
+    // Save the columnSettings in local browser storage
+    function saveColumnSettings(e) {
+        columnSettings = {
+            ver: 1,
+            useCustomSbutton: $("#useCustomSbutton").val() === "true", // convert to boolean
+            customBtnLetter: $("#customBtnLetter").val(),
+            customBtnLabel: $("#customBtnLabel").val(),
+            customTemplate: $("#customTemplate").val()
+        }
+        if (!columnSettings.useCustomSbutton) {columnSettings = {}}; // reset
+        columnSettingsSave(columnSettings);
+        // refresh the grid
+        gridOps.refresh(kustoSettings, columnSettings);
+    }
+
+    // set columnSettings modal to the current columnSettings
+    function currentColumnSettings() {
         if (!kustoSettings.ver) {
             $("#useCustomSbutton").val("false");
         } else {
@@ -85,17 +113,19 @@ $(function() {
             myInput1.focus()
         })
         $("#modalLoadZip .btn-primary").on("click", loadZipFile.bind(this));
-        $("#modalSettings .btn-primary").on("click", saveSettings.bind(this));
+        $("#modalSettings .btn-primary").on("click", saveKustoSettings.bind(this));
+        $("#modalColumns .btn-primary").on("click", saveColumnSettings.bind(this));
         $("#modalFaq").on("show.bs.modal", faqDisplay.bind(this));
 
         // Proactively open the LoadZipFile modal upon startup
         // The user can also open via the top nav item
         loadZipFileModal = new bootstrap.Modal("#modalLoadZip");
         loadZipFileModal.show();
-        currentSettings();
+        currentKustoSettings();
+        currentColumnSettings();
     }
 
     const logger = new Logger();
-    const gridOps = new GridOps(logger, kustoSettings);
+    const gridOps = new GridOps(logger, kustoSettings, columnSettings);
     startup();
 });

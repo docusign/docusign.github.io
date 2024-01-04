@@ -25,7 +25,7 @@ function toast (msg, status="INFO") {
 }
 
 /**
- * Retrieve the settings from local storage
+ * Retrieve the Kusto settings from local storage
  */
 const kustoSettingsKey = "apiLogger"
 function kustoSettingsGet() {
@@ -41,7 +41,7 @@ function kustoSettingsGet() {
 }
 
 /**
- * Store the kustoSettings to local storage
+ * Store the Kusto Settings to local storage
  */
 function kustoSettingsSave(kustoSettings) {
     try {
@@ -53,4 +53,33 @@ function kustoSettingsSave(kustoSettings) {
     }
 }
 
-export {toast, kustoSettingsGet, kustoSettingsSave}
+/**
+ * Retrieve the column settings from local storage
+ */
+const columnSettingsKey = "apiLoggerColumns"
+function columnSettingsGet() {
+    let columnSettings;
+    try {
+        columnSettings = localStorage.getItem(columnSettingsKey);
+        columnSettings = JSON.parse(columnSettings);
+    } catch (error) {
+        columnSettings = {}
+    }
+    if (!columnSettings) {columnSettings = {}}
+    return columnSettings
+}
+
+/**
+ * Store the column Settings to local storage
+ */
+function columnSettingsSave(columnSettings) {
+    try {
+        const s = JSON.stringify(columnSettings);
+        localStorage.setItem(columnSettingsKey, s);
+        toast(`Settings saved!`, "SUCCESS")
+    } catch (error) {
+        toast(`Could not save settings: ${error.message}`, "DANGER")
+    }
+}
+
+export {toast, kustoSettingsGet, kustoSettingsSave, columnSettingsGet, columnSettingsSave}
