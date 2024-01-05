@@ -15,7 +15,7 @@ import {
     GridOps
 } from "./lib/gridOps.js";
 import {
-    toast, kustoSettingsSave, kustoSettingsGet, columnSettingsGet, columnSettingsSave
+    toast, kSettingsSave, kSettingsGet, columnSettingsGet, columnSettingsSave
 } from "./lib/utils.js";
 
 // Using jQuery
@@ -38,30 +38,30 @@ $(function() {
         }
     }
 
-    // Save the kustoSettings in local browser storage
-    function saveKustoSettings(e) {
-        kustoSettings = {
+    // Save the kSettings in local browser storage
+    function saveKSettings(e) {
+        kSettings = {
             ver: 1,
             useCustomSbutton: $("#useCustomSbutton").val() === "true", // convert to boolean
             customBtnLetter: $("#customBtnLetter").val(),
             customBtnLabel: $("#customBtnLabel").val(),
             customTemplate: $("#customTemplate").val()
         }
-        if (!kustoSettings.useCustomSbutton) {kustoSettings = {}}; // reset
-        kustoSettingsSave(kustoSettings);
+        if (!kSettings.useCustomSbutton) {kSettings = {}}; // reset
+        kSettingsSave(kSettings);
         // refresh the grid
-        gridOps.refresh(kustoSettings, columnSettings);
+        gridOps.refresh(kSettings, columnSettings);
     }
 
-    // set kustoSettings modal to the current kustoSettings
-    function currentKustoSettings() {
-        if (!kustoSettings.ver) {
+    // set kSettings modal to the current kSettings
+    function currentKSettings() {
+        if (!kSettings.ver) {
             $("#useCustomSbutton").val("false");
         } else {
-            $("#useCustomSbutton").val(kustoSettings.useCustomSbutton ? "true" : "false");
-            $("#customBtnLetter").val(kustoSettings.customBtnLetter);
-            $("#customBtnLabel").val(kustoSettings.customBtnLabel);
-            $("#customTemplate").val(kustoSettings.customTemplate);
+            $("#useCustomSbutton").val(kSettings.useCustomSbutton ? "true" : "false");
+            $("#customBtnLetter").val(kSettings.customBtnLetter);
+            $("#customBtnLabel").val(kSettings.customBtnLabel);
+            $("#customTemplate").val(kSettings.customTemplate);
         }
     }
 
@@ -73,7 +73,7 @@ $(function() {
         });
         columnSettingsSave(columnSettings);
         // refresh the grid
-        gridOps.refresh(kustoSettings, columnSettings);
+        gridOps.refresh(kSettings, columnSettings);
     }
 
     // set columnSettings modal to the current columnSettings
@@ -103,7 +103,7 @@ $(function() {
             myInput1.focus()
         })
         $("#modalLoadZip .btn-primary").on("click", loadZipFile.bind(this));
-        $("#modalSettings .btn-primary").on("click", saveKustoSettings.bind(this));
+        $("#modalSettings .btn-primary").on("click", saveKSettings.bind(this));
         $("#modalColumns .btn-primary").on("click", saveColumnSettings.bind(this));
         $("#modalFaq").on("show.bs.modal", faqDisplay.bind(this));
 
@@ -111,17 +111,17 @@ $(function() {
         // The user can also open via the top nav item
         loadZipFileModal = new bootstrap.Modal("#modalLoadZip");
         loadZipFileModal.show();
-        currentKustoSettings();
+        currentKSettings();
         currentColumnSettings();
     }
 
     //// The MAINLINE ////
     let loadZipFileModal = null;
-    let kustoSettings = kustoSettingsGet();
+    let kSettings = kSettingsGet();
     let columnSettings; // Set below
     let faqPoured = false; // has the FAQ modal been set?
     const logger = new Logger();
-    const gridOps = new GridOps(logger, kustoSettings);
+    const gridOps = new GridOps(logger, kSettings);
     columnSettings = columnSettingsGet()
     columnSettings = gridOps.initializeColumnSettings(columnSettings);
     startup();
