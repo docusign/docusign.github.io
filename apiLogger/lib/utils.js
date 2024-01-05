@@ -82,4 +82,4 @@ function columnSettingsSave(columnSettings) {
     }
 }
 
-export {toast, kSettingsGet, kSettingsSave, columnSettingsGet, columnSettingsSave}
+export {toast, kSettingsGet, kSettingsSave, columnSettingsGet, columnSettingsSave} 

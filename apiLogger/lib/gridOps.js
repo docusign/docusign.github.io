@@ -407,5 +407,4 @@ class ButtonRenderer {
     }
 }
 
-
 export { GridOps };

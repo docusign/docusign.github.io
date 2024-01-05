@@ -115,7 +115,7 @@ $(function() {
         currentColumnSettings();
     }
 
-    //// The MAINLINE ////
+    //// The MAINLINE //// 
     let loadZipFileModal = null;
     let kSettings = kSettingsGet();
     let columnSettings; // Set below
