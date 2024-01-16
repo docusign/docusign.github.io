@@ -17,7 +17,9 @@
     <script>
       const msg = {source: 'dsResponse', hash: window.location.hash || '',
         href: window.location.href || ''}
-      if (window.opener) {
+      if (window.parent && window.parent.opener) {
+        window.parent.opener.postMessage(msg, '*'); // iframed case
+      } else if (window.opener) {
         window.opener.postMessage(msg, '*');
       } else {
         window.parent.postMessage(msg, '*');
