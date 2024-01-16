@@ -25,6 +25,7 @@ $(function () {
     let clientId = "demo";
     // Viewing settings 
     const dsReturnUrlDefault = "https://docusign.github.io/jsfiddleDsResponse.html";
+    const iframeitUrl = "https://docusign.github.io/app-examples/embedded-views/iframeit.html";
     let dsReturnUrl = dsReturnUrlDefault;
     let comment = ""; // The user's comment about this config
     let qpSender = { // defaults
@@ -300,7 +301,10 @@ $(function () {
         const resultsUrl = results.url.replace(/&send=[01]/,''); // remove "&send=1"
         const senderUrl = `${resultsUrl}&${qp.toString()}`;
         msg(`Displaying sender view: ${senderUrl}`); 
-        embeddedViewWindow = window.open(senderUrl, "_blank");
+        // no iframe: embeddedViewWindow = window.open(senderUrl, "_blank");
+        embeddedViewWindow = window.open(
+            `iframeitUrl?label=Embedded+Sender+View&url=${encodeURIComponent(senderUrl)}`, "_blank");
+        
         if(!embeddedViewWindow || embeddedViewWindow.closed || 
            typeof embeddedViewWindow.closed=='undefined') {
             // popup blocked
