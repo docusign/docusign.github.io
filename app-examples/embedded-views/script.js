@@ -117,15 +117,21 @@ $(function () {
      */
     let doit2 = async function doit2f(event) {
         $("#doit").addClass("hide");
+        const action = $(`#action`).value();
         if (!checkToken()) {
             // Check that we have a valid token
             return;
         }
         workingUpdate(true);
         updateQp();
-        await embeddedTemplateEdit({
-            templateId: templates[0].templateId,
-        });
+        if (action === "Template Edit") {
+            await embeddedTemplateEdit({
+                templateId: templates[0].templateId,
+            })
+        } else if (action === "Document Responsive HTML Preview") {
+            debugger;
+        }
+        
         $("#doit").removeClass("hide");
         workingUpdate(false);
     };
