@@ -11,9 +11,9 @@
 window.faqmd = `
 ## F.A.Q.
 
-1. Q: Is this application a DocuSign product?
+1. Q: Is this utility a DocuSign product?
 
-   A: No, it is an open source example application. It is not a DocuSign product. It is not supported.
+   A: No, it is an open source application. It is not a DocuSign product. It is not supported.
    please see the LICENSE file in the [source directory](https://github.com/docusign/docusign.github.io/tree/master/apiLogger) for more information.
 
 2. Q: When I upload my API log zip file, is any data sent to DocuSign or to another server?
@@ -22,7 +22,7 @@ window.faqmd = `
    is entirely processed within the browser. No data is sent to DocuSign or anywhere outside of
    your browser. 
 
-   When you open the eSign logger HTML file, JavaScript libraries are *downloaded* into your 
+   When you open the API Logger HTML file, JavaScript libraries are *downloaded* into your 
    web browser. Data is not uploaded to any place on the Internet.
 
 1. Q: How do I get an API log zip file?
@@ -34,14 +34,14 @@ window.faqmd = `
 
 1. Q: Please describe the table.
 
-    A: The table shows the log entries from the zip file. One row per log entry. 
+    A: The table shows the log entries from the zip file, one row per log entry. 
     (Each file in the zip file is one log entry.) Column definitions:
 
     * **Action** The **V** button opens a view to the complete information for the log entry. 
       The view includes the request and response headers and API bodies.
 
-      The **C** button creates a plain text version of the log entry and copies it to the 
-      system clip board. You can then *paste* the log entry into a text editor or email.
+      The **C** button creates a plain-text version of the log entry and copies it to the 
+      system clipboard. You can then *paste* the log entry into a text editor or email.
 
       The **C** buttons can be customized to produce different output. See the **Settings** FAQ, below.
 
@@ -63,24 +63,24 @@ window.faqmd = `
 
     * **URL** The URL that the application called. The port number may reflect an internal
     server, rather than the port that the application used. When the server name
-    starts with demo.app or app, the client was usually the DocuSign web app.
+    starts with *demo.app* or *app,* the client was usually the DocuSign web app.
 
 1. Q: Can I sort the table by a column?
 
-   A: Yes! Click on the small up/down arrows next to the column name. By default, the 
+   A: Yes! Select the small up/down arrows next to the column name. By default, the 
        table is sorted by the log entries' timestamps, in ascending order 
        (the oldest log entry is listed first).
  
 1. Q: Can I choose the columns shown in the grid?
 
-   A: Yes! Click on the **Columns** link in the top navigation bar (right side) to choose
+   A: Yes! Select the **Columns** link in the top navigation bar (right side) to choose
    the columns that will be shown in the grid.
 
 1. Q: What are the Settings options?
 
-   A: Use the **Setting** (top navigation, right corner) to set the application's settings.
-   The settings enables you to redefine the **S** buttons on the grid, and to add a new
-   button to the log entry view pages. Note: this feature is mostly of use to DocuSign 
+   A: Use the **Settings** link (top navigation, right corner) to set the application's settings.
+   The settings enable you to redefine the **S** buttons on the grid, and to add a new
+   button to the log entry view pages. Note: This feature is mostly of use to DocuSign 
    support staff.
 
     * **Custom or Default S button action** choice. Select **Custom** to enable the button
