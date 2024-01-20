@@ -97,6 +97,7 @@ pre {
     cursor: default;
 }
 .accountModal-body {padding: 0;}
+#action {width: 23em;}
 
 
 /* From http://tobiasahlin.com/spinkit/ */

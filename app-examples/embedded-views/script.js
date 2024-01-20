@@ -16,6 +16,7 @@ import {
     usingHttps,
     getStoredAccountId,
     setStoredAccountId,
+    toast,
     //switchAccountsModal
 } from "https://docusign.github.io/app-examples/library/utilities.js" 
 // View the source at https://codepen.io/docusign/pen/OJoLNvQ
@@ -28,6 +29,7 @@ $(function () {
     //const iframeitUrl = "https://docusign.github.io/app-examples/embedded-views/iframeit.html";
     const iframeitUrl = "iframeit.html"; // same dir as the app
     let dsReturnUrl = dsReturnUrlDefault;
+    let envelopeId = null;
     let comment = ""; // The user's comment about this config
     let qpSender = { // defaults
           sendButtonAction: "send" // "redirect"
@@ -82,56 +84,44 @@ $(function () {
     debugger; // uncomment with debugger open to find the right JS file.
 
     /*
-     * The doit function is the example that is triggered by the
-     * button. The user is already logged in (we have an access token).
-     */
-    let doit = async function doitf(event) {
-        $("#doit").addClass("hide");
-        if (!checkToken()) {
-            // Check that we have a valid token
-            return;
-        }
-        workingUpdate(true);
-        updateQp();
-        const signer = {
-            name: data.userInfo.name,
-            email: data.userInfo.email,
-            clientUserId: 1000
-        };
-        const envelopeId = await createEnvelope(signer);
-        if (envelopeId) {
-            msg(`Envelope ${envelopeId} created.`);
-            await embeddedSenderView({
-                envelopeId: envelopeId,
-                signer: signer
-            });
-        }
-        $("#doit").removeClass("hide");
-        workingUpdate(false);
-    };
-    doit = doit.bind(this);
-
-    /*
      * The doit2 function is the example that is triggered by the
      * button. The user is already logged in (we have an access token).
      */
     let doit2 = async function doit2f(event) {
         $("#doit").addClass("hide");
-        const action = $(`#action`).value();
+        const action = $(`#action`).val();
         if (!checkToken()) {
             // Check that we have a valid token
             return;
         }
         workingUpdate(true);
         updateQp();
-        if (action === "Template Edit") {
-            await embeddedTemplateEdit({
-                templateId: templates[0].templateId,
-            })
-        } else if (action === "Document Responsive HTML Preview") {
-            debugger;
+        const needsEnv = {
+            "Edit": true, "Correct": true, "Recipient Preview": true, "Recipient Manual Review": true}
+        if (needsEnv[action] && !envelope) {
+            toast("Problem: create an envelope")
+        } else {
+            if (action === "Envelope Send") {
+                await embeddedSend()
+            } else if (action === "Envelope Edit") {
+                await embeddedEdit()
+            } else if (action === "Envelope Correct") {
+                await embeddedCorrect()
+            } else if (action === "Envelope Recipient Preview") {
+                // https://developers.docusign.com/docs/esign-rest-api/reference/envelopes/enveloperecipients/createenveloperecipientpreview/
+                await embeddedRecipientPreview() 
+            } else if (action === "Envelope Recipient Manual Review") {
+                // https://developers.docusign.com/docs/esign-rest-api/reference/envelopes/enveloperecipients/createrecipientmanualreviewview/
+                await embeddedRecipientManualReview()
+            } else if (action === "Template Edit") {
+                await embeddedTemplateEdit({
+                    templateId: templates[0].templateId,
+                })
+            } else if (action === "Template Recipient Preview") {
+                await embeddedTemplateRecipientPreview()
+            }
         }
-        
+
         $("#doit").removeClass("hide");
         workingUpdate(false);
     };
@@ -200,6 +190,22 @@ $(function () {
             if (property in qpSender) {
                 $(`#${property}`).val(query[property]);
             }
+        }
+    }
+
+    async function embeddedSend() {
+        const signer = {
+            name: data.userInfo.name,
+            email: data.userInfo.email,
+            clientUserId: 1000
+        };
+        envelopeId = await createEnvelope(signer);
+        if (envelopeId) {
+            msg(`Envelope ${envelopeId} created.`);
+            await embeddedSenderView({
+                envelopeId: envelopeId,
+                signer: signer
+            });
         }
     }
 
