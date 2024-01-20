@@ -149,4 +149,4 @@ function adjustRows() {
 
 /////////////////////
 export { msg, htmlMsg, adjustRows, errMsg, workingUpdate, usingHttps,
-    getStoredAccountId, setStoredAccountId toast};
+    getStoredAccountId, setStoredAccountId, toast};
