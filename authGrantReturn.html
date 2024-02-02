@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <!-- // Copyright © 2022 DocuSign, Inc.
+       // License: MIT Open Source https://opensource.org/licenses/MIT 
+       // Authorization Code response handler
+  -->
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="description"
+      content="DocuSign OAuth response page"
+    />
+    <title>Close this tab</title>
+  </head>
+  <body>
+    <h2>Please close this tab or window.</h2>
+    <h3><a href="https://github.com/docusign/docusign.github.io/blob/master/jsfiddleImplicitGrantReturn.html">Page source</a></h3>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <script>
+      const msg = {source: 'oauthResponse', search: window.location.search || ''}
+      if (window.opener) {
+        window.opener.postMessage(msg, '*');
+      } else {
+        window.parent.postMessage(msg, '*');
+      }
+    </script>
+  </body>
+</html>
