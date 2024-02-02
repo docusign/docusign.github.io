@@ -208,12 +208,24 @@ class ImplicitGrant {
  */
 class UserInfo {
     constructor(args) {
+        if (args.platform) {
+            if (args.platform === "prod") {
+                oAuthServiceProvider = oAuthServiceProviderProd;
+                oAuthClientID = oAuthClientIDprod
+            } else if (args.platform === "demo") {
+                oAuthServiceProvider = oAuthServiceProviderDemo;
+                oAuthClientID = oAuthClientIDdemo
+            } else if (args.platform === "stage") {
+                oAuthServiceProvider = oAuthServiceProviderStage;
+                oAuthClientID = oAuthClientIDstage
+            }
+        }
         this.accessToken = args.accessToken;
         this.workingUpdateF = args.workingUpdateF || null;
         this.oAuthServiceProvider = oAuthServiceProvider;
         this.userInfoPath = userInfoPath;
         this.eSignBase = eSignBase;
-
+    
         // public variables
         this.working = false;
         this.errMsg = null;
