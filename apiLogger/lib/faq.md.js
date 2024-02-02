@@ -18,7 +18,7 @@ window.faqmd = `
 
 1. Q: Is the source available? Can I use the source?
 
-   A: Yes! The utility is open-source and uses the MIT open source license. 
+   A: Yes! The utility is open source and uses the MIT open source license. 
    See the LICENSE file in the [source directory](https://github.com/docusign/docusign.github.io/tree/master/apiLogger) for more information.
 
 2. Q: When I upload my API log zip file, is any data sent to DocuSign or to another server?
