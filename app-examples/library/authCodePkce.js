@@ -4,15 +4,14 @@
 const oAuthServiceProviderProd = "https://account.docusign.com"; // prod
 const oAuthServiceProviderDemo = "https://account-d.docusign.com"; 
 const oAuthServiceProviderStage = "https://account-s.docusign.com"; 
-let oAuthServiceProvider = oAuthServiceProviderProd; // prod
-const implicitGrantPath = "/oauth/auth";
+const authPath = "/oauth/auth";
 const userInfoPath = "/oauth/userinfo";
 // Client IDs are NOT secrets. See
 // https://www.rfc-editor.org/rfc/rfc6749.html#section-2.2
-const oAuthClientIDdemo = "f399b5fa-1807-4cc2-8498-2fba58d14759"; // demo
-const oAuthClientIDstage = "75db0d4b-a09f-47c0-af54-8d533dd59ea5"; // stage
-const oAuthClientIDprod = "8dd0204d-d969-4097-b121-f4bc77b81a44"; // prod
-let oAuthClientID = oAuthClientIDprod;
+const oAuthClientIDdemo = ""; // demo
+const oAuthClientIDstage = "ec5769e4-ec17-494c-98a7-bcc0a289e214"; // stage
+const oAuthClientIDprod = ""; // prod
+
 const oAuthScopes = "signature cors";
 const eSignBase = "/restapi/v2.1";
 const oAuthReturnUrl =
@@ -21,39 +20,49 @@ const logLevel = 0; // 0 is terse; 9 is verbose
 
 /*
  * CLASS AuthCodePkce
- * AuthCodePkce handles the functionality of the implicit grant flow
+ * AuthCodePkce handles the functionality of the 
+ * authentication code grant flow with PKCE without a secret
+ * -- for public clients
  *
  * It opens, then later closes, a new browser tab.
  * The client app must call handleMessage when the window receives a message event
- *
- * args -- an object containing attributes:
+ * 
+ * Constructor
+ *   args -- an object containing attributes:
  *   workingUpdateF -- function called when working state changes
+ *   platform === "stage", "demo", or "prod" -- selects the DocuSign platform
  *
  * public values
+ *   .oAuthClientID
+ *   .oAuthScopes
+ *   .platform
  *   .errMsg -- null or contains the error information
- *   .working -- is the implicit grant flow in process?
+ *   .working -- is the grant flow in process?
  *   .accessToken -- the access_token or null
  *   .accessTokenExpires -- a Date object or null
+ *   .refreshToken
  */
 class AuthCodePkce {
+    /**
+     * See https://jackhenry.dev/open-api-docs/authentication-framework/overview/pkce/
+     *  
+     */
     constructor(args) {
-        // set ClientId
-        if (args.clientId) {
-            if (args.clientId === "prod") {
-                oAuthServiceProvider = oAuthServiceProviderProd;
-                oAuthClientID = oAuthClientIDprod
-            } else if (args.clientId === "demo") {
-                oAuthServiceProvider = oAuthServiceProviderDemo;
-                oAuthClientID = oAuthClientIDdemo
-            } else if (args.clientId === "stage") {
-                oAuthServiceProvider = oAuthServiceProviderStage;
-                oAuthClientID = oAuthClientIDstage
+        // set platform
+        if (args.platform) {
+            if (args.platform === "prod") {
+                this.oAuthServiceProvider = oAuthServiceProviderProd;
+                this.oAuthClientID = oAuthClientIDprod
+            } else if (args.platform === "demo") {
+                this.oAuthServiceProvider = oAuthServiceProviderDemo;
+                this.oAuthClientID = oAuthClientIDdemo
+            } else if (args.platform === "stage") {
+                this.oAuthServiceProvider = oAuthServiceProviderStage;
+                this.oAuthClientID = oAuthClientIDstage
             }
         }
 
-        this.oAuthServiceProvider = oAuthServiceProvider;
-        this.implicitGrantPath = implicitGrantPath;
-        this.oAuthClientID = oAuthClientID;
+        this.authPath = authPath;
         this.oAuthScopes = oAuthScopes;
         this.oAuthReturnUrl = oAuthReturnUrl;
         this.workingUpdateF = args.workingUpdateF || null;
@@ -79,14 +88,16 @@ class AuthCodePkce {
             this.workingUpdateF(this.working);
         }
 
+        await this.createCodeVerifierChallenge();
+
         // Get a random nonce to use with OAuth call
         // See https://oauth.net/articles/authentication/#access-token-injection
         // Using https://www.random.org/clients/http/
         this._nonce = Date.now(); // default nounce
         this._nonce = (await this.randomNounce()) || this._nonce;
         const url =
-            `${this.oAuthServiceProvider}${this.implicitGrantPath}` +
-            `?response_type=token` +
+            `${this.oAuthServiceProvider}${this.authPath}` +
+            `?response_type=code` +
             `&scope=${this.oAuthScopes}` +
             `&client_id=${this.oAuthClientID}` +
             `&redirect_uri=${this.oAuthReturnUrl}` +
@@ -176,6 +187,58 @@ class AuthCodePkce {
             Date.now() + bufferTime < this.accessTokenExpires.getTime();
         return ok;
     }
+
+    /**
+     * Create 
+     * this.codeVerifier -- a secret
+     * this.codeChallenge -- SHA256(this.CodeVerifier)
+     * See https://stackoverflow.com/a/63336562/64904
+     */
+    async createCodeVerifierChallenge() {
+        this.codeVerifier = this.generateCodeVerifier();
+        
+        function sha256(plain) {
+            // returns promise ArrayBuffer
+            const encoder = new TextEncoder();
+            const data = encoder.encode(plain);
+            return window.crypto.subtle.digest("SHA-256", data);
+        }
+          
+        function base64urlencode(a) {
+            let str = "";
+            let bytes = new Uint8Array(a);
+            let len = bytes.byteLength;
+            for (let i = 0; i < len; i++) {
+              str += String.fromCharCode(bytes[i]);
+            }
+            return btoa(str)
+              .replace(/\+/g, "-")
+              .replace(/\//g, "_")
+              .replace(/=+$/, "");
+        }
+          
+        const hashed = await sha256(this.codeVerifier);
+        this.codeChallenge = base64urlencode(hashed);
+        // Check the code verifier and challenge here:
+        // https://example-app.com/pkce
+    }
+
+    /**
+     * return codeVerifier -- a secret
+     * 43 - 128 bytes
+     * Characters English letters A-Z or a-z, Numbers 0-9, Symbols “-”, “.”, “_” or “~”.
+     * Note that this solution can return varying string lengths
+     * See https://crypto.stackexchange.com/q/109579/8680 
+     */
+    generateCodeVerifier() {
+        const len = 128;
+        const array = new Uint32Array( len / 8);
+        window.crypto.getRandomValues(array);
+        return Array.from(array, x => x.toString(16)).join("");
+    }
+
+      
+
 }
 
 export { AuthCodePkce };

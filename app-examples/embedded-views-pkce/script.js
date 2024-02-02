@@ -616,7 +616,7 @@ $(function () {
         platform = "demo";
         data.authCodePkce = new AuthCodePkce({
             workingUpdateF: workingUpdate,
-            clientId: platform
+            platform: platform
         });
         await data.authCodePkce.login();
     };
@@ -627,7 +627,7 @@ $(function () {
         platform = "stage";
         data.authCodePkce = new AuthCodePkce({
             workingUpdateF: workingUpdate,
-            clientId: platform
+            platform: platform
         });
         await data.authCodePkce.login();
     };
