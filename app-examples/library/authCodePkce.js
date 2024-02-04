@@ -5,6 +5,7 @@ const oAuthServiceProviderProd = "https://account.docusign.com"; // prod
 const oAuthServiceProviderDemo = "https://account-d.docusign.com"; 
 const oAuthServiceProviderStage = "https://account-s.docusign.com"; 
 const authPath = "/oauth/auth";
+const tokenPath = "/oauth/token";
 const userInfoPath = "/oauth/userinfo";
 // Client IDs are NOT secrets. See
 // https://www.rfc-editor.org/rfc/rfc6749.html#section-2.2
@@ -15,7 +16,7 @@ const oAuthClientIDprod = ""; // prod
 const oAuthScopes = "signature cors";
 const eSignBase = "/restapi/v2.1";
 const oAuthReturnUrl =
-    "https://docusign.github.io/jsfiddleImplicitGrantReturn.html";
+    "https://docusign.github.io/authGrantReturn.html";
 const logLevel = 0; // 0 is terse; 9 is verbose
 
 /*
@@ -63,6 +64,7 @@ class AuthCodePkce {
         }
 
         this.authPath = authPath;
+        this.tokenPath = tokenPath;
         this.oAuthScopes = oAuthScopes;
         this.oAuthReturnUrl = oAuthReturnUrl;
         this.workingUpdateF = args.workingUpdateF || null;
@@ -90,16 +92,16 @@ class AuthCodePkce {
 
         await this.createCodeVerifierChallenge();
 
-        // Get a random nonce to use with OAuth call
-        // See https://oauth.net/articles/authentication/#access-token-injection
-        // Using https://www.random.org/clients/http/
-        this._nonce = Date.now(); // default nounce
-        this._nonce = (await this.randomNounce()) || this._nonce;
+        // Make a random nonce to use with OAuth call
+        this._nonce = this.generateCodeVerifier()
+
         const url =
             `${this.oAuthServiceProvider}${this.authPath}` +
             `?response_type=code` +
             `&scope=${this.oAuthScopes}` +
             `&client_id=${this.oAuthClientID}` +
+            `&code_challenge=${this.codeChallenge}` +
+            `&code_challenge_method=S256` +
             `&redirect_uri=${this.oAuthReturnUrl}` +
             `&state=${this._nonce}`;
         this._loginWindow = window.open(url, "_blank");
@@ -112,31 +114,10 @@ class AuthCodePkce {
     }
 
     /*
-     * Obtain a random value from random.org
-     */
-    async randomNounce() {
-        try {
-            const url =
-                "https://www.random.org/strings/?num=1&len=20&digits=on&upperalpha=on&loweralpha=on&unique=on&format=plain&rnd=new";
-            let results = await fetch(url, {
-                mode: "cors",
-                headers: new Headers({
-                    Accept: `text/html`
-                })
-            });
-            if (results && results.ok) {
-                // remove the last character, a CR
-                return (await results.text()).slice(0, -1);
-            }
-        } catch (e) {}
-        return false;
-    }
-
-    /*
      * handleMessage processes the incoming response message
      * from the Authorization Service Provider
      */
-    handleMessage(data) {
+    async handleMessage(data) {               
         if (!data || data.source !== "oauthResponse") {
             return "skip";
         }
@@ -144,27 +125,65 @@ class AuthCodePkce {
         if (this._loginWindow) {
             this._loginWindow.close(); // close the browser tab used for OAuth
         }
-        const hash = data.hash.substring(1); // remove the #
-        const items = hash.split(/\=|\&/);
-        let i = 0;
-        let response = {};
-        while (i + 1 < items.length) {
-            response[items[i]] = items[i + 1];
-            i += 2;
+        const queryString = data.search;
+        if (!queryString) {
+            this.err ("Bad OAuth response");
+            return ("error");
         }
-        const newState = response.state;
-        if (newState !== this._nonce) {
-            this.errMsg = "Bad state response. Possible attacker!?!";
-            this.working = false;
-            if (this.workingUpdateF) {
-                this.workingUpdateF(this.working);
-            }
+        const params = new URLSearchParams(queryString);
+        const code = params.get("code"); // the authorization code
+        const state = params.get("state"); // the returned state
+        if (!code) {
+            this.err ("Bad OAuth response");
+            return ("error");
+        }
+        if (state !== this._nonce) {
+            this.err ("Bad state response. Possible attacker!?!");
             return "error";
         }
+
+        // curl command to obtain the access token
+        console.log(`
+        curl -X POST -d "grant_type=authorization_code&code=${code}&client_id=${this.oAuthClientID}&code_verifier=${this.codeVerifier}" -H "origin: http://localhost" ${this.oAuthServiceProvider}${this.tokenPath}`);
+
+        // Token exchange example response:
+        /**
+         *  {
+            "access_token":"eyJ0eX...6-tOlc8jCM9OSY_rTpW5wyQ3N2rWEcBuAG9GRpn0raO6rGI9H0-ZYYag",
+            "token_type":"Bearer",
+            "refresh_token":"eyJ0eX...AiOiJNVCIsImFsZyI6I85lJTMjU2IpWhA4yEosLcVg64WI0JRwWI5Rw",
+            "expires_in":28800,
+            "scope":"signature cors"
+            }
+        */ 
+
+        // exchange the authorization code for the access token
+        // https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.3
+        try {
+            const formData = new FormData();
+            formData.append('grant_type', 'authorization_code');
+            formData.append('code', code);
+            formData.append('client_id', this.oAuthClientID);
+            formData.append('code_verifier', this.codeVerifier);
+            const url = `${this.oAuthServiceProvider}${this.tokenPath}`;
+            const rawResponse = await fetch(url,
+                    {mode: 'cors',
+                    method: 'POST',
+                    headers: new Headers({"X-DocuSign-SDK": "CodePen"}), 
+                    body: formData
+                    });
+            const response = rawResponse && rawResponse.ok && await rawResponse.json();
+        } catch (e) {
+            this.err ("Bad OAuth response");
+            return ("error");
+        }
+
         this.accessToken = response.access_token;
+        this.refreshToken = response.refresh_token;
         this.accessTokenExpires = new Date(
             Date.now() + response.expires_in * 1000
         );
+        console.log (`\n\n#### Access Token expiration: ${response.expires_in / 60 / 60} hours\n\n`);
         // done!
         this.working = false;
         if (this.workingUpdateF) {
@@ -172,6 +191,15 @@ class AuthCodePkce {
         }
         return "ok";
     }
+
+    err (msg) {
+        this.errMsg = msg;
+        this.working = false;
+        if (this.workingUpdateF) {
+            this.workingUpdateF(this.working);
+        }
+    }
+
 
     logout() {
         this.accessToken = null;

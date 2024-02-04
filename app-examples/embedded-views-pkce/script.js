@@ -451,10 +451,10 @@ $(function () {
     messageListener = messageListener.bind(this);
 
     /*
-     * Process incoming implicit grant response
+     * Process incoming OAuth response
      */
     async function authCodePkceMsg(eventData) {
-        const oAuthResponse = data.authCodePkce.handleMessage(eventData);
+        const oAuthResponse = await data.authCodePkce.handleMessage(eventData);
         if (oAuthResponse === "ok") {
             await completeLogin()
         } else if (oAuthResponse === "error") {
