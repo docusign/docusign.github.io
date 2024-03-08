@@ -100,6 +100,8 @@ pre {
 .accountModal-body {padding: 0;}
 #action {width: 25em;}
 
+#uxForm {margin-top:2em;}
+#uxForm select {display: inline; width: 14em; margin-left: 2em;}
 
 /* From http://tobiasahlin.com/spinkit/ */
 .spinner {
