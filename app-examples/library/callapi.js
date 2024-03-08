@@ -4,6 +4,7 @@
 const oAuthServiceProviderProd = "https://account.docusign.com"; // prod
 const oAuthServiceProviderDemo = "https://account-d.docusign.com"; 
 const oAuthServiceProviderStage = "https://account-s.docusign.com"; 
+const oAuthServiceProvidertk1 = "https://account-tk1.tk.docusign.dev/"; 
 let oAuthServiceProvider = oAuthServiceProviderProd; // prod
 const implicitGrantPath = "/oauth/auth";
 const userInfoPath = "/oauth/userinfo";
@@ -12,6 +13,7 @@ const userInfoPath = "/oauth/userinfo";
 const oAuthClientIDdemo = "f399b5fa-1807-4cc2-8498-2fba58d14759"; // demo
 const oAuthClientIDstage = "75db0d4b-a09f-47c0-af54-8d533dd59ea5"; // stage
 const oAuthClientIDprod = "8dd0204d-d969-4097-b121-f4bc77b81a44"; // prod
+const oAuthClientIDtk1 = "b3d4361e-56a7-4c77-9fa1-d50418666f40"; // tk1
 let oAuthClientID = oAuthClientIDprod;
 const oAuthScopes = "signature cors";
 const eSignBase = "/restapi/v2.1";
@@ -48,6 +50,9 @@ class ImplicitGrant {
             } else if (args.clientId === "stage") {
                 oAuthServiceProvider = oAuthServiceProviderStage;
                 oAuthClientID = oAuthClientIDstage
+            } else if (args.clientId === "tk1") {
+                oAuthServiceProvider = oAuthServiceProvidertk1;
+                oAuthClientID = oAuthClientIDtk1
             }
         }
 
