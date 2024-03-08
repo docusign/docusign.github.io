@@ -620,16 +620,19 @@ $(function () {
     };
     login = login.bind(this);
 
-    let loginStage = async function loginStagef(event) {
+    let loginInternal = async function loginInternalf(event) {
+        event.preventDefault;
+        const target = event.target;
+
         $("#login").addClass("hide");
-        clientId = "tk1";
+        clientId = $(target).attr("data-platform");
         data.implicitGrant = new ImplicitGrant({
             workingUpdateF: workingUpdate,
             clientId: clientId
         });
         await data.implicitGrant.login();
     };
-    loginStage = loginStage.bind(this);
+    loginInternal = loginInternal.bind(this);
     
     /*
      * Switch Accounts was clicked
@@ -685,7 +688,8 @@ $(function () {
         adjustRows();
         window.addEventListener("message", messageListener);
         $("#btnOauth").click(login);
-        $("#btnOauthStage").click(loginStage);
+        $("#btnOauthInternalStage").click(loginInternal);
+        $("#btnOauthInternalTk1").click(loginInternal);
         $("#btnDoit").click(doit);
         $("#btnDoit2").click(doit2);
         $("#btnDoit3").click(doit3);
