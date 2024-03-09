@@ -3,6 +3,87 @@
 //
 // Test embedded views v2 backwards compatibility 
 
+/**
+ * 
+
+
+    {
+	"returnUrl": "https://app.example.com", // required
+	"viewAccess": "envelope", // required 
+// (use "template" for embedded template edit)
+	"settings": {
+	"startingScreen": "prepare", // or tagging
+	"sendButtonAction": "redirect",
+"showBackButton": "true",
+"backButtonAction": "previousPage", // or redirect
+"showHeaderActions": "true",
+"showDiscardAction": "true",
+"showAdvancedOptions": "true",
+"lockToken": "", // or {token_value},
+
+"recipientSettings": {              /// NOT recipients
+	"showEditRecipients": "true",
+	"showEditMessage": "true",
+	"showBulkSend": "true",
+	"showContactsList": "true"
+},
+"documentSettings": {  /// not documents
+	"showEditDocuments": "true",
+	"showEditDocumentVisibility": "true",
+	"showEditPages": "true",
+	"showSaveAsDocumentCustomField": "true"
+},
+	"templateSettings": {  ## not templates
+		"showMatchingTemplatesPrompt": "true"
+},
+"taggerSettings": {  /// not tagging
+	"paletteSections": "default", // or custom, none
+	"paletteSettings": { // only when “showPalette” is “custom”
+	"custom": {
+		"show": "true",
+		"isDefault": "true"  /// PRESENT? (same for rest of isDefault palette attributes)
+},
+"merge": {
+		"show": "true",
+		"isDefault": "false"
+},
+"notary": {
+		"show": "true",
+		"isDefault": "false"
+},
+"seals": {
+		"show": "true",
+		"isDefault": "false"
+},
+"smartContracts": {
+		"show": "true",
+		"isDefault": "false"
+},
+"annotations": {
+		"show": "true",
+		"isDefault": "false"
+},
+"smartSections": {
+		"show": "true",
+		"isDefault": "false"
+}
+}
+},
+"envelopeCustomFieldSettings  ": { /// NOT envelopeCustomFields
+	"showEnvelopeCustomFields": "true"
+},
+"customFields": {  /// NOT here, in documentSettings
+	"showSaveAsDocumentCustomField": "true"
+}
+
+}
+
+ * 
+ * 
+ * 
+ */
+
+
 import {
     CallApi,
     ImplicitGrant,
@@ -25,6 +106,7 @@ import {
 import { CheckTemplates } from "https://docusign.github.io/app-examples/library/checkTemplates.js";
 
 $(function () {
+    const IGNORE_CORS_ERRORS = true;
     let clientId = "demo";
     // Viewing settings 
     const dsReturnUrlDefault = "https://docusign.github.io/jsfiddleDsResponse.html";
@@ -477,6 +559,7 @@ $(function () {
         });
         let ok = await data.userInfo.getUserInfo();
         corsAccountReport();
+        ok = ok || IGNORE_CORS_ERRORS;
         ok = ok && await setAccountId(getStoredAccountId());
         if (!ok) {
             // Did not complete the login or templates issue
