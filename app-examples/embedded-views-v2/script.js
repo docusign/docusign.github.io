@@ -395,10 +395,10 @@ $(function () {
         if (IGNORE_CORS_ERRORS) {
             let curl = `curl \\\n`;
             curl += `-H Content-Type: application/json \\\n`;
-            curl += `-H Authorization: Bearer ${data.implicitGrant.accessToken}  \\\n;`;
+            curl += `-H Authorization: Bearer ${data.implicitGrant.accessToken}  \\\n`;
             curl += `--request POST ${accountBaseUrl}/${apiMethod}\\\n`;
-            curl += `--date-binary '${req}'`
-            htmlMsg(`<pre><code>${curl}</code></pre>`)
+            curl += `--data $'${JSON.stringify(req, null, 4)}'`
+            htmlMsg(`<pre style="width=50em;"><code>${curl}</code></pre>`)
             return
         }
 
