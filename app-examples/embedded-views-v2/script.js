@@ -501,6 +501,9 @@ $(function () {
                 "showMatchingTemplatesPrompt": qpSender.showMatchingTemplatesPrompt
             }
         }
+
+        htmlMsg(`<h2>Embedded View request object</h2>
+            <pre><code>${JSON.stringify(request, null, 4)}</code></pre></p>`);
         return request
     }
     
