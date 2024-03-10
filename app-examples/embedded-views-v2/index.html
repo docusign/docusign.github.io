@@ -23,15 +23,17 @@
                             Login with DocuSign</a>
 
                         <!-- https://mdbootstrap.com/docs/standard/extended/dropdown-button/ -->
-                        <div id="internalLogins" class="hide dropdown display-inline mlb">
-                            <button class="btn btn-outline-warning btn-sm dropdown-toggle" type="button" id="dropdownMenuButton"
-                              data-mdb-toggle="dropdown" aria-expanded="false">
-                              Internal Login
-                            </button>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                              <li><a id="btnOauthInternalStage" class="dropdown-item" href="#" data-platform="stage">Stage</a></li>
-                              <li><a id="btnOauthInternalTk1" class="dropdown-item" href="#" data-platform="tk1">TK1</a></li>
-                            </ul>
+                        <div class="display-inline">
+                            <div id="internalLogins" class="hide dropdown mlb">
+                                <button class="btn btn-outline-warning btn-sm dropdown-toggle" type="button" id="dropdownMenuButton"
+                                data-mdb-toggle="dropdown" aria-expanded="false">
+                                Internal Login
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <li><a id="btnOauthInternalStage" class="dropdown-item" href="#" data-platform="stage">Stage</a></li>
+                                <li><a id="btnOauthInternalTk1" class="dropdown-item" href="#" data-platform="tk1">TK1</a></li>
+                                </ul>
+                            </div>
                         </div>
                         <p>
                             Use your DocuSign <b>Developer Account.</b><br/>Don't have one?
