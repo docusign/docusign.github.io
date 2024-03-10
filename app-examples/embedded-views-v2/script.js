@@ -395,9 +395,10 @@ $(function () {
         if (IGNORE_CORS_ERRORS) {
             let curl = `curl \\\n`;
             curl += `-H "Content-Type: application/json" \\\n`;
-            curl += `-H "Authorization: Bearer ${data.implicitGrant.accessToken}  "\\\n`;
-            curl += `--data '${JSON.stringify(req, null, 4).replaceAll('\n', ' \\\n')}\\\n'`
-            curl += `--request POST ${accountBaseUrl}/${apiMethod}\\\n`;
+            curl += `-H "Authorization: Bearer ${data.implicitGrant.accessToken}  " \\\n`;
+            curl += `--data '${JSON.stringify(req, null, 4)}' \\\n`
+            curl += `--request POST \\\n`;
+            url += `${accountBaseUrl}${apiMethod}`
             window.focus();
             await navigator.clipboard.writeText(curl);
             Toastify({ // https://github.com/apvarun/toastify-js/blob/master/README.md
