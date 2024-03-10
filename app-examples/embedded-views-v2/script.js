@@ -445,47 +445,47 @@ $(function () {
             "returnUrl": dsReturnUrl, // required
             "viewAccess": style, // required  // (use "template" for embedded template edit)
             "settings": {
-                "startingScreen": qpSender[startingScreen], //"prepare" // or tagging
-                "sendButtonAction": qpSender[sendButtonAction],
-                "showBackButton": qpSender[showBackButton],
-                "backButtonAction": qpSender[backButtonAction], // or redirect
-                "showHeaderActions": qpSender[showHeaderActions],
-                "showDiscardAction": qpSender[showDiscardAction],
-                "showAdvancedOptions": qpSender[showAdvancedOptions],
+                "startingScreen": qpSender.startingScreen, //"prepare" // or tagging
+                "sendButtonAction": qpSender.sendButtonAction,
+                "showBackButton": qpSender.showBackButton,
+                "backButtonAction": qpSender.backButtonAction, // or redirect
+                "showHeaderActions": qpSender.showHeaderActions,
+                "showDiscardAction": qpSender.showDiscardAction,
+                "showAdvancedOptions": qpSender.showAdvancedOptions,
                 // "lockToken": token_value,
                 "recipientSettings": {              /// NOT recipients
-                    "showEditRecipients": qpSender[showEditRecipients],
-                    "showEditMessage": qpSender[showEditMessage],
-                    "showBulkSend": qpSender[showBulkSend],
-                    "showContactsList": qpSender[showContactsList]
+                    "showEditRecipients": qpSender.showEditRecipients,
+                    "showEditMessage": qpSender.showEditMessage,
+                    "showBulkSend": qpSender.showBulkSend,
+                    "showContactsList": qpSender.showContactsList
                 },
                 "documentSettings": {  /// not documents
-                    "showEditDocuments": qpSender[showEditDocuments],
-                    "showEditDocumentVisibility": qpSender[showEditDocumentVisibility],
-                    "showEditPages": qpSender[showEditPages],
-                    "showSaveAsDocumentCustomField": qpSender[showSaveAsDocumentCustomField]
+                    "showEditDocuments": qpSender.showEditDocuments,
+                    "showEditDocumentVisibility": qpSender.showEditDocumentVisibility,
+                    "showEditPages": qpSender.showEditPages,
+                    "showSaveAsDocumentCustomField": qpSender.showSaveAsDocumentCustomField
                 },
                 "taggerSettings": {  /// not tagging
-                    "paletteSections": qpSender[paletteSections], // or custom, none
-                    "paletteDefault": qpSender[paletteDefault], // or custom, none
+                    "paletteSections": qpSender.paletteSections, // or custom, none
+                    "paletteDefault": qpSender.paletteDefault, // or custom, none
                     "paletteSettings": { // only when “showPalette” is “custom”
-                        "custom": {"show": qpSender[psSettingsCustomShow]},
-                        "merge": {"show": qpSender[psSettingsMergeShow]},
-                        "notary": {"show": qpSender[psSettingsNotaryShow]},
-                        "seals": {"show": qpSender[psSettingsSealsShow]},
-                        "smartContracts": {"show": qpSender[psSettingsSmartContractsShow]},
-                        "annotations": {"show": qpSender[psSettingsAnnotationsShow]},
-                        "smartSections": {"show": qpSender[psSettingsSmartSectionsShow]},
+                        "custom": {"show": qpSender.psSettingsCustomShow},
+                        "merge": {"show": qpSender.psSettingsMergeShow},
+                        "notary": {"show": qpSender.psSettingsNotaryShow},
+                        "seals": {"show": qpSender.psSettingsSealsShow},
+                        "smartContracts": {"show": qpSender.psSettingsSmartContractsShow},
+                        "annotations": {"show": qpSender.psSettingsAnnotationsShow},
+                        "smartSections": {"show": qpSender.psSettingsSmartSectionsShow},
                     }
                 },
                 "envelopeCustomFieldSettings  ": { /// NOT envelopeCustomFields
-                    "showEnvelopeCustomFields": qpSender[showEnvelopeCustomFields]
+                    "showEnvelopeCustomFields": qpSender.showEnvelopeCustomFields
                 }
             }
         }
         if (style === "envelope") {
             request["templateSettings"] = {  // not for templates edit request
-                "showMatchingTemplatesPrompt": qpSender[showMatchingTemplatesPrompt]
+                "showMatchingTemplatesPrompt": qpSender.showMatchingTemplatesPrompt
             }
         }
         return request
