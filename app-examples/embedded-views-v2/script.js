@@ -760,7 +760,7 @@ $(function () {
             errMsg(data.checkTemplates.errMsg)
             ok = false;
         }
-        if (ok) {
+        if (ok || IGNORE_CORS_ERRORS) {
             $("#doit").removeClass("hide");
         }
         msg('done.'); // done with templates
