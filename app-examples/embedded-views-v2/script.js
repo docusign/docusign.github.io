@@ -394,11 +394,12 @@ $(function () {
 
         if (IGNORE_CORS_ERRORS) {
             let curl = `curl \\\n`;
-            curl += `-H Content-Type: application/json \\\n`;
-            curl += `-H Authorization: Bearer ${data.implicitGrant.accessToken}  \\\n`;
+            curl += `-H "Content-Type: application/json" \\\n`;
+            curl += `-H "Authorization: Bearer ${data.implicitGrant.accessToken}  "\\\n`;
+            curl += `--data '${JSON.stringify(req, null, 4).replaceAll('\n', ' \\\n')}\\\n'`
             curl += `--request POST ${accountBaseUrl}/${apiMethod}\\\n`;
-            curl += `--data $'${JSON.stringify(req, null, 4)}'`
-            htmlMsg(`<pre style="width=50em;"><code>${curl}</code></pre>`)
+            await navigator.clipboard.writeText(curl);
+            htmlMsg(`<h2>Curl command is on clipboard: replace the envelope ID`)
             return
         }
 
