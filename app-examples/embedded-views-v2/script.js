@@ -485,7 +485,7 @@ $(function () {
         }
         if (style === "envelope") {
             request["templateSettings"] = {  // not for templates edit request
-                "showMatchingTemplatesPrompt": qpSender[]
+                "showMatchingTemplatesPrompt": qpSender[showMatchingTemplatesPrompt]
             }
         }
         return request
