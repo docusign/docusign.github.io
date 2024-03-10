@@ -230,7 +230,7 @@ $(function () {
         updateQp();
         let url = window.location.origin + window.location.pathname + "#";
         if (showInternalLogins) {
-            url += `${SHOW_INTERNAL_AUTH_QP}=1`
+            url += `${SHOW_INTERNAL_AUTH_QP}=1&`
         }
         for (const property in qpSender) {
             url += `${property}=${encodeURIComponent(qpSender[property]).replace(/\%20/g, '+')}&`;
@@ -398,8 +398,19 @@ $(function () {
             curl += `-H "Authorization: Bearer ${data.implicitGrant.accessToken}  "\\\n`;
             curl += `--data '${JSON.stringify(req, null, 4).replaceAll('\n', ' \\\n')}\\\n'`
             curl += `--request POST ${accountBaseUrl}/${apiMethod}\\\n`;
+            window.focus();
             await navigator.clipboard.writeText(curl);
-            htmlMsg(`<h2>Curl command is on clipboard: replace the envelope ID`)
+            Toastify({ // https://github.com/apvarun/toastify-js/blob/master/README.md
+                text: "Curl command is on clipboard: replace the envelope ID!",
+                duration: 5000,
+                close: true,
+                gravity: "top", // `top` or `bottom`
+                position: "center", // `left`, `center` or `right`
+                stopOnFocus: true, // Prevents dismissing of toast on hover
+                style: {
+                  background: "linear-gradient(to right, #00b09b, #96c93d)",
+                },
+              }).showToast();
             return
         }
 
