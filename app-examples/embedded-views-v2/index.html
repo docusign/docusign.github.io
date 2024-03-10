@@ -23,7 +23,7 @@
                             Login with DocuSign</a>
 
                         <!-- https://mdbootstrap.com/docs/standard/extended/dropdown-button/ -->
-                        <div class="dropdown display-inline mlb">
+                        <div id="internalLogins" class="hide dropdown display-inline mlb">
                             <button class="btn btn-outline-warning btn-sm dropdown-toggle" type="button" id="dropdownMenuButton"
                               data-mdb-toggle="dropdown" aria-expanded="false">
                               Internal Login
@@ -72,12 +72,12 @@
             <div id="doit" class="hide mb-3">
                 <select id="action" class="form-select-lg" aria-label="Action select">
                     <option>Envelope Send</option>
-                    <option>Envelope Correct</option>
+                    <!-- <option>Envelope Correct</option>
                     <option>Envelope Recipient Preview</option>
-                    <option>Envelope Recipient Manual Review</option>
+                    <option>Envelope Recipient Manual Review</option>  -->
                     <option>Template Edit</option>
-                    <option>Template Document Responsive HTML Preview</option>
-                    <option>Template Recipient Preview</option>
+                    <!-- <option>Template Document Responsive HTML Preview</option>
+                    <option>Template Recipient Preview</option>  -->
                 </select>
                 <a id="btnDoit2" class="btn btn-primary" type="button" role="button">
                     Go!</a>
@@ -89,17 +89,10 @@
                         <textarea id="comment" class="form-control" rows="3" style="width:40em;"></textarea>
                     </div>
                         <div class="mb-3">
-                        <label for="dsReturnUrl" class="form-label">Include a return URL?</label>
-                        <select id="dsReturnUrl" class="form-select form-select-sm" aria-label=".form-select-sm example">
-                            <option selected>true</option>
-                            <option>false</option>
-                        </select>
-                        </div>
-                        <div class="mb-3">
-                        <label for="send" class="form-label">Start window:</label>
-                        <select id="send" class="form-select form-select-sm" aria-label=".form-select-sm example">
-                            <option value="0" selected>Prepare window</option>
-                            <option value="1">Tagger window</option>
+                        <label for="startingScreen" class="form-label">Starting Screen:</label>
+                        <select id="startingScreen" class="form-select form-select-sm" aria-label=".form-select-sm example">
+                            <option value="prepare" selected>Prepare window</option>
+                            <option value="tagging">Tagger window</option>
                         </select>
                         </div>
                         <div class="mb-3">
@@ -110,6 +103,13 @@
                         </select>
                         </div>
                         <div class="mb-3">
+                            <label for="showBackButton" class="form-label">Show Back Button?</label>
+                            <select id="showBackButton" class="form-select form-select-sm" aria-label=".form-select-sm example">
+                                <option selected>true</option>
+                                <option>false</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
                         <label for="backButtonAction" class="form-label">Back Button action:</label>
                         <select id="backButtonAction" class="form-select form-select-sm" aria-label=".form-select-sm example">
                             <option selected>previousPage</option>
@@ -117,11 +117,25 @@
                         </select>
                         </div>
                         <div class="mb-3">
-                        <label for="showBackButton" class="form-label">Show Back Button?</label>
-                        <select id="showBackButton" class="form-select form-select-sm" aria-label=".form-select-sm example">
-                            <option selected>true</option>
-                            <option>false</option>
-                        </select>
+                            <label for="showHeaderActions" class="form-label">Show Header Actions?</label>
+                            <select id="showHeaderActions" class="form-select form-select-sm" aria-label=".form-select-sm example">
+                                <option selected>true</option>
+                                <option>false</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="showDiscardAction" class="form-label">Show Discard Action?</label>
+                            <select id="showDiscardAction" class="form-select form-select-sm" aria-label=".form-select-sm example">
+                                <option selected>true</option>
+                                <option>false</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="showAdvancedOptions" class="form-label">Show Advanced Options?</label>
+                            <select id="showAdvancedOptions" class="form-select form-select-sm" aria-label=".form-select-sm example">
+                                <option selected>true</option>
+                                <option>false</option>
+                            </select>
                         </div>
                         <div class="mb-3">
                         <label for="showEditRecipients" class="form-label">Show Edit Recipients?</label>
@@ -129,6 +143,27 @@
                             <option selected>true</option>
                             <option>false</option>
                         </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="showEditMessage" class="form-label">Show Edit Message?</label>
+                            <select id="showEditMessage" class="form-select form-select-sm" aria-label=".form-select-sm example">
+                                <option selected>true</option>
+                                <option>false</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="showBulkSend" class="form-label">Show Bulk Send?</label>
+                            <select id="showBulkSend" class="form-select form-select-sm" aria-label=".form-select-sm example">
+                                <option selected>true</option>
+                                <option>false</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="showContactsList" class="form-label">Show Contacts List?</label>
+                            <select id="showContactsList" class="form-select form-select-sm" aria-label=".form-select-sm example">
+                                <option selected>true</option>
+                                <option>false</option>
+                            </select>
                         </div>
                         <div class="mb-3">
                         <label for="showEditDocuments" class="form-label">Show Edit Documents?</label>
@@ -152,6 +187,13 @@
                         </select>
                         </div>
                         <div class="mb-3">
+                            <label for="showSaveAsDocumentCustomField" class="form-label">Show Save As Document Custom Field?</label>
+                            <select id="showSaveAsDocumentCustomField" class="form-select form-select-sm" aria-label=".form-select-sm example">
+                                <option selected>true</option>
+                                <option>false</option>
+                            </select>
+                            </div>
+                        <div class="mb-3">
                         <label for="showMatchingTemplatesPrompt" class="form-label">Show Matching Templates Prompt?</label>
                         <select id="showMatchingTemplatesPrompt" class="form-select form-select-sm" aria-label=".form-select-sm example">
                             <option selected>true</option>
@@ -159,38 +201,73 @@
                         </select>
                         </div>
                         <div class="mb-3">
-                        <label for="showHeaderActions" class="form-label">Show Header Actions?</label>
-                        <select id="showHeaderActions" class="form-select form-select-sm" aria-label=".form-select-sm example">
-                            <option selected>true</option>
-                            <option>false</option>
-                        </select>
-                        </div>
-                        <div class="mb-3">
-                        <label for="showDiscardAction" class="form-label">Show Discard Action?</label>
-                        <select id="showDiscardAction" class="form-select form-select-sm" aria-label=".form-select-sm example">
-                            <option selected>true</option>
-                            <option>false</option>
-                        </select>
-                        </div>
-                        <div class="mb-3">
-                        <label for="showTabPalette" class="form-label">Show Tab Palette?</label>
-                        <select id="showTabPalette" class="form-select form-select-sm" aria-label=".form-select-sm example">
-                            <option selected>true</option>
-                            <option>false</option>
-                        </select>
-                        </div>
-                        <div class="mb-3">
-                        <label for="tabPaletteType" class="form-label">Tab Palette type:</label>
-                        <select id="tabPaletteType" class="form-select form-select-sm" aria-label=".form-select-sm example">
-                            <option selected>standard</option>
+                            <label for="showEnvelopeCustomFields" class="form-label">Show Envelope Custom Fields?</label>
+                            <select id="showEnvelopeCustomFields" class="form-select form-select-sm" aria-label=".form-select-sm example">
+                                <option selected>true</option>
+                                <option>false</option>
+                            </select>
+                            </div>
+                            <div class="mb-3">
+                        <label for="paletteSections" class="form-label">Palette Sections?</label>
+                        <select id="paletteSections" class="form-select form-select-sm" aria-label=".form-select-sm example">
+                            <option selected>default</option>
+                            <option>none</option>
                             <option>custom</option>
-                            <option>merge</option>
-                            <option>notary</option>
-                            <option>seals</option>
-                            <option>smartcontracts</option>
-                            <option>annotations</option>
-                            <option>smartSections</option>
                         </select>
+                        </div>
+                        <div class="mb-5">
+                            <label for="paletteDefault" class="form-label">Custom palette: Default Section?</label>
+                            <select id="paletteDefault" class="form-select form-select-sm" aria-label=".form-select-sm example">
+                                <option selected>custom</option>
+                                <option>merge</option>
+                                <option>notary</option>
+                                <option>seals</option>
+                                <option>smartContracts</option>
+                                <option>annotations</option>
+                                <option>smartSections</option>
+                                </select>
+                        </div>
+                        <div class="mb-5">
+                            <label for="psSettingsCustomShow" class="form-label">Custom palette: Show Custom?</label>
+                            <select id="psSettingsCustomShow" class="form-select form-select-sm" aria-label=".form-select-sm example">
+                                <option selected>true</option>
+                                <option>false</option>
+                            </select>
+                        </div>
+                        <div class="mb-5">
+                            <label for="psSettingsMergeShow" class="form-label">Custom palette: Show Merge?</label>
+                            <select id="psSettingsMergeShow" class="form-select form-select-sm" aria-label=".form-select-sm example">
+                                <option selected>true</option>
+                                <option>false</option>
+                            </select>
+                        </div>
+                        <div class="mb-5">
+                            <label for="psSettingsNotaryShow" class="form-label">Custom palette: Show Notary?</label>
+                            <select id="psSettingsNotaryShow" class="form-select form-select-sm" aria-label=".form-select-sm example">
+                                <option selected>true</option>
+                                <option>false</option>
+                            </select>
+                        </div>
+                        <div class="mb-5">
+                            <label for="psSettingsSealsShow" class="form-label">Custom palette: Show Seals?</label>
+                            <select id="psSettingsSealsShow" class="form-select form-select-sm" aria-label=".form-select-sm example">
+                                <option selected>true</option>
+                                <option>false</option>
+                            </select>
+                        </div>
+                        <div class="mb-5">
+                            <label for="psSettingsAnnotationsShow" class="form-label">Custom palette: Show Annotations?</label>
+                            <select id="psSettingsAnnotationsShow" class="form-select form-select-sm" aria-label=".form-select-sm example">
+                                <option selected>true</option>
+                                <option>false</option>
+                            </select>
+                        </div>
+                        <div class="mb-5">
+                            <label for="psSettingsSmartSectionsShow" class="form-label">Custom palette: Show Smart Sections?</label>
+                            <select id="psSettingsSmartSectionsShow" class="form-select form-select-sm" aria-label=".form-select-sm example">
+                                <option selected>true</option>
+                                <option>false</option>
+                            </select>
                         </div>
                 </form>
             </div>

@@ -1,84 +1,71 @@
-// Copyright © 2022 DocuSign, Inc.
+// Copyright © 2024 DocuSign, Inc.
 // License: MIT Open Source https://opensource.org/licenses/MIT
 //
-// Test embedded views v2 backwards compatibility 
+// Test embedded views v2  
 
 /**
  * 
-
-
-    {
+{
 	"returnUrl": "https://app.example.com", // required
-	"viewAccess": "envelope", // required 
-// (use "template" for embedded template edit)
+	"viewAccess": "envelope", // required  // (use "template" for embedded template edit)
 	"settings": {
 	"startingScreen": "prepare", // or tagging
 	"sendButtonAction": "redirect",
-"showBackButton": "true",
-"backButtonAction": "previousPage", // or redirect
-"showHeaderActions": "true",
-"showDiscardAction": "true",
-"showAdvancedOptions": "true",
-"lockToken": "", // or {token_value},
-
-"recipientSettings": {              /// NOT recipients
-	"showEditRecipients": "true",
-	"showEditMessage": "true",
-	"showBulkSend": "true",
-	"showContactsList": "true"
-},
-"documentSettings": {  /// not documents
-	"showEditDocuments": "true",
-	"showEditDocumentVisibility": "true",
-	"showEditPages": "true",
-	"showSaveAsDocumentCustomField": "true"
-},
-	"templateSettings": {  ## not templates
+    "showBackButton": "true",
+    "backButtonAction": "previousPage", // or redirect
+    "showHeaderActions": "true",
+    "showDiscardAction": "true",
+    "showAdvancedOptions": "true",
+    "lockToken": "", // or {token_value},
+    "recipientSettings": {              /// NOT recipients
+        "showEditRecipients": "true",
+        "showEditMessage": "true",
+        "showBulkSend": "true",
+        "showContactsList": "true"
+    },
+    "documentSettings": {  /// not documents
+        "showEditDocuments": "true",
+        "showEditDocumentVisibility": "true",
+        "showEditPages": "true",
+        "showSaveAsDocumentCustomField": "true"
+    },
+	"templateSettings": {  // not templates edit
 		"showMatchingTemplatesPrompt": "true"
-},
-"taggerSettings": {  /// not tagging
-	"paletteSections": "default", // or custom, none
-	"paletteSettings": { // only when “showPalette” is “custom”
-	"custom": {
-		"show": "true",
-		"isDefault": "true"  /// PRESENT? (same for rest of isDefault palette attributes)
-},
-"merge": {
-		"show": "true",
-		"isDefault": "false"
-},
-"notary": {
-		"show": "true",
-		"isDefault": "false"
-},
-"seals": {
-		"show": "true",
-		"isDefault": "false"
-},
-"smartContracts": {
-		"show": "true",
-		"isDefault": "false"
-},
-"annotations": {
-		"show": "true",
-		"isDefault": "false"
-},
-"smartSections": {
-		"show": "true",
-		"isDefault": "false"
+    },
+    "taggerSettings": {  /// not tagging
+        "paletteSections": "default", // or custom, none
+        "paletteDefault": "custom", // merge, notary, seals, smartContracts,
+            annotations, smartSections
+        "paletteSettings": { // only when “showPalette” is “custom”
+        "custom": {
+            "show": "true",
+            "isDefault": "true"  /// PRESENT? (same for rest of isDefault palette attributes)
+    },
+    "merge": {
+            "show": "true",
+    },
+    "notary": {
+            "show": "true",
+    },
+    "seals": {
+            "show": "true",
+    },
+    "smartContracts": {
+            "show": "true",
+    },
+    "annotations": {
+            "show": "true",
+    },
+    "smartSections": {
+            "show": "true",
+    },
+    "envelopeCustomFieldSettings  ": { /// NOT envelopeCustomFields
+        "showEnvelopeCustomFields": "true"
+    },
+    "customFields": {  /// NOT here, in documentSettings
+        "showSaveAsDocumentCustomField": "true"
+    }
 }
-}
-},
-"envelopeCustomFieldSettings  ": { /// NOT envelopeCustomFields
-	"showEnvelopeCustomFields": "true"
-},
-"customFields": {  /// NOT here, in documentSettings
-	"showSaveAsDocumentCustomField": "true"
-}
-
-}
-
- * 
  * 
  * 
  */
@@ -107,7 +94,9 @@ import { CheckTemplates } from "https://docusign.github.io/app-examples/library/
 
 $(function () {
     const IGNORE_CORS_ERRORS = true;
+    const SHOW_INTERNAL_AUTH_QP = "internal"; // If this QP is present then show internal login options
     let clientId = "demo";
+    let showInternalLogins = false;
     // Viewing settings 
     const dsReturnUrlDefault = "https://docusign.github.io/jsfiddleDsResponse.html";
     //const iframeitUrl = "https://docusign.github.io/app-examples/embedded-views-v2-bc/iframeit.html";
@@ -116,36 +105,62 @@ $(function () {
     let envelopeId = null;
     let comment = ""; // The user's comment about this config
     let qpSender = { // defaults
-          sendButtonAction: "send" // "redirect"
-        , backButtonAction: "previousPage" // "redirect"
+          startingScreen: "prepare" // or tagging
+        , sendButtonAction: "send" // "redirect"
         , showBackButton: "true" // "false"
+        , backButtonAction: "previousPage" // "redirect"
+        , showHeaderActions: "true" // "false"
+        , showDiscardAction: "true" // "false"
+        , showAdvancedOptions: "true"
         , showEditRecipients: "true" // "false"
+        , showEditMessage: "true"
+        , showBulkSend: "true"
+        , showContactsList: "true"
         , showEditDocuments: "true" // "false"
         , showEditDocumentVisibility: "true" // "false"
         , showEditPages: "true" // "false"
+        , showSaveAsDocumentCustomField: "true" // "false"
         , showMatchingTemplatesPrompt: "true" // "false" 
-        , showHeaderActions: "true" // "false"
-        , showDiscardAction: "true" // "false"
-        , send: "1" // 0 - start in prepare, 1 - start in tagger
-        , showTabPalette: "true" // "false"
-        , tabPaletteType: "custom" //  standard, custom, merge, notary
-    }            // seals, smartcontracts, annotations, smartSections
+        , paletteSections: "default"
+        , paletteDefault: "custom"
+        , psSettingsCustomShow: "true"
+        , psSettingsMergeShow: "true"
+        , psSettingsNotaryShow: "true"
+        , psSettingsSealsShow: "true"
+        , psSettingsSmartContractsShow: "true"
+        , psSettingsAnnotationsShow: "true"
+        , psSettingsSmartSectionsShow: "true"
+        , showEnvelopeCustomFields: "true"
+    }            
     
     const qpSenderOptions = {
-        sendButtonAction: ["send", "redirect"]
-      , backButtonAction: ["previousPage", "redirect"]
+        startingScreen: ["prepare", "tagging"]
+      , sendButtonAction: ["send", "redirect"]
       , showBackButton: ["true", "false"]
+      , backButtonAction: ["previousPage", "redirect"]
+      , showHeaderActions: ["true", "false"]
+      , showDiscardAction: ["true", "false"]
+      , showAdvancedOptions: ["true", "false"] // new?
       , showEditRecipients: ["true", "false"]
+      , showEditMessage: ["true", "false"]  // new
+      , showBulkSend: ["true", "false"]  // new
+      , showContactsList: ["true", "false"] // new
       , showEditDocuments: ["true", "false"]
       , showEditDocumentVisibility: ["true", "false"]
       , showEditPages: ["true", "false"]
-      , showMatchingTemplatesPrompt: ["true", "false"] 
-      , showHeaderActions: ["true", "false"]
-      , showDiscardAction: ["true", "false"]
-      , send: ["0", "1"] // 0 - start in prepare, 1 - start in tagger
-      , showTabPalette: ["true", "false"]
-      , tabPaletteType: ["standard", "custom", "merge", "notary",
-            "seals", "smartcontracts", "annotations", "smartSections"]
+      , showSaveAsDocumentCustomField: ["true", "false"]  // new
+      , showMatchingTemplatesPrompt: ["true", "false"] // new???
+      , paletteDefault: ["custom", "merge", "notary", "seals",
+            "smartContracts", "annotations", "smartSections"]
+      , paletteSections: ["default", "none", "custom"]  // new
+      , psSettingsCustomShow: ["true", "false"]
+      , psSettingsMergeShow: ["true", "false"]
+      , psSettingsNotaryShow: ["true", "false"]
+      , psSettingsSealsShow: ["true", "false"]
+      , psSettingsSmartContractsShow: ["true", "false"]
+      , psSettingsAnnotationsShow: ["true", "false"]
+      , psSettingsSmartSectionsShow: ["true", "false"]
+      , showEnvelopeCustomFields: ["true", "false"]
   }
 
     // Set basic variables
@@ -181,14 +196,12 @@ $(function () {
         workingUpdate(true);
         updateQp();
         const needsEnv = {
-            "Edit": true, "Correct": true, "Recipient Preview": true, "Recipient Manual Review": true}
+            "Correct": true, "Recipient Preview": true, "Recipient Manual Review": true}
         if (needsEnv[action] && !envelope) {
             toast("Problem: create an envelope")
         } else {
             if (action === "Envelope Send") {
                 await embeddedSend()
-            } else if (action === "Envelope Edit") {
-                await embeddedEdit()
             } else if (action === "Envelope Correct") {
                 await embeddedCorrect()
             } else if (action === "Envelope Recipient Preview") {
@@ -205,7 +218,6 @@ $(function () {
                 await embeddedTemplateRecipientPreview()
             }
         }
-
         $("#doit").removeClass("hide");
         workingUpdate(false);
     };
@@ -217,10 +229,12 @@ $(function () {
     let doit3 = async function doit3f(event) {
         updateQp();
         let url = window.location.origin + window.location.pathname + "#";
+        if (showInternalLogins) {
+            url += `${SHOW_INTERNAL_AUTH_QP}=1`
+        }
         for (const property in qpSender) {
             url += `${property}=${encodeURIComponent(qpSender[property]).replace(/\%20/g, '+')}&`;
         }
-        url += `dsReturnUrl=${dsReturnUrl === dsReturnUrlDefault ? "true&" : "false&"}`;
         url += `comment=${encodeURIComponent(comment).replace(/\%20/g, '+')}`;
         await navigator.clipboard.writeText(url);
         Toastify({ // https://github.com/apvarun/toastify-js/blob/master/README.md
@@ -234,8 +248,6 @@ $(function () {
               background: "linear-gradient(to right, #00b09b, #96c93d)",
             },
           }).showToast();
-          
-
     };
     doit2 = doit2.bind(this);
 
@@ -243,7 +255,7 @@ $(function () {
      * Update the QP obj from the form 
      */
     function updateQp() {
-        dsReturnUrl = $("#dsReturnUrl").val() === "true" ? dsReturnUrlDefault : "";
+        dsReturnUrl = dsReturnUrlDefault;
         comment = $("#comment").val();
         for (const property in qpSender) {
             qpSender[property] = $(`#${property}`).val();
@@ -264,11 +276,14 @@ $(function () {
                 decodeURIComponent(pair[1].replace(/\+/g, '%20') || '');
         }
 
-        if ("dsReturnUrl" in query) {
-            $("#dsReturnUrl").val(query["dsReturnUrl"]);
-        }
         if ("comment" in query) {
             $("#comment").val(query["comment"]);
+        }
+        if (SHOW_INTERNAL_AUTH_QP in query) {
+            showInternalLogins = query[SHOW_INTERNAL_AUTH_QP] === "1";
+            if (showInternalLogins) {
+                $("#internalLogins").removeClass("hide");
+            }
         }
         for (const property in query) {
             if (property in qpSender) {
@@ -283,7 +298,11 @@ $(function () {
             email: data.userInfo.email,
             clientUserId: 1000
         };
-        envelopeId = await createEnvelope(signer);
+        if (IGNORE_CORS_ERRORS) {
+            envelopeId = "000-ENVELOPE-ID-000"
+        } else {
+            envelopeId = await createEnvelope(signer);
+        }
         if (envelopeId) {
             msg(`Envelope ${envelopeId} created.`);
             await embeddedSenderView({
@@ -370,12 +389,20 @@ $(function () {
      * Create an embedded sender view, open a new tab with it
      */
     async function embeddedSenderView({ envelopeId, signer }) {
-        const req = {
-            returnUrl: dsReturnUrl
-        };
+        const req = makeEmbeddedViewRequest("envelope");
+        const apiMethod = `/accounts/${accountId}/envelopes/${envelopeId}/views/sender`;
+
+        if (IGNORE_CORS_ERRORS) {
+            let curl = `curl \\\n`;
+            curl += `-H Content-Type: application/json \\\n`;
+            curl += `-H Authorization: Bearer ${data.implicitGrant.accessToken}  \\\n;`;
+            curl += `--request POST ${accountBaseUrl}/${apiMethod}\\\n`;
+            curl += `--date-binary '${req}'`
+            htmlMsg(`<pre><code>${curl}</code></pre>`)
+            return
+        }
 
         // Make the API call
-        const apiMethod = `/accounts/${accountId}/envelopes/${envelopeId}/views/sender`;
         const httpMethod = "POST";
         const results = await data.callApi.callApiJson({
             apiMethod: apiMethod,
@@ -394,10 +421,8 @@ $(function () {
                 )}</code></pre></p>`
             );
         }
-        const qp = new URLSearchParams(qpSender);
-        const resultsUrl = results.url.replace(/&send=[01]/,''); // remove "&send=1"
-        const senderUrl = `${resultsUrl}&${qp.toString()}`;
-        msg(`Displaying sender view: ${senderUrl}`); 
+        const resultsUrl = results.url
+        msg(`Displaying sender view: ${resultsUrl}`); 
         // no iframe: embeddedViewWindow = window.open(senderUrl, "_blank");
         embeddedViewWindow = window.open(
             `${iframeitUrl}?label=Embedded+Sender+View&url=${encodeURIComponent(senderUrl)}`, "_blank");
@@ -409,6 +434,61 @@ $(function () {
         }
         embeddedViewWindow.focus();
         return true;
+    }
+
+    /**
+     * 
+     * @param {string} style -- "envelope" or "template" 
+     */
+    function makeEmbeddedViewRequest (style) {
+        let request = {
+            "returnUrl": dsReturnUrl, // required
+            "viewAccess": style, // required  // (use "template" for embedded template edit)
+            "settings": {
+                "startingScreen": qpSender[startingScreen], //"prepare" // or tagging
+                "sendButtonAction": qpSender[sendButtonAction],
+                "showBackButton": qpSender[showBackButton],
+                "backButtonAction": qpSender[backButtonAction], // or redirect
+                "showHeaderActions": qpSender[showHeaderActions],
+                "showDiscardAction": qpSender[showDiscardAction],
+                "showAdvancedOptions": qpSender[showAdvancedOptions],
+                // "lockToken": token_value,
+                "recipientSettings": {              /// NOT recipients
+                    "showEditRecipients": qpSender[showEditRecipients],
+                    "showEditMessage": qpSender[showEditMessage],
+                    "showBulkSend": qpSender[showBulkSend],
+                    "showContactsList": qpSender[showContactsList]
+                },
+                "documentSettings": {  /// not documents
+                    "showEditDocuments": qpSender[showEditDocuments],
+                    "showEditDocumentVisibility": qpSender[showEditDocumentVisibility],
+                    "showEditPages": qpSender[showEditPages],
+                    "showSaveAsDocumentCustomField": qpSender[showSaveAsDocumentCustomField]
+                },
+                "taggerSettings": {  /// not tagging
+                    "paletteSections": qpSender[paletteSections], // or custom, none
+                    "paletteDefault": qpSender[paletteDefault], // or custom, none
+                    "paletteSettings": { // only when “showPalette” is “custom”
+                        "custom": {"show": qpSender[psSettingsCustomShow]},
+                        "merge": {"show": qpSender[psSettingsMergeShow]},
+                        "notary": {"show": qpSender[psSettingsNotaryShow]},
+                        "seals": {"show": qpSender[psSettingsSealsShow]},
+                        "smartContracts": {"show": qpSender[psSettingsSmartContractsShow]},
+                        "annotations": {"show": qpSender[psSettingsAnnotationsShow]},
+                        "smartSections": {"show": qpSender[psSettingsSmartSectionsShow]},
+                    }
+                },
+                "envelopeCustomFieldSettings  ": { /// NOT envelopeCustomFields
+                    "showEnvelopeCustomFields": qpSender[showEnvelopeCustomFields]
+                }
+            }
+        }
+        if (style === "envelope") {
+            request["templateSettings"] = {  // not for templates edit request
+                "showMatchingTemplatesPrompt": qpSender[]
+            }
+        }
+        return request
     }
     
     /*
@@ -569,7 +649,6 @@ $(function () {
                 htmlMsg(errHtml);
             }
         }
-        setQp()
         return ok
     }
 
@@ -655,7 +734,7 @@ $(function () {
         }
         $("#loggedin").removeClass("hide");
         
-        if (corsError) {
+        if (!IGNORE_CORS_ERRORS && corsError) {
             errMsg(`Error: this account (${accountName}) has not enabled CORS for this application. Please switch accounts or login again.`);
             return false; // EARLY RETURN
         }
@@ -773,11 +852,10 @@ $(function () {
         $("#btnOauth").click(login);
         $("#btnOauthInternalStage").click(loginInternal);
         $("#btnOauthInternalTk1").click(loginInternal);
-        $("#btnDoit").click(doit);
         $("#btnDoit2").click(doit2);
         $("#btnDoit3").click(doit3);
         $("#saccount a").click(switchAccountsButton);
         $("#switchAccountModal .modal-body").click(accountClicked);
-
+        setQp();
     }    
 });
