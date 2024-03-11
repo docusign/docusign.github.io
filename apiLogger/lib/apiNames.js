@@ -16,6 +16,7 @@ const data =
 `AddDocumentToEnvelope|EnvelopeDocuments:update|esign-rest-api/reference/envelopes/envelopedocuments/update/
 AddEnvelopeRecipients|EnvelopeRecipients:update|esign-rest-api/reference/envelopes/enveloperecipients/update/
 TemplateRecipientTabs:create|TemplateRecipientTabs:create|esign-rest-api/reference/templates/templaterecipienttabs/create/
+EnvelopeViews:createEdit|EnvelopeViews:createEdit|esign-rest-api/reference/envelopes/envelopeviews/createedit/
 AddEnvelopeTabs|EnvelopeRecipientTabs:create|esign-rest-api/reference/envelopes/enveloperecipienttabs/create/
 CommitChunkedUpload|ChunkedUploads:commit|esign-rest-api/reference/envelopes/chunkeduploads/commit/
 CreateAndSendEnvelope|Envelopes:create|esign-rest-api/reference/envelopes/envelopes/create/
@@ -81,7 +82,11 @@ UpdateEnvelopeRecipients|EnvelopeRecipients:update|esign-rest-api/reference/enve
 TemplateRecipients:update|TemplateRecipients:update|esign-rest-api/reference/templates/templaterecipients/update/
 UpdateEnvelopeTabs|EnvelopeRecipientTabs:update|esign-rest-api/reference/envelopes/enveloperecipienttabs/update/
 UpdateTemplate|Templates:update|esign-rest-api/reference/templates/templates/update/
-GetUserSignatureImage|UserSignatures:getImage|esign-rest-api/reference/users/usersignatures/getimage/`;
+GetUserSignatureImage|UserSignatures:getImage|esign-rest-api/reference/users/usersignatures/getimage/
+RequestCorrectToken|EnvelopeViews:createCorrect|esign-rest-api/reference/envelopes/envelopeviews/createcorrect/
+RequestSenderToken|EnvelopeViews:createSender|esign-rest-api/reference/envelopes/envelopeviews/createsender/
+RequestTemplateEditToken|TemplateViews:createEdit|esign-rest-api/reference/templates/templateviews/createedit/`;
+
 
 class ApiNames {
     constructor() {

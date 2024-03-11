@@ -18,6 +18,7 @@
 // reported as the envelope API name.
 // Need a simple URL check.
 const specialInternalNames = {
+    RequestCorrectToken: {op: "POST", urlIncludes: "/edit", correctName: "EnvelopeViews:createEdit"},
     AddEnvelopeTabs: {op: "POST", urlIncludes: "/templates/", correctName: "TemplateRecipientTabs:create"},
     DeleteEnvelopeTabs: {op: "DELETE", urlIncludes: "/templates/", correctName: "TemplateRecipientTabs:delete"},
     GetDocumentImage: {op: "GET", urlIncludes: "/templates/", correctName: "Templates:getDocumentPageImage"},
