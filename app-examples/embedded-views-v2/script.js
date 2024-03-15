@@ -457,7 +457,7 @@ $(function () {
         msg(`Displaying sender view: ${resultsUrl}`); 
         // no iframe: embeddedViewWindow = window.open(senderUrl, "_blank");
         embeddedViewWindow = window.open(
-            `${iframeitUrl}?label=Embedded+Sender+View&url=${encodeURIComponent(senderUrl)}`, "_blank");
+            `${iframeitUrl}?label=Embedded+Sender+View&url=${encodeURIComponent(resultsUrl)}`, "_blank");
         
         if(!embeddedViewWindow || embeddedViewWindow.closed || 
            typeof embeddedViewWindow.closed=='undefined') {
