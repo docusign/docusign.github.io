@@ -6,64 +6,50 @@
 /**
  * 
 {
-	"returnUrl": "https://app.example.com", // required
-	"viewAccess": "envelope", // required  // (use "template" for embedded template edit)
-	"settings": {
-	"startingScreen": "prepare", // or tagging
-	"sendButtonAction": "redirect",
-    "showBackButton": "true",
-    "backButtonAction": "previousPage", // or redirect
-    "showHeaderActions": "true",
-    "showDiscardAction": "true",
-    "showAdvancedOptions": "true",
-    "lockToken": "", // or {token_value},
-    "recipientSettings": {              /// NOT recipients
-        "showEditRecipients": "true",
-        "showEditMessage": "true",
-        "showBulkSend": "true",
-        "showContactsList": "true"
-    },
-    "documentSettings": {  /// not documents
-        "showEditDocuments": "true",
-        "showEditDocumentVisibility": "true",
-        "showEditPages": "true",
-        "showSaveAsDocumentCustomField": "true"
-    },
-	"templateSettings": {  // not templates edit
-		"showMatchingTemplatesPrompt": "true"
-    },
-    "taggerSettings": {  /// not tagging
-        "paletteSections": "default", // or custom, none
-        "paletteDefault": "custom", // merge, notary, seals, smartContracts,
-            annotations, smartSections
-        "paletteSettings": { // only when “showPalette” is “custom”
-        "custom": {
-            "show": "true",
-            "isDefault": "true"  /// PRESENT? (same for rest of isDefault palette attributes)
-    },
-    "merge": {
-            "show": "true",
-    },
-    "notary": {
-            "show": "true",
-    },
-    "seals": {
-            "show": "true",
-    },
-    "smartContracts": {
-            "show": "true",
-    },
-    "annotations": {
-            "show": "true",
-    },
-    "smartSections": {
-            "show": "true",
-    },
-    "envelopeCustomFieldSettings  ": { /// NOT envelopeCustomFields
-        "showEnvelopeCustomFields": "true"
-    },
-    "customFields": {  /// NOT here, in documentSettings
-        "showSaveAsDocumentCustomField": "true"
+    "returnUrl": , // url required
+    "viewAccess": , // "envelope" or "template" required  
+                    // (use "template" for embedded template edit)
+    "settings": {
+        "startingScreen":  //"prepare" or "tagging"
+        "sendButtonAction": // "send", "redirect",
+        "showBackButton":  // "true", "false"
+        "backButtonAction": // "previousPage", "redirect"
+        "showHeaderActions": // "true", "false",
+        "showDiscardAction": // "true", "false",
+        "showAdvancedOptions": // "true", "false", // FUTURE
+        "lockToken": // token_value,
+        "recipientSettings": {              /// NOT recipients
+            "showEditRecipients": // "true", "false",
+            "showEditMessage": // "true", "false", // FUTURE
+            "showBulkSend": // "true", "false",    // FUTURE
+            "showContactsList": // "true", "false"
+        },
+        "documentSettings": {  /// not documents
+            "showEditDocuments": // "true", "false",
+            "showEditDocumentVisibility": // "true", "false",
+            "showEditPages": // "true", "false",
+            "showSaveAsDocumentCustomField": // "true", "false" // FUTURE
+        },
+        "taggerSettings": {  /// not tagging
+            "paletteSections":  // "default", "none", "custom"
+            "paletteDefault": // "custom", "merge", "notary", "seals",
+                              // "smartContracts", "annotations", "smartSections"
+            "paletteSettings": { // only when paletteSections is “custom”  // FUTURE
+                "custom": {"show": } // "true", "false",
+                "merge": {"show": }// "true", "false",
+                "notary": {"show": }// "true", "false",
+                "seals": {"show": }// "true", "false",
+                "smartContracts": {"show": }// "true", "false",
+                "annotations": {"show": }// "true", "false",
+                "smartSections": {"show": }// "true", "false",
+            }
+        },
+        "envelopeCustomFieldSettings": {    
+            "showEnvelopeCustomFields": // "true", "false" // FUTURE
+        },
+        "templateSettings": {  // not for templates edit request
+            "showMatchingTemplatesPrompt": // "true", "false"
+        }   
     }
 }
  * 
@@ -93,7 +79,7 @@ import {
 import { CheckTemplates } from "https://docusign.github.io/app-examples/library/checkTemplates.js";
 
 $(function () {
-    const IGNORE_CORS_ERRORS = true;
+    const IGNORE_CORS_ERRORS = false;
     const SHOW_INTERNAL_AUTH_QP = "internal"; // If this QP is present then show internal login options
     let clientId = "demo";
     let showInternalLogins = false;
@@ -133,6 +119,39 @@ $(function () {
         , showEnvelopeCustomFields: "true"
     }            
     
+    /**
+     * Only the following attributes are implemented for the v2 
+     * Embedded Views release. The HTML has been marked with
+     * "Future" next to the other settings.
+     * "startingScreen",
+     * "sendButtonAction",
+     * "showBackButton", 
+     * "backButtonAction",
+     * "showHeaderActions",
+     * "showDiscardAction",
+     * "lockToken",
+     * {
+     *  // recipientSettings
+     *  "showEditRecipients",
+     *  "showContactList"
+     * },
+     * {
+     *  // documentSettings
+     *  "showEditDocuments",
+     *  "showEditDocumentVisibility",
+     *  "showEditPages"
+     * },
+     * {
+     *  // templateSettings
+     *  "showMatchingTemplatesPrompt"
+     * },
+     * {
+     *  // taggerSettings
+     *  "paletteSections",
+     *  "paletteDefault",
+     * }
+     */
+
     const qpSenderOptions = {
         startingScreen: ["prepare", "tagging"]
       , sendButtonAction: ["send", "redirect"]

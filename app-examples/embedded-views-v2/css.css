@@ -68,6 +68,7 @@ pre {
 }
 .mlb {margin-left:3em;}
 .display-inline {display: inline}
+.f {font-variant: small-caps; color:darkorange;}
 
 #lname {font-weight: 600;}
 #lemail, #laccount, #laccountname {font-size: 75%;}
