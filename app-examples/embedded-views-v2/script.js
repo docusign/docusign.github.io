@@ -61,7 +61,8 @@ import {
     CallApi,
     ImplicitGrant,
     UserInfo
-} from "https://docusign.github.io/app-examples/library/callapi.js" 
+} from "../library/callapi.js" 
+//} from "https://docusign.github.io/app-examples/library/callapi.js" 
  
 import {
     msg,
@@ -74,9 +75,12 @@ import {
     setStoredAccountId,
     toast,
     //switchAccountsModal
-} from "https://docusign.github.io/app-examples/library/utilities.js" 
-// View the source at https://codepen.io/docusign/pen/OJoLNvQ
-import { CheckTemplates } from "https://docusign.github.io/app-examples/library/checkTemplates.js";
+} from "../library/utilities.js" 
+//} from "https://docusign.github.io/app-examples/library/utilities.js" 
+
+import { CheckTemplates 
+} from "../library/checkTemplates.js";
+//} from "https://docusign.github.io/app-examples/library/checkTemplates.js";
 
 $(function () {
     const IGNORE_CORS_ERRORS = false;
@@ -90,7 +94,16 @@ $(function () {
     let dsReturnUrl = dsReturnUrlDefault;
     let envelopeId = null;
     let comment = ""; // The user's comment about this config
-    let qpSender = { // defaults
+    /**
+     *   qpSender 
+     *   Holds the in-memory version of the parameters
+     *   Initialized here to defaults (but will be overridden if this page
+     *   is provided with defaults via the URL)
+     * 
+     *   The setter/getter for qpSender also uses qpCheckbox to determine
+     *   if special checkbox handling is needed.
+     */
+    let qpSender = {
           startingScreen: "prepare" // or tagging
         , sendButtonAction: "send" // "redirect"
         , showBackButton: "true" // "false"
@@ -117,7 +130,30 @@ $(function () {
         , psSettingsAnnotationsShow: "true"
         , psSettingsSmartSectionsShow: "true"
         , showEnvelopeCustomFields: "true"
-    }            
+    };
+    const qpCheckbox = {
+          showBackButton: true
+        , showHeaderActions: true
+        , showDiscardAction: true
+        , showAdvancedOptions: true
+        , showEditRecipients: true
+        , showEditMessage: true
+        , showBulkSend: true
+        , showContactsList: true
+        , showEditDocuments: true
+        , showEditDocumentVisibility: true
+        , showEditPages: true
+        , showSaveAsDocumentCustomField: true
+        , showMatchingTemplatesPrompt: true 
+        , psSettingsCustomShow: true
+        , psSettingsMergeShow: true
+        , psSettingsNotaryShow: true
+        , psSettingsSealsShow: true
+        , psSettingsSmartContractsShow: true
+        , psSettingsAnnotationsShow: true
+        , psSettingsSmartSectionsShow: true
+        , showEnvelopeCustomFields: true
+    }
     
     /**
      * Only the following attributes are implemented for the v2 
@@ -277,7 +313,7 @@ $(function () {
         dsReturnUrl = dsReturnUrlDefault;
         comment = $("#comment").val();
         for (const property in qpSender) {
-            qpSender[property] = $(`#${property}`).val();
+            qpSender[property] = qpCheckbox[property] ? $(`#${property}`).prop('checked') : $(`#${property}`).val();
         }
     }
 
@@ -306,7 +342,11 @@ $(function () {
         }
         for (const property in query) {
             if (property in qpSender) {
-                $(`#${property}`).val(query[property]);
+                if (qpCheckbox[property]) {
+                    $(`#${property}`).prop('checked', query[property]==="true");
+                } else {
+                    $(`#${property}`).val(query[property]);
+                }
             }
         }
     }
@@ -696,9 +736,9 @@ $(function () {
         if (!corsErr) {return} // EARLY RETURN
         htmlMsg(`<h5>Your Accounts and CORS Access</h5>`);
         data.userInfo.accounts.forEach(account => {
-            const aId = account.corsError ? `<b>CORS Error</b>` : 
+            const aId = account.corsError ? `<b>CORS Error:</b> ${account.corsError}` : 
                 `#${account.accountExternalId}`;
-            htmlMsg(`<p class="mb-0">${account.accountName} (${aId})</p>`)
+            htmlMsg(`<p class="mb-0">${account.accountName} (${account.accountId}) (${aId})</p>`)
         }) 
         if (corsErr) {
             errMsg(`One or more of your accounts has not enabled CORS for this application`);

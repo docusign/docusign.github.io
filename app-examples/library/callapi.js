@@ -325,8 +325,12 @@ class UserInfo {
                             Accept: `application/json`,
                             "X-DocuSign-SDK": "CodePen"}) 
                         });
-                const data = response && response.ok && await response.json();
-                account.accountExternalId = data.externalAccountId;
+                const data = response && await response.json();
+                if (response.ok) {
+                    account.accountExternalId = data.externalAccountId
+                } else {
+                    account.corsError = `${data.errorCode}; ${data.message}`
+                }
             } catch (e) {
                 account.corsError = e instanceof TypeError
             }

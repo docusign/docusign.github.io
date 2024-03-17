@@ -40,7 +40,7 @@ function errMsg(s) {
 // UsingHttps
 function usingHttps() {
     // Using https?
-    if (location.protocol === "https:") {
+    if (location.protocol === "https:" || location.origin === "http://localhost") {
         $("#login").removeClass("hide");
         return true;
     } else {
