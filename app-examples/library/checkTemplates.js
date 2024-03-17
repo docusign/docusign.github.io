@@ -66,7 +66,7 @@ class CheckTemplates {
             }
         }
         if (!ok) {
-            this.errMsg += `Could not upload template ${templates[i].name}. `;
+            this.errMsg += `Could not upload template ${templates[i].name}: ${this.callApi.errMsg}`;
             return this.templates;
         }
         return this.templates;
