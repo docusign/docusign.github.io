@@ -94,6 +94,7 @@ $(function () {
     let dsReturnUrl = dsReturnUrlDefault;
     let envelopeId = null;
     let comment = ""; // The user's comment about this config
+    let showFormImages = false; // Show WYSIWYG form images
     /**
      *   qpSender 
      *   Holds the in-memory version of the parameters
@@ -290,6 +291,7 @@ $(function () {
         for (const property in qpSender) {
             url += `${property}=${encodeURIComponent(qpSender[property]).replace(/\%20/g, '+')}&`;
         }
+        url += `showFormImages=${encodeURIComponent(showFormImages).replace(/\%20/g, '+')}&`;
         url += `comment=${encodeURIComponent(comment).replace(/\%20/g, '+')}`;
         await navigator.clipboard.writeText(url);
         Toastify({ // https://github.com/apvarun/toastify-js/blob/master/README.md
@@ -312,6 +314,7 @@ $(function () {
     function updateQp() {
         dsReturnUrl = dsReturnUrlDefault;
         comment = $("#comment").val();
+        showFormImages = $(`#showFormImages`).prop('checked');
         for (const property in qpSender) {
             qpSender[property] = qpCheckbox[property] ? $(`#${property}`).prop('checked') : $(`#${property}`).val();
         }
@@ -334,6 +337,10 @@ $(function () {
         if ("comment" in query) {
             $("#comment").val(query["comment"]);
         }
+        if ("showFormImages" in query) {
+            $("#showFormImages").prop('checked', query["showFormImages"]==="true");
+        }
+        showFormImages
         if (SHOW_INTERNAL_AUTH_QP in query) {
             showInternalLogins = query[SHOW_INTERNAL_AUTH_QP] === "1";
             if (showInternalLogins) {
