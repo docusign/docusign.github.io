@@ -6,47 +6,7 @@
 	"authoritativeCopy": "false",
 	"autoNavigation": "true",
 	"brandId": "c153d327-39da-4758-94fd-abcb4671bf9d",
-	"customFields": {
-		"listCustomFields": [
-			{
-				"fieldId": "10790324191",
-				"name": "Envelope list custom field 1",
-				"required": "false",
-				"show": "true",
-				"value": "value 1"
-			},
-			{
-				"fieldId": "10790324192",
-				"name": "Envelope list custom field 2",
-				"required": "false",
-				"show": "true",
-				"value": "value 2"
-			}
-		],
-		"textCustomFields": [
-			{
-				"fieldId": "10790324189",
-				"name": "Envelope text custom field 1",
-				"required": "false",
-				"show": "true",
-				"value": "value 1"
-			},
-			{
-				"fieldId": "10790324190",
-				"name": "Envelope text custom field 2",
-				"required": "false",
-				"show": "true",
-				"value": "value 2"
-			},
-			{
-				"fieldId": "10790324193",
-				"name": "templateUsageRestriction",
-				"required": "false",
-				"show": "false",
-				"value": "allOptions"
-			}
-		]
-	},
+	"customFields": {},
 	"disableResponsiveDocument": "false",
 	"emailBlurb": "",
 	"emailSubject": "Please sign the attached document",
