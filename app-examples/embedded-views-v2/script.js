@@ -84,6 +84,8 @@ import { CheckTemplates
 
 $(function () {
     const IGNORE_CORS_ERRORS = false;
+    const START_WITH_BLANK_ENV = false;
+    const SHOW_IN_IFRAME = false;
     const SHOW_INTERNAL_AUTH_QP = "internal"; // If this QP is present then show internal login options
     let clientId = "demo";
     let showInternalLogins = false;
@@ -383,7 +385,9 @@ $(function () {
      *  on the DocuSign platform
      */
     async function createEnvelope({ name, email, clientUserId }) {
-        const req = {
+        const req = START_WITH_BLANK_ENV ? {
+            status: "created"
+        } : {
             status: "created",
             compositeTemplates: [
                 {
@@ -397,15 +401,6 @@ $(function () {
                     inlineTemplates: [
                         {
                             sequence: "1",
-                            customFields: {
-                                listCustomFields: [
-                                    {
-                                        name: "Envelope list custom field 1",
-                                        show: "true",
-                                        value: "value 5"
-                                    }
-                                ]
-                            },
                             recipients: {
                                 signers: [
                                     {
@@ -414,10 +409,6 @@ $(function () {
                                         clientUserId: clientUserId,
                                         roleName: "Signer1",
                                         recipientId: "1",
-                                        customFields: [
-                                            "field1: value 1",
-                                            "field2: value 2"
-                                        ]
                                     }
                                 ]
                             }
@@ -502,10 +493,12 @@ $(function () {
         }
         const resultsUrl = results.url
         msg(`Displaying sender view: ${resultsUrl}`); 
-        // no iframe: embeddedViewWindow = window.open(senderUrl, "_blank");
-        embeddedViewWindow = window.open(
-            `${iframeitUrl}?label=Embedded+Sender+View&url=${encodeURIComponent(resultsUrl)}`, "_blank");
-        
+        if (SHOW_IN_IFRAME) {
+            embeddedViewWindow = window.open(
+                `${iframeitUrl}?label=Embedded+Sender+View&url=${encodeURIComponent(resultsUrl)}`, "_blank");
+        } else {
+            embeddedViewWindow = window.open(resultsUrl, "_blank")
+        }
         if(!embeddedViewWindow || embeddedViewWindow.closed || 
            typeof embeddedViewWindow.closed=='undefined') {
             // popup blocked
@@ -653,6 +646,72 @@ $(function () {
         htmlMsg(msg);
     }
 
+    /**
+     * showFormImagesChange
+     */
+    function showFormImagesChange(e) {
+        showFormImages = $("#showFormImages").prop('checked');
+
+        if (showFormImages) {
+            doShowFormImages ()
+        } else {
+            doNotShowFormImages ()
+        }
+    }
+
+    const senderUxXY = {
+          sendButtonAction: {top: 1640, left: 800}
+        , showBackButton: {top: 2530, left: 830}
+        , backButtonAction: {top: 2530, left: 830}
+        , showHeaderActions: {top: -100, left: 840}
+        , showDiscardAction: {top: -70, left: 840}
+        , showEditRecipients: {top: 280, left: 500}
+        , showContactsList: {top: 400, left: 350}
+        , showEditDocuments: {top: -220, left: 230}
+        , showEditDocumentVisibility: {top: 1760, left: 830}
+        , showEditPages: {top: 1760, left: 830}
+        , showMatchingTemplatesPrompt: {top: -200, left: 750} 
+        , paletteSections: {top: 1275, left: 250}
+        , paletteDefault: {top: 1275, left: 203}
+    }
+    const senderUxHide = {  // Hide future settings
+          showAdvancedOptions: true
+        , showEditMessage: true
+        , showBulkSend: true
+        , showSaveAsDocumentCustomField: true
+        , psSettingsCustomShow: true
+        , psSettingsMergeShow: true
+        , psSettingsNotaryShow: true
+        , psSettingsSealsShow: true
+        , psSettingsSmartContractsShow: true
+        , psSettingsAnnotationsShow: true
+        , psSettingsSmartSectionsShow: true
+        , showEnvelopeCustomFields: true
+    }
+
+    function doShowFormImages () {
+        $("#uxForm").addClass("formBackgroundSender");
+        $("#uxForm div").addClass("formBackground");
+        for (const property in senderUxXY) {
+            $(`#${property}`).parent()
+                .css({"top":`${senderUxXY[property].top}px`, "left":`${senderUxXY[property].left}px`})
+        }
+        for (const property in senderUxHide) {
+            $(`#${property}`).parent().addClass("hide")
+        }
+        $("#uxForm div select").css({"width":"fit-content"});
+    }
+    function doNotShowFormImages () {
+        $("#uxForm").removeClass("formBackgroundSender");
+        $("#uxForm div").removeClass("formBackground");
+        for (const property in senderUxXY) {
+            $(`#${property}`).parent().css({"top":``, "left":``})
+        }
+        for (const property in senderUxHide) {
+            $(`#${property}`).parent().removeClass("hide")
+        }
+        $("#uxForm div select").css({"width":""});
+    }
 
     /////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////
@@ -764,7 +823,6 @@ $(function () {
         }
     }
 
-    
     /* 
      * setAccountId(accountId)
      * If the accountId is null then use the account server's default.
@@ -938,6 +996,9 @@ $(function () {
         $("#btnDoit3").click(doit3);
         $("#saccount a").click(switchAccountsButton);
         $("#switchAccountModal .modal-body").click(accountClicked);
+        $('#showFormImages').change(showFormImagesChange); 
+
         setQp();
+        showFormImagesChange();
     }    
 });

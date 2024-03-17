@@ -15,7 +15,7 @@ container.c {
 
 container.ctop {
   display: flex;
-  height: 25rem;
+  height: 80%; /* 35rem; */
   padding: 1em;
   overflow-y: scroll;
 }
@@ -101,8 +101,21 @@ pre {
 .accountModal-body {padding: 0;}
 #action {width: 25em;}
 
-#uxForm {margin-top:2em;}
-#uxForm select {display: inline; width: 14em; margin-left: 2em;}
+form {margin-top:2em;}
+.mb-3 select, .mb-3 select, .mb-5 select, .mb-5 select {display: inline; width: 14em; margin-left: 2em;}
+.formBackgroundSender {
+  background: url('../assets/embedded_sender_1050x2585.png') no-repeat 0 0;
+  width: 1050px;
+  height: 2585px;
+}
+label {margin-bottom: 0px;}
+input {margin-left: 5px;}
+.formBackground {
+  position: relative;
+  width:fit-content;
+  padding: 3px 5px 2px 2px;
+  background-color: fuchsia;
+}
 
 /* From http://tobiasahlin.com/spinkit/ */
 .spinner {
