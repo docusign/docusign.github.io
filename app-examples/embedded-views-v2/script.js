@@ -230,7 +230,7 @@ $(function () {
     // Example settings
     let templates = [
         {
-            url:     "https://docusign.github.io/examples/templates/Anchor_text_with_checkboxes_v2",
+            url:  "https://docusign.github.io/examples/templates/Anchor_text_with_checkboxes_v2",
             name: "DevCenter example: Anchor text with checkboxes v2",
             description:
                 "This DevCenter example template includes one PDF file with anchor text. Checkboxes are grouped to require that exactly one of the boxes is included. The template includes text fields and envelope metadata.",
