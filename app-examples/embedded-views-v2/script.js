@@ -521,7 +521,7 @@ $(function () {
             }
         }
 
-        htmlMsg(`<h2>Embedded View request object</h2>
+        htmlMsg(`<h4>Embedded View request object</h4>
             <pre><code>${JSON.stringify(request, null, 4)}</code></pre></p>`);
         return request
     }
