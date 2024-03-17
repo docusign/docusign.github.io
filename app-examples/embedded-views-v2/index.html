@@ -83,136 +83,142 @@
                     Go!</a>
                 <a id="btnDoit3" class="btn btn-primary mlb" type="button" role="button">
                         Save configuration to URL</a>
-                <form id="uxForm">
+                <form>
                     <div class="mb-3">
                         <label for="comment" class="form-label" style="width:40em;">Your comment about this configuration</label>
                         <textarea id="comment" class="form-control" rows="3" style="width:40em;"></textarea>
                     </div>
-                        <div class="mb-3">
-                            <label for="startingScreen" class="form-label">Starting Screen:</label>
-                            <select id="startingScreen" class="form-select form-select-sm" aria-label=".form-select-sm example">
-                                <option value="prepare" selected>Prepare window</option>
-                                <option value="tagging">Tagger window</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="sendButtonAction" class="form-label">Send Button action:</label>
-                            <select id="sendButtonAction" class="form-select form-select-sm" aria-label=".form-select-sm example">
-                                <option selected>send</option>
-                                <option>redirect</option>
-                            </select>
-                        </div>
+                    <div class="mb-3">
+                        <label for="startingScreen" class="form-label">Starting Screen:</label>
+                        <select id="startingScreen" class="form-select form-select-sm" aria-label=".form-select-sm example">
+                            <option value="prepare" selected>Prepare page</option>
+                            <option value="tagging">Tagger page</option>
+                        </select>
                         <div class="mb-3 form-check">
-                            <label for="showBackButton" class="form-label">Show Back Button</label>
-                            <input id="showBackButton" class="form-check-input" type="checkbox" checked>
+                            <label for="showFormImages" class="form-label">Show Form Images</label>
+                            <input id="showFormImages" class="form-check-input" type="checkbox" checked>
                         </div>
-                        <div class="mb-3">
-                        <label for="backButtonAction" class="form-label">Back Button action:</label>
-                        <select id="backButtonAction" class="form-select form-select-sm" aria-label=".form-select-sm example">
-                            <option selected>previousPage</option>
+                    </div>
+                </form>
+                <form id="uxForm">
+                    <div class="mb-3">
+                        <label for="sendButtonAction" class="form-label">Send Button action:</label>
+                        <select id="sendButtonAction" class="form-select form-select-sm" aria-label=".form-select-sm example">
+                            <option selected>send</option>
                             <option>redirect</option>
                         </select>
-                        </div>
-                        <div class="mb-3 form-check">
-                            <label for="showHeaderActions" class="form-label">Show Header Actions</label>
-                            <input id="showHeaderActions" class="form-check-input" type="checkbox" checked>
-                        </div>
-                        <div class="mb-3 form-check">
-                            <label for="showDiscardAction" class="form-label">Show Discard Action</label>
-                            <input id="showDiscardAction" class="form-check-input" type="checkbox" checked>
-                        </div>
-                        <div class="mb-3 form-check">
-                            <label for="showAdvancedOptions" class="form-label"><span class="f">Future: </span>Show Advanced Options</label>
-                            <input id="showAdvancedOptions" class="form-check-input" type="checkbox" checked>
-                        </div>
-                        <div class="mb-3 form-check">
-                            <label for="showEditRecipients" class="form-label">Show Edit Recipients</label>
-                            <input id="showEditRecipients" class="form-check-input" type="checkbox" checked>
-                        </div>
-                        <div class="mb-3 form-check">
-                            <label for="showEditMessage" class="form-label"><span class="f">Future: </span>Show Edit Message</label>
-                            <input id="showEditMessage" class="form-check-input" type="checkbox" checked>
-                        </div>
-                        <div class="mb-3 form-check">
-                            <label for="showBulkSend" class="form-label"><span class="f">Future: </span>Show Bulk Send</label>
-                            <input id="showBulkSend" class="form-check-input" type="checkbox" checked>
-                        </div>
-                        <div class="mb-3 form-check">
-                            <label for="showContactsList" class="form-label">Show Contact List</label>
-                            <input id="showContactsList" class="form-check-input" type="checkbox" checked>
-                        </div>
-                        <div class="mb-3 form-check">
-                            <label for="showEditDocuments" class="form-label">Show Edit Documents</label>
-                            <input id="showEditDocuments" class="form-check-input" type="checkbox" checked>
-                        </div>
-                        <div class="mb-3 form-check">
-                            <label for="showEditDocumentVisibility" class="form-label">Show Edit Document Visibility</label>
-                            <input id="showEditDocumentVisibility" class="form-check-input" type="checkbox" checked>
-                        </div>
-                        <div class="mb-3 form-check">
-                            <label for="showEditPages" class="form-label">Show Edit Pages</label>
-                            <input id="showEditPages" class="form-check-input" type="checkbox" checked>
-                        </div>
-                        <div class="mb-3 form-check">
-                            <label for="showSaveAsDocumentCustomField" class="form-label"><span class="f">Future: </span>Show Save As Document Custom Field</label>
-                            <input id="showSaveAsDocumentCustomField" class="form-check-input" type="checkbox" checked>
-                            </div>
-                        <div class="mb-3 form-check">
-                            <label for="showMatchingTemplatesPrompt" class="form-label">Show Matching Templates Prompt</label>
-                            <input id="showMatchingTemplatesPrompt" class="form-check-input" type="checkbox" checked>
-                        </div>
-                        <div class="mb-3 form-check">
-                            <label for="showEnvelopeCustomFields" class="form-label"><span class="f">Future: </span>Show Envelope Custom Fields</label>
-                            <input id="showEnvelopeCustomFields" class="form-check-input" type="checkbox" checked>
-                            </div>
-                            <div class="mb-3">
+                    </div>
+                    <div class="mb-3">
+                        <input id="showBackButton" class="form-check-input" type="checkbox" checked>
+                        <label for="showBackButton" class="form-label">Show Back Button</label>
+                    </div>
+                    <div class="mb-3">
+                    <label for="backButtonAction" class="form-label">Back Button action:</label>
+                    <select id="backButtonAction" class="form-select form-select-sm" aria-label=".form-select-sm example">
+                        <option selected>previousPage</option>
+                        <option>redirect</option>
+                    </select>
+                    </div>
+                    <div class="mb-3">
+                        <input id="showHeaderActions" class="form-check-input" type="checkbox" checked>
+                        <label for="showHeaderActions" class="form-label">Show Header Actions</label>
+                    </div>
+                    <div class="mb-3">
+                        <input id="showDiscardAction" class="form-check-input" type="checkbox" checked>
+                        <label for="showDiscardAction" class="form-label">Show Discard Action</label>
+                    </div>
+                    <div class="mb-3">
+                        <input id="showEditRecipients" class="form-check-input" type="checkbox" checked>
+                        <label for="showEditRecipients" class="form-label">Show Edit Recipients</label>
+                    </div>
+                    <div class="mb-3">
+                        <input id="showContactsList" class="form-check-input" type="checkbox" checked>
+                        <label for="showContactsList" class="form-label">Show Contact List</label>
+                    </div>
+                    <div class="mb-3">
+                        <input id="showEditDocuments" class="form-check-input" type="checkbox" checked>
+                        <label for="showEditDocuments" class="form-label">Show Edit Documents</label>
+                    </div>
+                    <div class="mb-3">
+                        <input id="showEditDocumentVisibility" class="form-check-input" type="checkbox" checked>
+                        <label for="showEditDocumentVisibility" class="form-label">Show Edit Document Visibility</label>
+                    </div>
+                    <div class="mb-3">
+                        <input id="showEditPages" class="form-check-input" type="checkbox" checked>
+                        <label for="showEditPages" class="form-label">Show Edit Pages</label>
+                    </div>
+                    <div class="mb-3">
+                        <input id="showMatchingTemplatesPrompt" class="form-check-input" type="checkbox" checked>
+                        <label for="showMatchingTemplatesPrompt" class="form-label">Show Matching Templates Prompt</label>
+                    </div>
+                    <div class="mb-3">
                         <label for="paletteSections" class="form-label">Palette Sections?</label>
                         <select id="paletteSections" class="form-select form-select-sm" aria-label=".form-select-sm example">
                             <option selected>default</option>
                             <option>none</option>
                             <option>custom</option>
                         </select>
-                        </div>
-                        <div class="mb-3 ms-5">
-                            <label for="paletteDefault" class="form-label">Custom palette: Default Section?</label>
-                            <select id="paletteDefault" class="form-select form-select-sm" aria-label=".form-select-sm example">
-                                <option selected>custom</option>
-                                <option>merge</option>
-                                <option>notary</option>
-                                <option>seals</option>
-                                <option>smartContracts</option>
-                                <option>annotations</option>
-                                <option>smartSections</option>
-                                </select>
-                        </div>
-                        <div class="mb-3 ms-5 form-check">
-                            <label for="psSettingsCustomShow" class="form-label"><span class="f">Future: </span>Custom palette: Show Custom</label>
-                            <input id="psSettingsCustomShow" class="form-check-input" type="checkbox" checked>
-                        </div>
-                        <div class="mb-3 ms-5 form-check">
-                            <label for="psSettingsMergeShow" class="form-label"><span class="f">Future: </span>Custom palette: Show Merge</label>
-                            <input id="psSettingsMergeShow" class="form-check-input" type="checkbox" checked>
-                        </div>
-                        <div class="mb-3 ms-5 form-check">
-                            <label for="psSettingsNotaryShow" class="form-label"><span class="f">Future: </span>Custom palette: Show Notary</label>
-                            <input id="psSettingsNotaryShow" class="form-check-input" type="checkbox" checked>
-                        </div>
-                        <div class="mb-3 ms-5 form-check">
-                            <label for="psSettingsSealsShow" class="form-label"><span class="f">Future: </span>Custom palette: Show Seals</label>
-                            <input id="psSettingsSealsShow" class="form-check-input" type="checkbox" checked>
-                        </div>
-                        <div class="mb-3 ms-5 form-check">
-                            <label for="psSettingsSmartContractsShow" class="form-label"><span class="f">Future: </span>Custom palette: Show Smart Contracts</label>
-                            <input id="psSettingsSmartContractsShow" class="form-check-input" type="checkbox" checked>
-                        </div>
-                        <div class="mb-3 ms-5 form-check">
-                            <label for="psSettingsAnnotationsShow" class="form-label"><span class="f">Future: </span>Custom palette: Show Annotations</label>
-                            <input id="psSettingsAnnotationsShow" class="form-check-input" type="checkbox" checked>
-                        </div>
-                        <div class="mb-3 ms-5 form-check">
-                            <label for="psSettingsSmartSectionsShow" class="form-label"><span class="f">Future: </span>Custom palette: Show Smart Sections</label>
-                            <input id="psSettingsSmartSectionsShow" class="form-check-input" type="checkbox" checked>
-                        </div>
+                    </div>
+                    <div class="mb-3 ms-5">
+                        <label for="paletteDefault" class="form-label">Custom palette: Default Section?</label>
+                        <select id="paletteDefault" class="form-select form-select-sm" aria-label=".form-select-sm example">
+                            <option selected>custom</option>
+                            <option>merge</option>
+                            <option>notary</option>
+                            <option>seals</option>
+                            <option>smartContracts</option>
+                            <option>annotations</option>
+                            <option>smartSections</option>
+                            </select>
+                    </div>
+                    <div class="mb-3">
+                        <input id="showAdvancedOptions" class="form-check-input" type="checkbox" checked>
+                        <label for="showAdvancedOptions" class="form-label"><span class="f">Future: </span>Show Advanced Options</label>
+                    </div>
+                    <div class="mb-3">
+                        <input id="showEditMessage" class="form-check-input" type="checkbox" checked>
+                        <label for="showEditMessage" class="form-label"><span class="f">Future: </span>Show Edit Message</label>
+                    </div>
+                    <div class="mb-3">
+                        <input id="showBulkSend" class="form-check-input" type="checkbox" checked>
+                        <label for="showBulkSend" class="form-label"><span class="f">Future: </span>Show Bulk Send</label>
+                    </div>
+                    <div class="mb-3">
+                        <input id="showSaveAsDocumentCustomField" class="form-check-input" type="checkbox" checked>
+                        <label for="showSaveAsDocumentCustomField" class="form-label"><span class="f">Future: </span>Show Save As Document Custom Field</label>
+                    </div>
+                    <div class="mb-3">
+                        <input id="showEnvelopeCustomFields" class="form-check-input" type="checkbox" checked>
+                        <label for="showEnvelopeCustomFields" class="form-label"><span class="f">Future: </span>Show Envelope Custom Fields</label>
+                    </div>
+                    <div class="mb-3 ms-5">
+                        <input id="psSettingsCustomShow" class="form-check-input" type="checkbox" checked>
+                        <label for="psSettingsCustomShow" class="form-label"><span class="f">Future: </span>Custom palette: Show Custom</label>
+                    </div>
+                    <div class="mb-3 ms-5">
+                        <input id="psSettingsMergeShow" class="form-check-input" type="checkbox" checked>
+                        <label for="psSettingsMergeShow" class="form-label"><span class="f">Future: </span>Custom palette: Show Merge</label>
+                    </div>
+                    <div class="mb-3 ms-5">
+                        <input id="psSettingsNotaryShow" class="form-check-input" type="checkbox" checked>
+                        <label for="psSettingsNotaryShow" class="form-label"><span class="f">Future: </span>Custom palette: Show Notary</label>
+                    </div>
+                    <div class="mb-3 ms-5">
+                        <input id="psSettingsSealsShow" class="form-check-input" type="checkbox" checked>
+                        <label for="psSettingsSealsShow" class="form-label"><span class="f">Future: </span>Custom palette: Show Seals</label>
+                    </div>
+                    <div class="mb-3 ms-5">
+                        <input id="psSettingsSmartContractsShow" class="form-check-input" type="checkbox" checked>
+                        <label for="psSettingsSmartContractsShow" class="form-label"><span class="f">Future: </span>Custom palette: Show Smart Contracts</label>
+                    </div>
+                    <div class="mb-3 ms-5">
+                        <input id="psSettingsAnnotationsShow" class="form-check-input" type="checkbox" checked>
+                        <label for="psSettingsAnnotationsShow" class="form-label"><span class="f">Future: </span>Custom palette: Show Annotations</label>
+                    </div>
+                    <div class="mb-3 ms-5">
+                        <input id="psSettingsSmartSectionsShow" class="form-check-input" type="checkbox" checked>
+                        <label for="psSettingsSmartSectionsShow" class="form-label"><span class="f">Future: </span>Custom palette: Show Smart Sections</label>
+                    </div>
                 </form>
             </div>
 
@@ -232,7 +238,7 @@
             <p id="log">
                 You can adjust the height of the sections.
             </p>
-            <p><a href="https://docusign.github.io/app-examples/embedded-views-v2/#internal=1">Enable DocuSign internal logins</a>. You must be on the corporate VPN.</p>
+            <p><a href="https://docusign.github.io/app-examples/embedded-views-v2/#internal=1">DocuSign staff: Enable DocuSign internal logins</a>. You must be on the corporate VPN.</p>
             <div id="msg">
             </div>
         </container>

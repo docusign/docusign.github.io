@@ -383,6 +383,7 @@ class CallApi {
      */
     async callApiJson({ apiMethod, httpMethod, req, qp, headers = []}) {
         let body = null;
+        this.errMsg = "";
         if (httpMethod === "POST" || httpMethod === "PUT") {
             body = JSON.stringify(req, null, 4);
         }
