@@ -107,6 +107,7 @@ form {margin-top:2em;}
   background: url('../assets/embedded_sender_1050x2585.png') no-repeat 0 0;
   width: 1050px;
   height: 2585px;
+  border: 2px solid mediumpurple;
 }
 label {margin-bottom: 0px;}
 input {margin-left: 5px;}

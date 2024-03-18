@@ -193,6 +193,32 @@ $(function () {
      * }
      */
 
+    /**
+     *   FUTURE items
+        "showAdvancedOptions"
+        "recipientSettings": {  
+            "showEditMessage":
+            "showBulkSend"
+        },
+        "documentSettings": { 
+            "showSaveAsDocumentCustomField"
+        }
+        "taggerSettings": {  
+            "paletteSettings": { // only when paletteSections is “custom”
+                "custom": {"show": },
+                "merge": {"show": },
+                "notary": {"show": },
+                "seals": {"show": },
+                "smartContracts": {"show": },
+                "annotations": {"show": },
+                "smartSections": {"show": },
+            }
+        },
+        "envelopeCustomFieldSettings": {    
+            "showEnvelopeCustomFields":
+        }
+     */
+
     const qpSenderOptions = {
         startingScreen: ["prepare", "tagging"]
       , sendButtonAction: ["send", "redirect"]
