@@ -87,8 +87,10 @@ $(function () {
     const START_WITH_BLANK_ENV = false;
     const SHOW_IN_IFRAME = false;
     const SHOW_INTERNAL_AUTH_QP = "internal"; // If this QP is present then show internal login options
+    const OPEN_EMBEDDED_VIEW = "openview"; // If set to 0, then don't open the embedded view 
     let clientId = "demo";
     let showInternalLogins = false;
+    let openEmbeddedView = true;
     // Viewing settings 
     const dsReturnUrlDefault = "https://docusign.github.io/jsfiddleDsResponse.html";
     //const iframeitUrl = "https://docusign.github.io/app-examples/embedded-views-v2-bc/iframeit.html";
@@ -290,6 +292,9 @@ $(function () {
         if (showInternalLogins) {
             url += `${SHOW_INTERNAL_AUTH_QP}=1&`
         }
+        if (!openEmbeddedView) {
+            url += `${OPEN_EMBEDDED_VIEW}=0&`
+        }
         for (const property in qpSender) {
             url += `${property}=${encodeURIComponent(qpSender[property]).replace(/\%20/g, '+')}&`;
         }
@@ -349,6 +354,8 @@ $(function () {
                 $("#internalLogins").removeClass("hide");
             }
         }
+        openEmbeddedView = 
+            !(OPEN_EMBEDDED_VIEW in query && query[OPEN_EMBEDDED_VIEW] === "0")
         for (const property in query) {
             if (property in qpSender) {
                 if (qpCheckbox[property]) {
@@ -492,19 +499,23 @@ $(function () {
             );
         }
         const resultsUrl = results.url
-        msg(`Displaying sender view: ${resultsUrl}`); 
-        if (SHOW_IN_IFRAME) {
-            embeddedViewWindow = window.open(
-                `${iframeitUrl}?label=Embedded+Sender+View&url=${encodeURIComponent(resultsUrl)}`, "_blank");
+        msg(`Sender view URL: ${resultsUrl}`);
+        if (openEmbeddedView) {
+            if (SHOW_IN_IFRAME) {
+                embeddedViewWindow = window.open(
+                    `${iframeitUrl}?label=Embedded+Sender+View&url=${encodeURIComponent(resultsUrl)}`, "_blank");
+            } else {
+                embeddedViewWindow = window.open(resultsUrl, "_blank")
+            }
+            if(!embeddedViewWindow || embeddedViewWindow.closed || 
+            typeof embeddedViewWindow.closed=='undefined') {
+                // popup blocked
+                alert ("Please enable the popup window");
+            }
+            embeddedViewWindow.focus();
         } else {
-            embeddedViewWindow = window.open(resultsUrl, "_blank")
+            htmlMsg ("<h3>Open the URL in an incognito window</h3>")
         }
-        if(!embeddedViewWindow || embeddedViewWindow.closed || 
-           typeof embeddedViewWindow.closed=='undefined') {
-            // popup blocked
-            alert ("Please enable the popup window");
-        }
-        embeddedViewWindow.focus();
         return true;
     }
 
