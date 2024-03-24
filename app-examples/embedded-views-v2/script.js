@@ -10,7 +10,7 @@
     "viewAccess": , // "envelope" or "template" required  
                     // (use "template" for embedded template edit)
     "settings": {
-        "startingScreen":  //"prepare" or "tagging"
+        "startingScreen":  //"Prepare" or "Tagger"
         "sendButtonAction": // "send", "redirect",
         "showBackButton":  // "true", "false"
         "backButtonAction": // "previousPage", "redirect"
@@ -83,12 +83,17 @@ import { CheckTemplates
 //} from "https://docusign.github.io/app-examples/library/checkTemplates.js";
 
 $(function () {
-    const IGNORE_CORS_ERRORS = false;
-    const START_WITH_BLANK_ENV = false;
-    const SHOW_IN_IFRAME = false;
+    const USE_CURL_QP = "curl"; // if QP curl=1 then use curl, not CORS
     const SHOW_INTERNAL_AUTH_QP = "internal"; // If this QP is present then show internal login options
-    const OPEN_EMBEDDED_VIEW = "openview"; // If set to 0, then don't open the embedded view 
+    const OPEN_EMBEDDED_VIEW_QP = "openview"; // If set to 0, then don't open the embedded view
+    const CLIENT_ID_QP = "clientid"; // if set, use this client ID
+    const OAUTH_PROVIDER_QP = "oauthserver";  // if set, use this OAuth Service Provider 
+    const SHOW_IN_IFRAME = false;
+    let useCurl = false;
+    let startWithBlankEnvelope = false;
     let clientId = "demo";
+    let clientIDqp = false;
+    let oauthServiceProvider = false;
     let showInternalLogins = false;
     let openEmbeddedView = true;
     // Viewing settings 
@@ -318,8 +323,17 @@ $(function () {
         if (showInternalLogins) {
             url += `${SHOW_INTERNAL_AUTH_QP}=1&`
         }
+        if (clientIDqp) {
+            url += `${CLIENT_ID_QP}=${clientIDqp}&`
+        }
+        if (oauthServiceProvider) {
+            url += `${OAUTH_PROVIDER_QP}=${encodeURIComponent(oauthServiceProvider)}&`
+        }
         if (!openEmbeddedView) {
-            url += `${OPEN_EMBEDDED_VIEW}=0&`
+            url += `${OPEN_EMBEDDED_VIEW_QP}=0&`
+        }
+        if (useCurl) {
+            url += `${USE_CURL_QP}=1&`
         }
         for (const property in qpSender) {
             url += `${property}=${encodeURIComponent(qpSender[property]).replace(/\%20/g, '+')}&`;
@@ -367,13 +381,22 @@ $(function () {
                 decodeURIComponent(pair[1].replace(/\+/g, '%20') || '');
         }
 
+        if (CLIENT_ID_QP in query) {
+            clientIDqp = query[CLIENT_ID_QP];
+        }
+        if (OAUTH_PROVIDER_QP in query) {
+            oauthServiceProvider = query[OAUTH_PROVIDER_QP];
+        }
+        if (USE_CURL_QP in query) {
+            useCurl = query[USE_CURL_QP] === "1";
+        }
         if ("comment" in query) {
             $("#comment").val(query["comment"]);
         }
         if ("showFormImages" in query) {
             $("#showFormImages").prop('checked', query["showFormImages"]==="true");
         }
-        showFormImages
+        showFormImagesChange();
         if (SHOW_INTERNAL_AUTH_QP in query) {
             showInternalLogins = query[SHOW_INTERNAL_AUTH_QP] === "1";
             if (showInternalLogins) {
@@ -381,7 +404,7 @@ $(function () {
             }
         }
         openEmbeddedView = 
-            !(OPEN_EMBEDDED_VIEW in query && query[OPEN_EMBEDDED_VIEW] === "0")
+            !(OPEN_EMBEDDED_VIEW_QP in query && query[OPEN_EMBEDDED_VIEW_QP] === "0")
         for (const property in query) {
             if (property in qpSender) {
                 if (qpCheckbox[property]) {
@@ -399,7 +422,7 @@ $(function () {
             email: data.userInfo.email,
             clientUserId: 1000
         };
-        if (IGNORE_CORS_ERRORS) {
+        if (useCurl) {
             envelopeId = "000-ENVELOPE-ID-000"
         } else {
             envelopeId = await createEnvelope(signer);
@@ -418,7 +441,7 @@ $(function () {
      *  on the DocuSign platform
      */
     async function createEnvelope({ name, email, clientUserId }) {
-        const req = START_WITH_BLANK_ENV ? {
+        const req = startWithBlankEnvelope ? {
             status: "created"
         } : {
             status: "created",
@@ -482,7 +505,7 @@ $(function () {
         const req = makeEmbeddedViewRequest("envelope");
         const apiMethod = `/accounts/${accountId}/envelopes/${envelopeId}/views/sender`;
 
-        if (IGNORE_CORS_ERRORS) {
+        if (useCurl) {
             let curl = `curl \\\n`;
             curl += `-H "Content-Type: application/json" \\\n`;
             curl += `-H "Authorization: Bearer ${data.implicitGrant.accessToken}  " \\\n`;
@@ -821,7 +844,7 @@ $(function () {
         });
         let ok = await data.userInfo.getUserInfo();
         corsAccountReport();
-        ok = ok || IGNORE_CORS_ERRORS;
+        ok = ok || useCurl;
         ok = ok && await setAccountId(getStoredAccountId());
         if (!ok) {
             // Did not complete the login or templates issue
@@ -915,7 +938,7 @@ $(function () {
         }
         $("#loggedin").removeClass("hide");
         
-        if (!IGNORE_CORS_ERRORS && corsError) {
+        if (!useCurl && corsError) {
             errMsg(`Error: this account (${accountName}) has not enabled CORS for this application. Please switch accounts or login again.`);
             return false; // EARLY RETURN
         }
@@ -941,7 +964,7 @@ $(function () {
             errMsg(data.checkTemplates.errMsg)
             ok = false;
         }
-        if (ok || IGNORE_CORS_ERRORS) {
+        if (ok || useCurl) {
             $("#doit").removeClass("hide");
         }
         msg('done.'); // done with templates
@@ -969,9 +992,13 @@ $(function () {
 
         $("#login").addClass("hide");
         clientId = $(target).attr("data-platform");
+        if (clientIDqp) { // if client ID was set via QP, use it
+            clientId = clientIDqp;
+        }
         data.implicitGrant = new ImplicitGrant({
             workingUpdateF: workingUpdate,
-            clientId: clientId
+            clientId: clientId,
+            oauthServiceProvider: oauthServiceProvider
         });
         await data.implicitGrant.login();
     };
@@ -1031,8 +1058,7 @@ $(function () {
         adjustRows();
         window.addEventListener("message", messageListener);
         $("#btnOauth").click(login);
-        $("#btnOauthInternalStage").click(loginInternal);
-        $("#btnOauthInternalTk1").click(loginInternal);
+        $("#internalLogins").click(loginInternal);
         $("#btnDoit2").click(doit2);
         $("#btnDoit3").click(doit3);
         $("#saccount a").click(switchAccountsButton);

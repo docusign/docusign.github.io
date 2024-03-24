@@ -23,16 +23,8 @@
                             Login with DocuSign</a>
 
                         <!-- https://mdbootstrap.com/docs/standard/extended/dropdown-button/ -->
-                        <div id="internalLogins" class="hide dropdown mt-4">
-                            <button class="btn btn-warning dropdown-toggle" type="button" id="dropdownMenuButton"
-                            data-mdb-toggle="dropdown" aria-expanded="false">
-                            Internal Login
-                            </button>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <li><a id="btnOauthInternalStage" class="dropdown-item" href="#" data-platform="stage">Stage</a></li>
-                            <li><a id="btnOauthInternalTk1" class="dropdown-item" href="#" data-platform="tk1">TK1</a></li>
-                            </ul>
-                        </div>
+                        <a id="internalLogins" class="hide btn btn-warning" type="button" role="button">
+                            Internal Login</a>
                         <p>
                             Use your DocuSign <b>Developer Account.</b><br/>Don't have one?
                             <a href="https://go.docusign.com/o/sandbox/?utm_campaign=GBL_XX_DEV_NEW_2208_ExternalProgrammingTools&utm_medium=display&utm_source=jsfiddle" target="_blank">Free signup!</a>
@@ -91,8 +83,8 @@
                     <div class="mb-3">
                         <label for="startingScreen" class="form-label">Starting Screen:</label>
                         <select id="startingScreen" class="form-select form-select-sm" aria-label=".form-select-sm example">
-                            <option value="prepare" selected>Prepare page</option>
-                            <option value="tagging">Tagger page</option>
+                            <option value="Prepare" selected>Prepare page</option>
+                            <option value="Tagger">Tagger page</option>
                         </select>
                         <div class="mb-3 form-check">
                             <label for="showFormImages" class="form-label">Show Form Images</label>
