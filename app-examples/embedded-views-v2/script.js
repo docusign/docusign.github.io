@@ -617,6 +617,32 @@ $(function () {
      */
     async function embeddedTemplateEdit() {
         let templateId, apiMethod, httpMethod, results, req;
+        if (useCurl) {
+            templateId = "000-TEMPLATE-ID-000";
+            apiMethod = `/accounts/${accountId}/templates/${templateId}/views/edit`;
+            req = makeEmbeddedViewRequest ("template");
+            let curl = `curl \\\n`;
+            curl += `-H "Content-Type: application/json" \\\n`;
+            curl += `-H "Authorization: Bearer ${data.implicitGrant.accessToken}  " \\\n`;
+            curl += `--data '${JSON.stringify(req, null, 4)}' \\\n`
+            curl += `--request POST \\\n`;
+            curl += `${accountBaseUrl}${apiMethod}`
+            window.focus();
+            await navigator.clipboard.writeText(curl);
+            Toastify({ // https://github.com/apvarun/toastify-js/blob/master/README.md
+                text: "Curl command is on clipboard: replace the envelope ID!",
+                duration: 5000,
+                close: true,
+                gravity: "top", // `top` or `bottom`
+                position: "center", // `left`, `center` or `right`
+                stopOnFocus: true, // Prevents dismissing of toast on hover
+                style: {
+                  background: "linear-gradient(to right, #00b09b, #96c93d)",
+                },
+              }).showToast();
+            return
+        }
+
         if (blankET) {
             // create a blank template
             apiMethod = `/accounts/${accountId}/templates`;
