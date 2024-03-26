@@ -89,6 +89,7 @@ $(function () {
     const CLIENT_ID_QP = "clientid"; // if set, use this client ID
     const OAUTH_PROVIDER_QP = "oauthserver";  // if set, use this OAuth Service Provider 
     const SHOW_IN_IFRAME = true;
+    const TEMPLATE_EDIT_ACTION = "Template Edit";
     let action = "Envelope Send";
     let useCurl = false;
     let blankET = false // start with a blank envelope/template
@@ -305,11 +306,14 @@ $(function () {
             url += `${USE_CURL_QP}=1&`
         }
         url += `blankET=${encodeURIComponent(blankET)}&`;
-        for (const property in qpSender) {
-            url += `${property}=${encodeURIComponent(qpSender[property]).replace(/\%20/g, '+')}&`;
-        }
-        url += `showFormImages=${encodeURIComponent(showFormImages).replace(/\%20/g, '+')}&`;
         url += `comment=${encodeURIComponent(comment).replace(/\%20/g, '+')}`;
+
+        if (action !== TEMPLATE_EDIT_ACTION) {
+            for (const property in qpSender) {
+                url += `${property}=${encodeURIComponent(qpSender[property]).replace(/\%20/g, '+')}&`;
+            }
+            url += `showFormImages=${encodeURIComponent(showFormImages).replace(/\%20/g, '+')}&`;
+        }
         await navigator.clipboard.writeText(url);
         Toastify({ // https://github.com/apvarun/toastify-js/blob/master/README.md
             text: "Copied to the Clipboard!",
@@ -743,6 +747,18 @@ $(function () {
     }
 
     /**
+     * 
+     */
+    function actionChange(e) {
+        updateQp();
+        if (action === TEMPLATE_EDIT_ACTION) {
+            $(".formItems").addClass("hide")
+        } else {
+            $(".formItems").removeClass("hide")
+        }
+    }
+    
+    /**
      * showFormImagesChange
      */
     function showFormImagesChange(e) {
@@ -1095,7 +1111,8 @@ $(function () {
         $("#btnDoit3").click(doit3);
         $("#saccount a").click(switchAccountsButton);
         $("#switchAccountModal .modal-body").click(accountClicked);
-        $('#showFormImages').change(showFormImagesChange); 
+        $('#showFormImages').change(showFormImagesChange);
+        $('#action').change(actionChange);
 
         setQp();
         showFormImagesChange();
