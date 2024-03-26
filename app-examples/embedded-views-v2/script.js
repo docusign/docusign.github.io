@@ -353,7 +353,7 @@ $(function () {
                 decodeURIComponent(pair[1].replace(/\+/g, '%20') || '');
         }
         if ("action" in query) {
-            action = query["action"];
+            $(`#action`).val(query["action"]);
         }
         if (CLIENT_ID_QP in query) {
             clientIDqp = query[CLIENT_ID_QP];
