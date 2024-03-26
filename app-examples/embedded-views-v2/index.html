@@ -61,13 +61,13 @@
                     <div class="rect5"></div>
                 </div>
             </section>
-            <div id="doit" class="hide mb-3">
+            <div id="doit" class="hide">
                 <select id="action" class="form-select-lg" aria-label="Action select">
                     <option>Envelope Send</option>
                     <!-- <option>Envelope Correct</option>
                     <option>Envelope Recipient Preview</option>
                     <option>Envelope Recipient Manual Review</option>  -->
-                    <!-- <option>Template Edit</option> -->
+                    <option>Template Edit</option>
                     <!-- <option>Template Document Responsive HTML Preview</option>
                     <option>Template Recipient Preview</option>  -->
                 </select>
@@ -86,9 +86,11 @@
                             <option value="Prepare" selected>Prepare page</option>
                             <option value="Tagger">Tagger page</option>
                         </select>
-                        <div class="mb-3 form-check">
-                            <label for="showFormImages" class="form-label">Show Form Images</label>
+                        <div class="mb-3">
                             <input id="showFormImages" class="form-check-input" type="checkbox" checked>
+                            <label for="showFormImages" class="form-label">Show Form Images</label>
+                            <input id="blankET" class="form-check-input mlb" type="checkbox">
+                            <label for="blankET" class="form-label">Use a blank envelope/template</label>
                         </div>
                     </div>
                 </form>
@@ -213,9 +215,6 @@
                     </div>
                 </form>
             </div>
-
-            <p><small> A template is used to create the envelope.
-            </small></p>
         </container>
     </container>
 

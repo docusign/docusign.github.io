@@ -89,8 +89,9 @@ $(function () {
     const CLIENT_ID_QP = "clientid"; // if set, use this client ID
     const OAUTH_PROVIDER_QP = "oauthserver";  // if set, use this OAuth Service Provider 
     const SHOW_IN_IFRAME = true;
+    let action = "Envelope Send";
     let useCurl = false;
-    let startWithBlankEnvelope = false;
+    let blankET = false // start with a blank envelope/template
     let clientId = "demo";
     let clientIDqp = false;
     let oauthServiceProvider = false;
@@ -249,7 +250,6 @@ $(function () {
      */
     let doit2 = async function doit2f(event) {
         $("#doit").addClass("hide");
-        const action = $(`#action`).val();
         if (!checkToken()) {
             // Check that we have a valid token
             return;
@@ -272,9 +272,7 @@ $(function () {
                 // https://developers.docusign.com/docs/esign-rest-api/reference/envelopes/enveloperecipients/createrecipientmanualreviewview/
                 await embeddedRecipientManualReview()
             } else if (action === "Template Edit") {
-                await embeddedTemplateEdit({
-                    templateId: templates[0].templateId,
-                })
+                await embeddedTemplateEdit()
             } else if (action === "Template Recipient Preview") {
                 await embeddedTemplateRecipientPreview()
             }
@@ -290,6 +288,7 @@ $(function () {
     let doit3 = async function doit3f(event) {
         updateQp();
         let url = window.location.origin + window.location.pathname + "#";
+        url += `action=${encodeURIComponent(action).replace(/\%20/g, '+')}&`;
         if (showInternalLogins) {
             url += `${SHOW_INTERNAL_AUTH_QP}=1&`
         }
@@ -305,6 +304,7 @@ $(function () {
         if (useCurl) {
             url += `${USE_CURL_QP}=1&`
         }
+        url += `blankET=${encodeURIComponent(blankET)}&`;
         for (const property in qpSender) {
             url += `${property}=${encodeURIComponent(qpSender[property]).replace(/\%20/g, '+')}&`;
         }
@@ -330,15 +330,17 @@ $(function () {
      */
     function updateQp() {
         dsReturnUrl = dsReturnUrlDefault;
+        action = $(`#action`).val();
         comment = $("#comment").val();
         showFormImages = $(`#showFormImages`).prop('checked');
+        blankET = $(`#blankET`).prop('checked');
         for (const property in qpSender) {
             qpSender[property] = qpCheckbox[property] ? $(`#${property}`).prop('checked') : $(`#${property}`).val();
         }
     }
 
     /**
-     * Update the in-memory data from the URL's query parameters
+     * Update the form from the URL's query parameters
      */
     function setQp() {
         if (!window.location.hash) {return}
@@ -350,7 +352,9 @@ $(function () {
             query[decodeURIComponent(pair[0])] = 
                 decodeURIComponent(pair[1].replace(/\+/g, '%20') || '');
         }
-
+        if ("action" in query) {
+            action = query["action"];
+        }
         if (CLIENT_ID_QP in query) {
             clientIDqp = query[CLIENT_ID_QP];
         }
@@ -365,6 +369,9 @@ $(function () {
         }
         if ("showFormImages" in query) {
             $("#showFormImages").prop('checked', query["showFormImages"]==="true");
+        }
+        if ("blankET" in query) {
+            $(`#blankET`).prop('checked', query.blankET === "true");
         }
         showFormImagesChange();
         if (SHOW_INTERNAL_AUTH_QP in query) {
@@ -416,7 +423,7 @@ $(function () {
      *  on the DocuSign platform
      */
     async function createEnvelope({ name, email, clientUserId }) {
-        const req = startWithBlankEnvelope ? {
+        const req = blankET ? {
             status: "created"
         } : {
             status: "created",
@@ -608,15 +615,32 @@ $(function () {
     /*
      * Create an embedded template edit view, open a new tab with it
      */
-    async function embeddedTemplateEdit({ templateId }) {
-        const req = {
-            returnUrl: dsReturnUrl
-        };
+    async function embeddedTemplateEdit() {
+        let templateId, apiMethod, httpMethod, results, req;
+        if (blankET) {
+            // create a blank template
+            apiMethod = `/accounts/${accountId}/templates`;
+            httpMethod = "POST";
+            req = {description: "Created by Embedded Views example app"}
+            results = await data.callApi.callApiJson({
+                apiMethod: apiMethod,
+                httpMethod: httpMethod,
+                req: req
+            });
+            if (results === false) {
+                return false; // error!
+            }
+            templateId = results.templateId;
+        } else {
+            // use the existing template
+            templateId = templates[0].templateId;
+        }
 
-        // Make the API call
-        const apiMethod = `/accounts/${accountId}/templates/${templateId}/views/edit`;
-        const httpMethod = "POST";
-        const results = await data.callApi.callApiJson({
+        // Make the API call for the embedded view
+        req = makeEmbeddedViewRequest ("template");
+        apiMethod = `/accounts/${accountId}/templates/${templateId}/views/edit`;
+        httpMethod = "POST";
+        results = await data.callApi.callApiJson({
             apiMethod: apiMethod,
             httpMethod: httpMethod,
             req: req
@@ -633,17 +657,24 @@ $(function () {
                 )}</code></pre></p>`
             );
         }
-        const qp = new URLSearchParams(qpSender);
-        const resultsUrl = results.url.replace(/&send=[01]/,''); // remove "&send=1"
-        const senderUrl = `${resultsUrl}&${qp.toString()}`;
-        msg(`Displaying template edit view: ${senderUrl}`); 
-        embeddedViewWindow = window.open(senderUrl, "_blank");
-        if(!embeddedViewWindow || embeddedViewWindow.closed || 
-           typeof embeddedViewWindow.closed=='undefined') {
-            // popup blocked
-            alert ("Please enable the popup window");
+        const resultsUrl = results.url
+        msg(`Embedded Template Edit View URL: ${resultsUrl}`);
+        if (openEmbeddedView) {
+            if (SHOW_IN_IFRAME) {
+                embeddedViewWindow = window.open(
+                    `${iframeitUrl}?label=Embedded+Sender+View&url=${encodeURIComponent(resultsUrl)}`, "_blank");
+            } else {
+                embeddedViewWindow = window.open(resultsUrl, "_blank")
+            }
+            if(!embeddedViewWindow || embeddedViewWindow.closed || 
+            typeof embeddedViewWindow.closed=='undefined') {
+                // popup blocked
+                alert ("Please enable the popup window");
+            }
+            embeddedViewWindow.focus();
+        } else {
+            htmlMsg ("<h3>Open the URL in an incognito window</h3>")
         }
-        embeddedViewWindow.focus();
         return true;
     }
 
