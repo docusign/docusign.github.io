@@ -88,7 +88,7 @@ $(function () {
     const OPEN_EMBEDDED_VIEW_QP = "openview"; // If set to 0, then don't open the embedded view
     const CLIENT_ID_QP = "clientid"; // if set, use this client ID
     const OAUTH_PROVIDER_QP = "oauthserver";  // if set, use this OAuth Service Provider 
-    const SHOW_IN_IFRAME = false;
+    const SHOW_IN_IFRAME = true;
     let useCurl = false;
     let startWithBlankEnvelope = false;
     let clientId = "demo";
@@ -141,7 +141,7 @@ $(function () {
         , psSettingsSmartSectionsShow: "true"
         , showEnvelopeCustomFields: "true"
     };
-    const qpCheckbox = {
+    const qpCheckbox = { // which attributes are boolean / shown as checkboxes in the UX
           showBackButton: true
         , showHeaderActions: true
         , showDiscardAction: true
@@ -224,36 +224,6 @@ $(function () {
         }
      */
 
-    const qpSenderOptions = {
-        startingScreen: ["prepare", "tagging"]
-      , sendButtonAction: ["send", "redirect"]
-      , showBackButton: ["true", "false"]
-      , backButtonAction: ["previousPage", "redirect"]
-      , showHeaderActions: ["true", "false"]
-      , showDiscardAction: ["true", "false"]
-      , showAdvancedOptions: ["true", "false"] // new?
-      , showEditRecipients: ["true", "false"]
-      , showEditMessage: ["true", "false"]  // new
-      , showBulkSend: ["true", "false"]  // new
-      , showContactsList: ["true", "false"] // new
-      , showEditDocuments: ["true", "false"]
-      , showEditDocumentVisibility: ["true", "false"]
-      , showEditPages: ["true", "false"]
-      , showSaveAsDocumentCustomField: ["true", "false"]  // new
-      , showMatchingTemplatesPrompt: ["true", "false"] // new???
-      , paletteDefault: ["custom", "merge", "notary", "seals",
-            "smartContracts", "annotations", "smartSections"]
-      , paletteSections: ["default", "none", "custom"]  // new
-      , psSettingsCustomShow: ["true", "false"]
-      , psSettingsMergeShow: ["true", "false"]
-      , psSettingsNotaryShow: ["true", "false"]
-      , psSettingsSealsShow: ["true", "false"]
-      , psSettingsSmartContractsShow: ["true", "false"]
-      , psSettingsAnnotationsShow: ["true", "false"]
-      , psSettingsSmartSectionsShow: ["true", "false"]
-      , showEnvelopeCustomFields: ["true", "false"]
-  }
-
     // Set basic variables
     const logLevel = 0; // 0 is terse; 9 is verbose
     let embeddedViewWindow = null;
@@ -271,7 +241,7 @@ $(function () {
         }
     ];
 
-    debugger; // uncomment with debugger open to find the right JS file.
+    debugger; // used with debugger open to find the right JS file.
 
     /*
      * The doit2 function is the example that is triggered by the
@@ -356,7 +326,7 @@ $(function () {
     doit2 = doit2.bind(this);
 
     /**
-     * Update the QP obj from the form 
+     * Update the in-memory QP obj from the form 
      */
     function updateQp() {
         dsReturnUrl = dsReturnUrlDefault;
@@ -368,7 +338,7 @@ $(function () {
     }
 
     /**
-     * Update the form from this page's QP
+     * Update the in-memory data from the URL's query parameters
      */
     function setQp() {
         if (!window.location.hash) {return}
@@ -416,6 +386,11 @@ $(function () {
         }
     }
 
+    /**
+     * Create an embeddedSenderView:
+     * 1. Create envelope
+     * 2. Call embeddedSenderView and open a browser window with the result
+     */
     async function embeddedSend() {
         const signer = {
             name: data.userInfo.name,
@@ -437,7 +412,7 @@ $(function () {
     }
 
     /*
-     *  Create the envelope from a template
+     *  Create an envelope, either a blank or from a template
      *  on the DocuSign platform
      */
     async function createEnvelope({ name, email, clientUserId }) {
