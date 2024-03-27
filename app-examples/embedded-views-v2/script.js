@@ -353,6 +353,7 @@ $(function () {
         const pairs = hash.split('&');
         for (let i = 0; i < pairs.length; i++) {
             const pair = pairs[i].split('=');
+            if (pair.length !== 2) {continue}
             query[decodeURIComponent(pair[0])] = 
                 decodeURIComponent(pair[1].replace(/\+/g, '%20') || '');
         }
