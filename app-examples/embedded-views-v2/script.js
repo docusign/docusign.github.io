@@ -305,8 +305,7 @@ $(function () {
         if (useCurl) {
             url += `${USE_CURL_QP}=1&`
         }
-        url += `blankET=${encodeURIComponent(blankET)}&`;
-        url += `comment=${encodeURIComponent(comment).replace(/\%20/g, '+')}`;
+        url += `comment=${encodeURIComponent(comment).replace(/\%20/g, '+')}&`;
 
         if (action !== TEMPLATE_EDIT_ACTION) {
             for (const property in qpSender) {
@@ -314,6 +313,7 @@ $(function () {
             }
             url += `showFormImages=${encodeURIComponent(showFormImages).replace(/\%20/g, '+')}&`;
         }
+        url += `blankET=${encodeURIComponent(blankET)}`;
         await navigator.clipboard.writeText(url);
         Toastify({ // https://github.com/apvarun/toastify-js/blob/master/README.md
             text: "Copied to the Clipboard!",
