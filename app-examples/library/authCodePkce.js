@@ -169,7 +169,7 @@ class AuthCodePkce {
             const rawResponse = await fetch(url,
                     {mode: 'cors',
                     method: 'POST',
-                    headers: new Headers({"X-DocuSign-SDK": "CodePen"}), 
+                    //headers: new Headers({"X-DocuSign-SDK": "CodePen"}), 
                     body: formData
                     });
             const response = rawResponse && rawResponse.ok && await rawResponse.json();
