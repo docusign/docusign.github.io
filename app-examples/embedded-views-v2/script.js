@@ -697,7 +697,7 @@ $(function () {
         if (openEmbeddedView) {
             if (SHOW_IN_IFRAME) {
                 embeddedViewWindow = window.open(
-                    `${iframeitUrl}?label=Embedded+Sender+View&url=${encodeURIComponent(resultsUrl)}`, "_blank");
+                    `${iframeitUrl}?label=Embedded+Template+Edit+View&url=${encodeURIComponent(resultsUrl)}`, "_blank");
             } else {
                 embeddedViewWindow = window.open(resultsUrl, "_blank")
             }
