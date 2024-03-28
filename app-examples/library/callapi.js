@@ -4,7 +4,7 @@
 const oAuthServiceProviderProd = "https://account.docusign.com"; // prod
 const oAuthServiceProviderDemo = "https://account-d.docusign.com"; 
 const oAuthServiceProviderStage = "https://account-s.docusign.com"; 
-let oAuthServiceProvider = oAuthServiceProviderProd; // prod
+let oAuthServiceProvider = oAuthServiceProviderDemo; // prod
 const implicitGrantPath = "/oauth/auth";
 const userInfoPath = "/oauth/userinfo";
 // Client IDs are NOT secrets. See
@@ -12,7 +12,7 @@ const userInfoPath = "/oauth/userinfo";
 const oAuthClientIDdemo = "f399b5fa-1807-4cc2-8498-2fba58d14759"; // demo
 const oAuthClientIDstage = "75db0d4b-a09f-47c0-af54-8d533dd59ea5"; // stage
 const oAuthClientIDprod = "8dd0204d-d969-4097-b121-f4bc77b81a44"; // prod
-let oAuthClientID = oAuthClientIDprod;
+let oAuthClientID = oAuthClientIDdemo;
 const oAuthScopes = "signature cors";
 const eSignBase = "/restapi/v2.1";
 const oAuthReturnUrl =
@@ -29,7 +29,7 @@ const logLevel = 0; // 0 is terse; 9 is verbose
  * args -- an object containing attributes:
  *   workingUpdateF -- function called when working state changes
  *   oAuthServiceProvider;
- *   clientId
+ *   clientId -- "prod", "demo" (default), "stage", or the actual clientId
  *
  * public values
  *   .errMsg -- null or contains the error information

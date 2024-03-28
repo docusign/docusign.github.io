@@ -96,7 +96,7 @@ $(function () {
     let clientId = "demo";
     let clientIDqp = false;
     let oauthServiceProvider = false;
-    let showInternalLogins = false;
+    let showInternalLogin = false;
     let openEmbeddedView = true;
     // Viewing settings 
     const dsReturnUrlDefault = "https://docusign.github.io/jsfiddleDsResponse.html";
@@ -290,7 +290,7 @@ $(function () {
         updateQp();
         let url = window.location.origin + window.location.pathname + "#";
         url += `action=${encodeURIComponent(action).replace(/\%20/g, '+')}&`;
-        if (showInternalLogins) {
+        if (showInternalLogin) {
             url += `${SHOW_INTERNAL_AUTH_QP}=1&`
         }
         if (clientIDqp) {
@@ -380,9 +380,13 @@ $(function () {
         }
         showFormImagesChange();
         if (SHOW_INTERNAL_AUTH_QP in query) {
-            showInternalLogins = query[SHOW_INTERNAL_AUTH_QP] === "1";
-            if (showInternalLogins) {
-                $("#internalLogins").removeClass("hide");
+            showInternalLogin = query[SHOW_INTERNAL_AUTH_QP] === "1";
+            if (showInternalLogin) {
+                $("#internalLogin").removeClass("hide");
+                if (!clientIDqp) {
+                    // Shown internal login to Stage
+                    $("#internalLogin").text("Stage Login");
+                }
             }
         }
         openEmbeddedView = 
@@ -1040,9 +1044,10 @@ $(function () {
         const target = event.target;
 
         $("#login").addClass("hide");
-        clientId = $(target).attr("data-platform");
         if (clientIDqp) { // if client ID was set via QP, use it
             clientId = clientIDqp;
+        } else {
+            clientId = "stage"
         }
         data.implicitGrant = new ImplicitGrant({
             workingUpdateF: workingUpdate,
@@ -1107,7 +1112,7 @@ $(function () {
         adjustRows();
         window.addEventListener("message", messageListener);
         $("#btnOauth").click(login);
-        $("#internalLogins").click(loginInternal);
+        $("#internalLogin").click(loginInternal);
         $("#btnDoit2").click(doit2);
         $("#btnDoit3").click(doit3);
         $("#saccount a").click(switchAccountsButton);
