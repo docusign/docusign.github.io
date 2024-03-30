@@ -4,19 +4,14 @@
 const oAuthServiceProviderProd = "https://account.docusign.com"; // prod
 const oAuthServiceProviderDemo = "https://account-d.docusign.com"; 
 const oAuthServiceProviderStage = "https://account-s.docusign.com"; 
-let oAuthServiceProvider = oAuthServiceProviderDemo; // prod
 const implicitGrantPath = "/oauth/auth";
-const userInfoPath = "/oauth/userinfo";
 // Client IDs are NOT secrets. See
 // https://www.rfc-editor.org/rfc/rfc6749.html#section-2.2
 const oAuthClientIDdemo = "f399b5fa-1807-4cc2-8498-2fba58d14759"; // demo
 const oAuthClientIDstage = "75db0d4b-a09f-47c0-af54-8d533dd59ea5"; // stage
 const oAuthClientIDprod = "8dd0204d-d969-4097-b121-f4bc77b81a44"; // prod
-let oAuthClientID = oAuthClientIDdemo;
 const oAuthScopes = "signature cors";
-const eSignBase = "/restapi/v2.1";
-const oAuthReturnUrl =
-    "https://docusign.github.io/jsfiddleImplicitGrantReturn.html";
+const IMPLICIT_NONCE = "Implicit OAuth Nonce"
 const logLevel = 0; // 0 is terse; 9 is verbose
 
 /*
@@ -27,13 +22,11 @@ const logLevel = 0; // 0 is terse; 9 is verbose
  * The client app must call handleMessage when the window receives a message event
  *
  * args -- an object containing attributes:
- *   workingUpdateF -- function called when working state changes
+ *   showMsg -- function to show a msg to the human
  *   oAuthServiceProvider;
  *   clientId -- "prod", "demo" (default), "stage", or the actual clientId
  *
  * public values
- *   .errMsg -- null or contains the error information
- *   .working -- is the implicit grant flow in process?
  *   .accessToken -- the access_token or null
  *   .accessTokenExpires -- a Date object or null
  */
@@ -42,103 +35,92 @@ class ImplicitGrant {
         // set ClientId
         if (args.clientId) {
             if (args.clientId === "prod") {
-                oAuthServiceProvider = oAuthServiceProviderProd;
-                oAuthClientID = oAuthClientIDprod
+                this.oAuthServiceProvider = oAuthServiceProviderProd;
+                this.oAuthClientID = oAuthClientIDprod
             } else if (args.clientId === "demo") {
-                oAuthServiceProvider = oAuthServiceProviderDemo;
-                oAuthClientID = oAuthClientIDdemo
+                this.oAuthServiceProvider = oAuthServiceProviderDemo;
+                this.oAuthClientID = oAuthClientIDdemo
             } else if (args.clientId === "stage") {
-                oAuthServiceProvider = oAuthServiceProviderStage;
-                oAuthClientID = oAuthClientIDstage
+                this.oAuthServiceProvider = oAuthServiceProviderStage;
+                this.oAuthClientID = oAuthClientIDstage
             } else {
-                oAuthServiceProvider = args.oauthServiceProvider;
-                oAuthClientID = args.clientId
+                this.oAuthServiceProvider = args.oauthServiceProvider;
+                this.oAuthClientID = args.clientId
             }
         }
-
-        this.oAuthServiceProvider = oAuthServiceProvider;
-        this.implicitGrantPath = implicitGrantPath;
-        this.oAuthClientID = oAuthClientID;
-        this.oAuthScopes = oAuthScopes;
-        this.oAuthReturnUrl = oAuthReturnUrl;
-        this.workingUpdateF = args.workingUpdateF || null;
+        this.oAuthReturnUrl = args.oAuthReturnUrl;
+        this.showMsg = args.showMsg;
 
         // public variables
-        this.working = false;
         this.accessToken = null;
         this.accessTokenExpires = null;
-        this.errMsg = null;
 
         // internal
         this._loginWindow = null;
         this._nonce = null;
+
+        // check the page URL to see if we have the OAuth response
+        this.oauthResponse()
     }
 
     /*
-     * Start the login process in a new browser tab
+     * Start the login process in the current browser tab
      */
-    async login() {
-        this.working = true;
-        this.errMsg = null;
-        if (this.workingUpdateF) {
-            this.workingUpdateF(this.working);
-        }
-
+    login() {
         // Get a random nonce to use with OAuth call
         // See https://oauth.net/articles/authentication/#access-token-injection
-        // Using https://www.random.org/clients/http/
-        this._nonce = Date.now(); // default nounce
-        this._nonce = (await this.randomNounce()) || this._nonce;
+        this._nonce = this.generateCodeVerifier();
+        this.storeNonce()
         const url =
-            `${this.oAuthServiceProvider}${this.implicitGrantPath}` +
+            `${this.oAuthServiceProvider}${implicitGrantPath}` +
             `?response_type=token` +
-            `&scope=${this.oAuthScopes}` +
+            `&scope=${oAuthScopes}` +
             `&client_id=${this.oAuthClientID}` +
             `&redirect_uri=${this.oAuthReturnUrl}` +
             `&state=${this._nonce}`;
-        this._loginWindow = window.open(url, "_blank");
-        const newTab = this._loginWindow;
-        if (!newTab || newTab.closed || typeof newTab.closed=='undefined') {
-            // POPUP BLOCKED
-            alert ("Please enable the popup login window. Then reload this page.")
-        }
-        this._loginWindow.focus();
+        location.href = url; // In the current tab, goto the OAuth URL 
     }
 
-    /*
-     * Obtain a random value from random.org
+    /**
+     * return codeVerifier -- a secret
+     * 43 - 128 bytes
+     * Characters English letters A-Z or a-z, Numbers 0-9, Symbols “-”, “.”, “_” or “~”.
+     * Note that this solution can return varying string lengths
+     * See https://crypto.stackexchange.com/q/109579/8680 
      */
-    async randomNounce() {
+    generateCodeVerifier() {
+        const len = 128;
+        const array = new Uint32Array( len / 8);
+        window.crypto.getRandomValues(array);
+        return Array.from(array, x => x.toString(16)).join("");
+    }
+
+    /**
+     * storeNonce -- stores the nonce in the browser's storage 
+     */
+    storeNonce() {
         try {
-            const url =
-                "https://www.random.org/strings/?num=1&len=20&digits=on&upperalpha=on&loweralpha=on&unique=on&format=plain&rnd=new";
-            let results = await fetch(url, {
-                mode: "cors",
-                headers: new Headers({
-                    Accept: `text/html`
-                })
-            });
-            if (results && results.ok) {
-                // remove the last character, a CR
-                return (await results.text()).slice(0, -1);
-            }
-        } catch (e) {}
-        return false;
+            localStorage.setItem(IMPLICIT_NONCE, this._nonce)
+        } catch {};
+    }
+    /**
+     * storeNonce -- stores the nonce in the browser's storage 
+     */
+    getNonce() {
+        this._nonce = null;
+        try {
+            this._nonce = localStorage.getItem(IMPLICIT_NONCE)
+        } catch {};
     }
 
+
     /*
-     * handleMessage processes the incoming response message
-     * from the Authorization Service Provider
+     * oauthResponse checks and processes the page's hash
      */
-    handleMessage(data) {
-        if (!data || data.source !== "oauthResponse") {
-            return "skip";
-        }
-        // OAuth response
-        if (this._loginWindow) {
-            this._loginWindow.close(); // close the browser tab used for OAuth
-        }
-        const hash = data.hash.substring(1); // remove the #
+    oauthResponse() {
+        const hash = location.hash.substring(1); // remove the #
+        if (!hash.length) {return} // EARLY RETURN (Nothing to see here!)
+        window.history.pushState("", "", `${location.origin}${location.pathname}`);
         const items = hash.split(/\=|\&/);
         let i = 0;
         let response = {};
@@ -147,24 +129,15 @@ class ImplicitGrant {
             i += 2;
         }
         const newState = response.state;
+        this.getNonce()
         if (newState !== this._nonce) {
-            this.errMsg = "Bad state response. Possible attacker!?!";
-            this.working = false;
-            if (this.workingUpdateF) {
-                this.workingUpdateF(this.working);
-            }
-            return "error";
+            console.error({incoming_nonce: newState, stored_nonce: this._nonce});
+            this.showMsg("OAuth problem: Bad state response. Possible attacker!?!");
         }
         this.accessToken = response.access_token;
         this.accessTokenExpires = new Date(
             Date.now() + response.expires_in * 1000
         );
-        // done!
-        this.working = false;
-        if (this.workingUpdateF) {
-            this.workingUpdateF(this.working);
-        }
-        return "ok";
     }
 
     logout() {
@@ -182,6 +155,5 @@ class ImplicitGrant {
         return ok;
     }
 }
-
 
 export { ImplicitGrant };

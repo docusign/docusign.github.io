@@ -51,6 +51,13 @@ function usingHttps() {
     }
 }
 
+function switchToHttps() {
+    if (location.protocol !== "https:" && location.origin !== "http://localhost") {
+        location.protocol = "https:"
+        location.replace(location.href())
+    }
+}
+
 function getStoredAccountId() {
     let accountId = null;
     try {
@@ -149,4 +156,4 @@ function adjustRows() {
 
 /////////////////////
 export { msg, htmlMsg, adjustRows, errMsg, workingUpdate, usingHttps,
-    getStoredAccountId, setStoredAccountId, toast};
+    getStoredAccountId, setStoredAccountId, toast, switchToHttps};
