@@ -86,8 +86,9 @@ $(function () {
     const USE_CURL_QP = "curl"; // if QP curl=1 then use curl, not CORS
     const SHOW_INTERNAL_AUTH_QP = "internal"; // If this QP is present then show internal login options
     const OPEN_EMBEDDED_VIEW_QP = "openview"; // If set to 0, then don't open the embedded view
+    const DEBUG_QP = "debug"; // if set to 1, same as openEmbeddedView set to 0
     const CLIENT_ID_QP = "clientid"; // if set, use this client ID
-    const OAUTH_PROVIDER_QP = "oauthserver";  // if set, use this OAuth Service Provider 
+    const OAUTH_PROVIDER_QP = "oauthserver";  // if set, use this OAuth Service Provider
     const SHOW_IN_IFRAME = true;
     const TEMPLATE_EDIT_ACTION = "Template Edit";
     let action = "Envelope Send";
@@ -300,7 +301,7 @@ $(function () {
             url += `${OAUTH_PROVIDER_QP}=${encodeURIComponent(oauthServiceProvider)}&`
         }
         if (!openEmbeddedView) {
-            url += `${OPEN_EMBEDDED_VIEW_QP}=0&`
+            url += `${OPEN_EMBEDDED_VIEW_QP}=0&${DEBUG_QP}=1&`
         }
         if (useCurl) {
             url += `${USE_CURL_QP}=1&`
@@ -391,6 +392,9 @@ $(function () {
         }
         openEmbeddedView = 
             !(OPEN_EMBEDDED_VIEW_QP in query && query[OPEN_EMBEDDED_VIEW_QP] === "0")
+        if (DEBUG_QP in query && query[DEBUG_QP] === "1") {
+            openEmbeddedView = false
+        }
         for (const property in query) {
             if (property in qpSender) {
                 if (qpCheckbox[property]) {
@@ -554,7 +558,9 @@ $(function () {
             }
             embeddedViewWindow.focus();
         } else {
-            htmlMsg ("<h3>Open the URL in an incognito window</h3>")
+            htmlMsg ("<h3>Debugging mode</h3><p>1. Open a new tab (incognito window best) and an inspector window<br />2. Load one of these URLs:</p>");
+            htmlMsg (`<p><a href="${resultsUrl}">Embedded Sender View</a></p>
+            <p><a href="${iframeitUrl}?label=Embedded+Sender+View&url=${encodeURIComponent(resultsUrl)}">Embedded Sender View in an iFrame</a></p>`);
         }
         return true;
     }
