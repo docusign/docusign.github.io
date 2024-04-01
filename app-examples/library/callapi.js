@@ -227,6 +227,7 @@ class UserInfo {
         }
         this.accessToken = args.accessToken;
         this.workingUpdateF = args.workingUpdateF || null;
+        this.onlyCheckDefaultAccount = args.onlyCheckDefaultAccount; // cors check 
         this.oAuthServiceProvider = oAuthServiceProvider;
         this.userInfoPath = userInfoPath;
         this.eSignBase = eSignBase;
@@ -315,6 +316,7 @@ class UserInfo {
      */
     async fetchExternalAccountIds() {
         for (const account of this.accounts) {
+            if (this.onlyCheckDefaultAccount && !account.accountIsDefault) {continue}
             try {
                 const url = `${account.accountBaseUrl}/accounts/${account.accountId}`;
                 const response = await fetch(url,

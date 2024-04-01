@@ -38,6 +38,7 @@ $(async function () {
         oAuthClientID = data.implicitGrant.oAuthClientID;
         data.userInfo = new UserInfo({
             accessToken: data.implicitGrant.accessToken,
+            onlyCheckDefaultAccount: true,
         });
         const ok = await data.userInfo.getUserInfo();
         if (ok) {
