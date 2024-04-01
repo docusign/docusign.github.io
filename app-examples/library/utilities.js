@@ -86,6 +86,13 @@ function toast (msg) {
       }).showToast();
 }
 
+function messageModal(title, msg) {
+    $("#messageModal .modal-title").text(title);
+    $("#messageModal .modal-body").html(msg);
+    const modal = new bootstrap.Modal('#messageModal');
+    modal.show();
+}
+
 /**
  * adjustRows implements the adjustable rows support
  * Based on https://htmldom.dev/create-resizable-split-views/
@@ -156,4 +163,4 @@ function adjustRows() {
 
 /////////////////////
 export { msg, htmlMsg, adjustRows, errMsg, workingUpdate, usingHttps,
-    getStoredAccountId, setStoredAccountId, toast, switchToHttps};
+    getStoredAccountId, setStoredAccountId, toast, switchToHttps, messageModal};

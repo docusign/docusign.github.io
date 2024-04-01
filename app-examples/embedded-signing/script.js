@@ -7,30 +7,26 @@ import {
     UserInfo
 } from "../library/callapi.js" 
 
-
 import { CheckTemplates 
 } from "../library/checkTemplates.js";
 
 import {
-    workingUpdate,
     switchToHttps,
-    getStoredAccountId,
-    setStoredAccountId,
     toast,
-    //switchAccountsModal
+    messageModal
 } from "../library/utilities.js" 
+
+import {Click2Agree} from "./click2agree.js"
 
 const CLIENT_ID = "demo";
 
 $(async function () {
-    // #####################################################
-    const logLevel = 0; // 0 is terse; 9 is verbose
-    // Change the log level to see the requests / responses
-    // #####################################################
+    let oAuthClientID;
+    let accountId;
 
-    let sign = function signF () {
-
-
+    let sign = async function signF (e) {
+        e.preventDefault();
+        await data.click2agree.sign();
     }.bind(this)
 
     let login = function loginF() {
@@ -38,15 +34,26 @@ $(async function () {
     }.bind(this);
 
     async function completeLogin() {
+        oAuthClientID = data.implicitGrant.oAuthClientID;
         data.userInfo = new UserInfo({
             accessToken: data.implicitGrant.accessToken,
         });
         const ok = await data.userInfo.getUserInfo();
         if (ok) {
+            accountId = data.userInfo.defaultAccount;
             data.callApi = new CallApi({
                 accessToken: data.implicitGrant.accessToken,
                 apiBaseUrl: data.userInfo.defaultBaseUrl
             });
+            data.click2agree = new Click2Agree({
+                showMsg: toast,
+                messageModal: messageModal,
+                clientId: oAuthClientID,
+                accountId: accountId,
+                callApi: data.callApi,
+                mainElId: "main",
+                signElId: "signing-ceremony",
+            })
         } else {
             // Did not complete the login
             toast(data.userInfo.errMsg);
@@ -59,11 +66,11 @@ $(async function () {
         implicitGrant: null,
         userInfo: null,
         callApi: null,
+        click2agree: null,
     };
 
     switchToHttps();
     data.implicitGrant = new ImplicitGrant({
-        workingUpdateF: workingUpdate,
         oAuthReturnUrl: `${location.origin}${location.pathname}`,
         clientId: CLIENT_ID,
         showMsg: toast

@@ -1,5 +1,9 @@
+body {
+  padding-top: 56px; /* Provide room for top NavBar */
+  flex-direction: column;
+}
 
-
+.hide {display: none;}
 
 /* https://projects.lukehaas.me/css-loaders/ */
 .loader {

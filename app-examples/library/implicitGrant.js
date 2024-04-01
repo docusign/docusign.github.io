@@ -23,12 +23,13 @@ const logLevel = 0; // 0 is terse; 9 is verbose
  *
  * args -- an object containing attributes:
  *   showMsg -- function to show a msg to the human
- *   oAuthServiceProvider;
  *   clientId -- "prod", "demo" (default), "stage", or the actual clientId
+ *   oAuthServiceProvider -- only used if clientId is the actual clientId
  *
  * public values
  *   .accessToken -- the access_token or null
  *   .accessTokenExpires -- a Date object or null
+ *   .oAuthClientID
  */
 class ImplicitGrant {
     constructor(args) {
@@ -112,7 +113,6 @@ class ImplicitGrant {
             this._nonce = localStorage.getItem(IMPLICIT_NONCE)
         } catch {};
     }
-
 
     /*
      * oauthResponse checks and processes the page's hash
