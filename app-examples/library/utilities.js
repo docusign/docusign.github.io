@@ -93,6 +93,45 @@ function messageModal(title, msg) {
     modal.show();
 }
 
+const LOADING_ID = "loading";
+const LOADING_SELECTOR = `#${LOADING_ID}`;
+class LoadingModal {
+    constructor(args) {
+        this.modal = new bootstrap.Modal(LOADING_SELECTOR);
+        this.titleEl = $(`${LOADING_SELECTOR} .modal-title`)[0];
+        this.shown = false; // Is the loader being shown?
+    }
+
+    /***
+     * show -- set the loader's message, show the loader
+     *      can be called additional times to update the msg 
+     */
+    show(msg) {
+        $(this.titleEl).text(msg);
+        if (!this.shown) {
+            this.modal.show();
+            this.shown = true;
+        }
+    }
+
+    /***
+     * delayedHide -- show a final message for a couple of seconds,
+     *      then hide the modal
+     */
+    delayedHide(msg, timeoutSec=3) {
+        $(this.titleEl).text(msg);
+        setTimeout(() => {this.modal.hide()}, timeoutSec * 1000);
+    }
+
+    /***
+     * hide -- immediately close the loader
+     */
+    hide() {
+        this.modal.hide();
+    }
+}
+
+
 /**
  * adjustRows implements the adjustable rows support
  * Based on https://htmldom.dev/create-resizable-split-views/
@@ -162,5 +201,5 @@ function adjustRows() {
 }
 
 /////////////////////
-export { msg, htmlMsg, adjustRows, errMsg, workingUpdate, usingHttps,
+export { msg, htmlMsg, adjustRows, errMsg, workingUpdate, usingHttps, LoadingModal,
     getStoredAccountId, setStoredAccountId, toast, switchToHttps, messageModal};

@@ -13,7 +13,8 @@ import { CheckTemplates
 import {
     switchToHttps,
     toast,
-    messageModal
+    messageModal,
+    LoadingModal
 } from "../library/utilities.js" 
 
 import {Click2Agree} from "./click2agree.js"
@@ -67,6 +68,7 @@ $(async function () {
         userInfo: null,
         callApi: null,
         click2agree: null,
+        loadingModal: new LoadingModal(),
     };
 
     switchToHttps();
@@ -80,11 +82,9 @@ $(async function () {
         loginModal.show();
     } else {
         // logged in
-        const loadingModal = new bootstrap.Modal('#loading');
-        loadingModal.show();
+        data.loadingModal.show("Completing Login Process")
         await completeLogin();
-        loadingModal.hide();
-        toast("Logged In!")
+        data.loadingModal.delayedHide("Logged In!")
     }
 
     //window.addEventListener("message", messageListener);
