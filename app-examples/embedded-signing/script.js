@@ -49,6 +49,7 @@ $(async function () {
             data.click2agree = new Click2Agree({
                 showMsg: toast,
                 messageModal: messageModal,
+                loadingModal: data.loadingModal,
                 clientId: oAuthClientID,
                 accountId: accountId,
                 callApi: data.callApi,

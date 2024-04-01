@@ -27,6 +27,7 @@ class Click2Agree {
     constructor(args) {
         this.showMsg = args.showMsg;
         this.messageModal = args.messageModal;
+        this.loadingModal = args.loadingModal;
         this.clientId = args.clientId;
         this.accountId = args.accountId;
         this.callApi = args.callApi;
@@ -46,11 +47,19 @@ class Click2Agree {
      */
     async sign() {
         const recipient = {email: EMAIL, name: NAME, clientUserId: CLIENT_USER_ID}
+        this.loadingModal.show("Creating the envelope");
         const envelopeId = await this.sendEnvelope(recipient);
-        if (!envelopeId) {return}
+        if (!envelopeId) {
+            this.loadingModal.delayedHide("Could not send the envelope");
+            return
+        }
+        this.loadingModal.show("Creating the recipient view");
         const recipientViewUrl = await this.recipientView({recipient: recipient, envelopeId: envelopeId});
-        if (!recipientViewUrl) {return}
-        this.focusedView(recipientViewUrl);
+        if (!recipientViewUrl) {
+            this.loadingModal.delayedHide("Could not open the recipient view");
+        }
+        this.loadingModal.delayedHide("Opening the focused view");
+        await this.focusedView(recipientViewUrl);
     }
 
     /***

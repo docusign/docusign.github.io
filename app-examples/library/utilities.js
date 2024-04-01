@@ -121,6 +121,7 @@ class LoadingModal {
     delayedHide(msg, timeoutSec=3) {
         $(this.titleEl).text(msg);
         setTimeout(() => {this.modal.hide()}, timeoutSec * 1000);
+        this.shown = false;
     }
 
     /***
@@ -128,6 +129,7 @@ class LoadingModal {
      */
     hide() {
         this.modal.hide();
+        this.shown = false;
     }
 }
 
