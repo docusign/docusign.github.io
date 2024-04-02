@@ -20,14 +20,24 @@ import {
 import {Click2Agree} from "./click2agree.js"
 
 const CLIENT_ID = "demo";
+const CONFIG_STORAGE = "embeddedSigning";
 
 $(async function () {
     let oAuthClientID;
     let accountId;
+    let configuration = {
+        mode: "click2sign", supp1include: true, supp1signerMustAcknowledge: "view",
+        supp2include: true, supp2signerMustAcknowledge: "accept"
+    }
 
     let sign = async function signF (e) {
         e.preventDefault();
-        await data.click2agree.sign();
+
+        const supplemental = [{include: true, signerMustAcknowledge: "view"},
+           {include: true, signerMustAcknowledge: "accept"}];
+        // no_interaction, view, accept, view_accept
+
+        await data.click2agree.sign({supplemental: supplemental});
     }.bind(this)
 
     let login = function loginF() {
@@ -43,6 +53,7 @@ $(async function () {
         const ok = await data.userInfo.getUserInfo();
         if (ok) {
             accountId = data.userInfo.defaultAccount;
+            console.log (`ACCOUNT INFORMATION Account ID: ${accountId}, Name: ${data.userInfo.defaultAccountName}`);
             data.callApi = new CallApi({
                 accessToken: data.implicitGrant.accessToken,
                 apiBaseUrl: data.userInfo.defaultBaseUrl

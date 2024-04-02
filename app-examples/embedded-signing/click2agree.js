@@ -15,12 +15,15 @@
  * public values
  */
 const STATIC_DOC_URL = "../assets/Web site Access Agreement.pdf";
+const SUPP_DOCS_URL = "../assets/";
+const SUPP_DOC_NAMES = ["Terms and Conditions 1.pdf", "Terms and Conditions 2.pdf"]
 const EMAIL = "email@example.com";
 const NAME = "Sam Spade";
 const CLIENT_USER_ID = 1000;
 // See https://developers.docusign.com/docs/esign-rest-api/reference/envelopes/envelopeviews/createrecipient/#schema__recipientviewrequest_frameancestors
 const FRAME_ANCESTORS = ["http://localhost", "https://docusign.github.io", "https://apps-d.docusign.com"]; 
 const MESSAGE_ORIGINS = ["https://apps-d.docusign.com"];
+const RETURN_URL = `https://docusign.github.io/jsfiddleDsResponse.html`;
 class Click2Agree {
 
 
@@ -45,7 +48,14 @@ class Click2Agree {
      * Then the recipientView URL (response from step 2) is returned to the client.
      * Then the client JavasScript opens the Click To Agree view
      */
-    async sign() {
+    async sign(args) {
+        this.supplemental = args.supplemental;
+
+        // supplemental = [{include: true, signerMustAcknowledge: "view"},
+        //   {include: true, signerMustAcknowledge: "accept"}];
+        // no_interaction, view, accept, view_accept
+        // https://developers.docusign.com/docs/esign-rest-api/reference/envelopes/envelopes/create/#schema__envelopedefinition_documents_signermustacknowledge
+
         const recipient = {email: EMAIL, name: NAME, clientUserId: CLIENT_USER_ID}
         this.loadingModal.show("Creating the envelope");
         const envelopeId = await this.sendEnvelope(recipient);
@@ -145,6 +155,9 @@ class Click2Agree {
                     <p><small>Error message: ${this.callApi.errMsg}</small></p>`)
                 return false
             }
+            this.messageModal("Create Envelope Problem: Operation Canceled", 
+            `<p>Error message: ${this.callApi.errMsg}</p>`)
+            return false
         }
     }
 
@@ -153,6 +166,24 @@ class Click2Agree {
      * document. Remember, Click To Agree means no tabs!
      */
     async staticDocument(recipient) {
+        const addSupplemental = async function addSupplementalF(i) {
+            if (this.supplemental[i] && this.supplemental[i].include) {
+                const sB64 = await this.callApi.getDocB64(SUPP_DOCS_URL + SUPP_DOC_NAMES[i]);
+                if (!sB64) {
+                    this.showMsg(this.callApi.errMsg); // Error!
+                    return
+                }
+                req.documents.push({
+                    name: SUPP_DOC_NAMES[i],
+                    display: "modal",
+                    fileExtension: "pdf",
+                    documentId: `${i+2}`,
+                    signerMustAcknowledge: this.supplemental[i].signerMustAcknowledge,
+                    documentBase64: sB64
+                })
+            }
+        }.bind(this)
+
         const docB64 = await this.callApi.getDocB64(STATIC_DOC_URL);
         if (!docB64) {
             this.showMsg(this.callApi.errMsg); // Error!
@@ -163,14 +194,6 @@ class Click2Agree {
                 // https://developers.docusign.com/docs/esign-rest-api/reference/envelopes/envelopes/create/#schema__envelopedefinition_usedisclosure
             emailSubject: "Please sign the attached document",
             status: "sent",
-            documents: [
-                {
-                    name: "Example document",
-                    documentBase64: docB64,
-                    fileExtension: "pdf",
-                    documentId: "1"
-                }
-            ],
             recipients: {
                 signers: [
                     {
@@ -180,8 +203,20 @@ class Click2Agree {
                         recipientId: "1",
                     }
                 ]
-            }
+            },
+            documents: [
+                {
+                    name: "Example document",
+                    fileExtension: "pdf",
+                    documentId: "1",
+                    documentBase64: docB64,
+                }
+            ]
         }
+
+        // Add supplemental docs
+        await addSupplemental(0);
+        await addSupplemental(1);
         return req
     }
 
@@ -202,7 +237,7 @@ class Click2Agree {
             email: recipient.email,
             frameAncestors: FRAME_ANCESTORS,
             messageOrigins: MESSAGE_ORIGINS,
-            returnUrl: location.href,
+            returnUrl: RETURN_URL,
             userName: recipient.name,
         }
         const results = await this.callApi.callApiJson({

@@ -4,6 +4,9 @@ body {
 }
 
 .hide {display: none;}
+.display-inline {display: inline;}
+.w10 {width: 10em;}
+.baseline {vertical-align: baseline;}
 
 /* https://projects.lukehaas.me/css-loaders/ */
 .loader {
