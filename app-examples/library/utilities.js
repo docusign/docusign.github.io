@@ -72,6 +72,20 @@ function setStoredAccountId(accountId) {
     } catch {};
 }
 
+function storageGet(name) {
+    let response = null;
+    try {
+        response = JSON.parse(localStorage.getItem(name));
+    } catch {};
+    return response
+}
+
+function storageSet(name, val) {
+    try {
+        localStorage.setItem(name, JSON.stringify(val))
+    } catch {};
+}
+
 function toast (msg) {
     Toastify({ // https://github.com/apvarun/toastify-js/blob/master/README.md
         text: msg,
@@ -91,6 +105,28 @@ function messageModal(title, msg) {
     $("#messageModal .modal-body").html(msg);
     const modal = new bootstrap.Modal('#messageModal');
     modal.show();
+}
+
+/***
+ * processUrlHash 
+ * Arg: qp
+ * If the hash includes the qp then return the hash as an object and
+ * clear the hash
+ */
+function processUrlHash(qp) {
+    const hash = location.hash.substring(1); // remove the #
+    if (!hash.length || hash.indexOf(qp) === -1) {return} // EARLY RETURN (Nothing to see here!)
+
+    window.history.pushState("", "", `${location.origin}${location.pathname}`);
+    let query = {};
+    const pairs = hash.split('&');
+    for (let i = 0; i < pairs.length; i++) {
+        const pair = pairs[i].split('=');
+        if (pair.length !== 2) {continue}
+        query[decodeURIComponent(pair[0])] = 
+            decodeURIComponent(pair[1].replace(/\+/g, '%20') || '');
+    }
+    return query
 }
 
 const LOADING_ID = "loading";
@@ -204,4 +240,5 @@ function adjustRows() {
 
 /////////////////////
 export { msg, htmlMsg, adjustRows, errMsg, workingUpdate, usingHttps, LoadingModal,
-    getStoredAccountId, setStoredAccountId, toast, switchToHttps, messageModal};
+    getStoredAccountId, setStoredAccountId, toast, switchToHttps, messageModal, 
+    processUrlHash, storageGet, storageSet};

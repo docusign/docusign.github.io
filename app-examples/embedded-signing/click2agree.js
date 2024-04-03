@@ -68,7 +68,7 @@ class Click2Agree {
         if (!recipientViewUrl) {
             this.loadingModal.delayedHide("Could not open the recipient view");
         }
-        this.loadingModal.delayedHide("Opening the focused view");
+        this.loadingModal.delayedHide("Opening the signing ceremony");
         await this.focusedView(recipientViewUrl);
     }
 
