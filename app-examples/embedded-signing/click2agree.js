@@ -91,11 +91,15 @@ class Click2Agree {
                     }
                 },
                 /** High-level components we allow specific overrides for */
+                /**
+                 * signingNavigationButton object is NOT used when the view is Click to Agree
+                 * 
                 signingNavigationButton: {
                     finishText: 'Accepted',
-                    /** 'bottom-left'|'bottom-center'|'bottom-right',  default: bottom-right */
-                    //position: 'bottom-left'
+                    // 'bottom-left'|'bottom-center'|'bottom-right',  default: bottom-right
+                    position: 'bottom-left'
                 }
+                */
             }
         }
 
@@ -109,7 +113,7 @@ class Click2Agree {
                 /** The event here denotes what caused the sessionEnd to trigger, such as signing_complete, ttl_expired etc../ */
                 console.log('sessionend', event);
                 $(`#${this.mainElId}`).removeClass("hide");
-                $(`#${this.signElId}`).addClass("hide");
+                $(`#${this.signElId}`).addClass("hide").empty(); // Important! REMOVE the signing ceremony
             });
             
             $(`#${this.mainElId}`).addClass("hide");
