@@ -123,8 +123,10 @@ function processUrlHash(qp) {
     for (let i = 0; i < pairs.length; i++) {
         const pair = pairs[i].split('=');
         if (pair.length !== 2) {continue}
-        query[decodeURIComponent(pair[0])] = 
-            decodeURIComponent(pair[1].replace(/\+/g, '%20') || '');
+        let val = decodeURIComponent(pair[1].replace(/\+/g, '%20') || '');
+        if (val === "true") {val = true}
+        if (val === "false") {val = false} 
+        query[decodeURIComponent(pair[0])] = val;
     }
     return query
 }

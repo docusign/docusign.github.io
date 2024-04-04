@@ -80,7 +80,7 @@ $(async function () {
         for (const property in configuration) {
             if (property === "mode") {continue}
             if (formCheckboxes[property]) {
-                $(`#${property}`).prop('checked', configuration[property]==="true");
+                $(`#${property}`).prop('checked', configuration[property]);
             } else {
                 $(`#${property}`).val(configuration[property]);
             }
@@ -172,6 +172,7 @@ $(async function () {
         const mode = storageGet(MODE_STORAGE); // restore mode
         if (mode) {configuration.mode = mode}
         let config = storageGet(CONFIG_STORAGE);
+        storageSet(CONFIG_STORAGE, false); // reset
         if (config) {configuration = config}; // overwrite from QP
         setFormFromConfiguration();
         data.loadingModal.delayedHide("Logged In!")
