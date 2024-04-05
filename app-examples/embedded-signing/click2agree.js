@@ -24,8 +24,12 @@ const CLIENT_USER_ID = 1000;
 const FRAME_ANCESTORS = ["http://localhost", "https://docusign.github.io", "https://apps-d.docusign.com"]; 
 const MESSAGE_ORIGINS = ["https://apps-d.docusign.com"];
 const RETURN_URL = `https://docusign.github.io/jsfiddleDsResponse.html`;
-class Click2Agree {
 
+/***
+ * Public variables
+ * signing -- is the signing window open?
+ */
+class Click2Agree {
 
     constructor(args) {
         this.showMsg = args.showMsg;
@@ -36,6 +40,7 @@ class Click2Agree {
         this.callApi = args.callApi;
         this.mainElId = args.mainElId;
         this.signElId = args.signElId;
+        this.signing = false; 
     }
 
     /***
@@ -56,17 +61,21 @@ class Click2Agree {
         // no_interaction, view, accept, view_accept
         // https://developers.docusign.com/docs/esign-rest-api/reference/envelopes/envelopes/create/#schema__envelopedefinition_documents_signermustacknowledge
 
+        this.signing = true;
         const recipient = {email: EMAIL, name: NAME, clientUserId: CLIENT_USER_ID}
         this.loadingModal.show("Creating the envelope");
         const envelopeId = await this.sendEnvelope(recipient);
         if (!envelopeId) {
             this.loadingModal.delayedHide("Could not send the envelope");
+            this.signing = false;
             return
         }
         this.loadingModal.show("Creating the recipient view");
         const recipientViewUrl = await this.recipientView({recipient: recipient, envelopeId: envelopeId});
         if (!recipientViewUrl) {
             this.loadingModal.delayedHide("Could not open the recipient view");
+            this.signing = false;
+            return;
         }
         this.loadingModal.delayedHide("Opening the signing ceremony");
         await this.focusedView(recipientViewUrl);
@@ -112,8 +121,15 @@ class Click2Agree {
             signing.on('sessionEnd', (event) => {
                 /** The event here denotes what caused the sessionEnd to trigger, such as signing_complete, ttl_expired etc../ */
                 console.log('sessionend', event);
-                $(`#${this.mainElId}`).removeClass("hide");
+                // Event: { returnUrl: url, type: "sessionEnd", sessionEndType: "signing_complete"}
+                this.signing = false;
+                if (event.type === "sessionEnd") {
+                    this.messageModal("Signing Session Ended", `<p>Result: <b>${event.sessionEndType.replace("_", " ")}</b></p>`)
+                } else {
+                    this.messageModal("Signing Session Message", `<p>Event data: ${JSON.stringify(event)}</p>`)
+                } 
                 $(`#${this.signElId}`).addClass("hide").empty(); // Important! REMOVE the signing ceremony
+                $(`#${this.mainElId}`).removeClass("hide");
             });
             
             $(`#${this.mainElId}`).addClass("hide");

@@ -23,10 +23,10 @@
               <li class="nav-item">
                 <a id="saveToUrl" class="nav-link" aria-current="page"  href="#">Save to URL</a>
               </li>
+              <!--
               <li class="nav-item">
                 <a class="nav-link" aria-current="page" disabled href="#">Show Log</a>
               </li>
-              <!--
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" disabled role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   Dropdown
@@ -135,6 +135,8 @@
         </div>      
       </div>
     </div>
+
+    <!-- LOGIN MODAL -->
     <div id="modalLogin" class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
         <div class="modal-dialog">
           <div class="modal-content">
@@ -145,7 +147,7 @@
               <p>Login is required.</p>
               <p>Why do I need to login? This is a developer example with no server component, so you 
                  login to obtain an access token for the example.</p>
-              <p>Production apps used by signers often obtain an access token from the app's server. 
+              <p>Production apps used by signers usually obtain an access token from the app’s server. 
                  An access token can be created on the server by using the JWT Impersonation OAuth flow.</p>
             </div>
             <div class="modal-footer">
@@ -153,8 +155,9 @@
             </div>
           </div>
         </div>
-      </div>
+    </div>
 
+    <!-- LOGIN MODAL -->
     <div id="loading" class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
         <div class="modal-dialog">
           <div class="modal-content">
@@ -168,6 +171,7 @@
         </div>
     </div>
 
+    <!-- MESSAGE MODAL -->
     <div id="messageModal" class="modal fade" tabindex="-1">
       <div class="modal-dialog">
         <div class="modal-content">

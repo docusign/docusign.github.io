@@ -47,7 +47,7 @@ $(async function () {
     }
 
     /***
-     * signClickToAgree -- start the signig process
+     * signClickToAgree -- start the signing process
      */
     let signClickToAgree = async function signF (e) {
         e.preventDefault();
@@ -55,7 +55,6 @@ $(async function () {
         const supplemental = [
             {include: configuration.supp1include, signerMustAcknowledge: configuration.supp1signerMustAcknowledge},
             {include: configuration.supp2include, signerMustAcknowledge: configuration.supp2signerMustAcknowledge}];
-        // no_interaction, view, accept, view_accept
         await data.click2agree.sign({supplemental: supplemental});
     }.bind(this)
 
@@ -101,6 +100,17 @@ $(async function () {
         await navigator.clipboard.writeText(url);
         toast("Copied to the Clipboard!");
     }.bind(this);
+
+    /***
+     * Ask for confirmation before
+     */
+    const beforeUnloadHandler = function beforeUnloadHandlerF(event) {
+        const signing = data.click2agree && data.click2agree.signing // OR another mode.signing
+        if (signing) {
+            event.preventDefault();
+            event.returnValue = ''; // Chrome requires returnValue to be set.
+        }
+    }.bind(this)
     
     /***
      * Start login process
@@ -178,12 +188,10 @@ $(async function () {
         data.loadingModal.delayedHide("Logged In!")
     }
 
-    //window.addEventListener("message", messageListener);
     $("#modalLogin button").click(login);
     $("#signClickToAgree").click(signClickToAgree);
     $("#saveToUrl").click(saveToUrl);
     $('#myTab [data-bs-toggle="tab"]').on('show.bs.tab', (e) => {
-        storageSet(MODE_STORAGE, $(e.target)[0].id)});
-
-
+        storageSet(MODE_STORAGE, $(e.target)[0].id)}); // save the mode
+    window.addEventListener("beforeunload", beforeUnloadHandler);
 })
