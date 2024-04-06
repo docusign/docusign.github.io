@@ -210,7 +210,8 @@ class Click2Agree {
             return
         }
         const req = {
-            useDisclosure: false, // ignored with click to agree
+            useDisclosure: false, // Enables Click to Agree
+                // https://developers.docusign.com/docs/esign-rest-api/reference/envelopes/envelopes/create/#schema__envelopedefinition_usedisclosure
             emailSubject: "Please sign the attached document",
             status: "sent",
             recipients: {

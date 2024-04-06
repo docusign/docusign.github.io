@@ -217,7 +217,7 @@
 							"xPosition": "139",
 							"yPosition": "350",
 							"locked": "false",
-							"required": "true",
+							"required": "false",
 							"allowSignerUpload": "true",
 							"shared": "false",
 							"tabLabel": "Drawing",
@@ -288,7 +288,7 @@
 							"locked": "false",
 							"originalValue": "",
 							"requireAll": "false",
-							"required": "true",
+							"required": "false",
 							"shared": "false",
 							"value": ""
 						}
@@ -350,7 +350,7 @@
 							"locked": "false",
 							"maxLength": "4000",
 							"originalValue": "",
-							"required": "true",
+							"required": "false",
 							"value": "",
 							"requireAll": "false",
 							"requireInitialOnSharedChange": "false",
@@ -361,7 +361,7 @@
 					"radioGroupTabs": [
 						{
 							"documentId": "1",
-							"groupName": "Radio Group d575e166-a02e-4944-bfe8-e1c99010c79e",
+							"groupName": "Radio Group",
 							"originalValue": "",
 							"radios": [
 								{
@@ -372,7 +372,7 @@
 									"italic": "false",
 									"locked": "false",
 									"pageNumber": "1",
-									"required": "true",
+									"required": "false",
 									"selected": "false",
 									"tabId": "575d885b-4d79-4cd9-b84f-210bdbdba547",
 									"underline": "false",
@@ -388,7 +388,7 @@
 									"italic": "false",
 									"locked": "false",
 									"pageNumber": "1",
-									"required": "true",
+									"required": "false",
 									"selected": "false",
 									"tabId": "cce22daa-923f-4d30-b073-d043b430ee85",
 									"underline": "false",
@@ -456,7 +456,7 @@
 							"templateRequired": "false",
 							"xPosition": "0",
 							"yPosition": "0",
-							"groupLabel": "Checkbox Group 3e4daf81-5838-4ac3-b37a-36d5686c6ef1",
+							"groupLabel": "Checkbox Group",
 							"groupRule": "SelectAtLeast",
 							"maximumAllowed": "1",
 							"minimumRequired": "0",
@@ -485,14 +485,14 @@
 							"localePolicy": {
 
 							},
-							"tabLabel": "Text a291d527-c13d-4116-b194-1f2e5b4961db",
+							"tabLabel": "Text 2",
 							"underline": "false",
 							"concealValueOnDocument": "false",
 							"disableAutoSize": "false",
 							"locked": "false",
 							"maxLength": "4000",
 							"originalValue": "",
-							"required": "true",
+							"required": "false",
 							"value": "",
 							"requireAll": "false",
 							"requireInitialOnSharedChange": "false",

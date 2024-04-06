@@ -26,6 +26,7 @@ import {
 } from "../library/utilities.js" 
 
 import {Click2Agree} from "./click2agree.js"
+import { FocusedViewSigning } from "./focusedViewSigning.js";
 
 const CLIENT_ID = "demo";
 const CONFIG_STORAGE = "embeddedSigningConfiguration";
@@ -46,10 +47,20 @@ $(async function () {
         supp2include: true, 
     }
 
+    let templates = [
+        {
+            url:  "https://docusign.github.io/examples/templates/Field_Test",
+            name: "DevCenter example: Field Test",
+            description:
+                "This DevCenter example template includes multiple types of fields.",
+            templateId: null
+        }
+    ];
+
     /***
      * signClickToAgree -- start the signing process
      */
-    let signClickToAgree = async function signF (e) {
+    let signClickToAgree = async function signClickToAgreeF (e) {
         e.preventDefault();
         formToConfiguration();
         const supplemental = [
@@ -57,6 +68,21 @@ $(async function () {
             {include: configuration.supp2include, signerMustAcknowledge: configuration.supp2signerMustAcknowledge}];
         await data.click2agree.sign({supplemental: supplemental});
     }.bind(this)
+
+    /***
+     * signFocusView -- Focus View example
+     */
+    let signFocusView = async function signFocusViewF (e) {
+        e.preventDefault();
+        formToConfiguration();
+        await data.focusedViewSigning.sign({
+            templateId: templates[0].templateId,
+            name: data.userInfo.name,
+            email: data.userInfo.email,
+            });
+    }.bind(this)
+
+
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -105,7 +131,9 @@ $(async function () {
      * Ask for confirmation before
      */
     const beforeUnloadHandler = function beforeUnloadHandlerF(event) {
-        const signing = data.click2agree && data.click2agree.signing // OR another mode.signing
+        const signing = data.click2agree && data.click2agree.signing
+            || data.focusedViewSigning && data.focusedViewSigning.signing
+         
         if (signing) {
             event.preventDefault();
             event.returnValue = ''; // Chrome requires returnValue to be set.
@@ -136,7 +164,21 @@ $(async function () {
                 accessToken: data.implicitGrant.accessToken,
                 apiBaseUrl: data.userInfo.defaultBaseUrl
             });
+            data.checkTemplates = new CheckTemplates({
+                callApi: data.callApi, 
+                accountId: accountId
+            });    
             data.click2agree = new Click2Agree({
+                showMsg: toast,
+                messageModal: messageModal,
+                loadingModal: data.loadingModal,
+                clientId: oAuthClientID,
+                accountId: accountId,
+                callApi: data.callApi,
+                mainElId: "main",
+                signElId: "signing-ceremony",
+            });
+            data.focusedViewSigning = new FocusedViewSigning({
                 showMsg: toast,
                 messageModal: messageModal,
                 loadingModal: data.loadingModal,
@@ -151,6 +193,18 @@ $(async function () {
             toast(data.userInfo.errMsg);
         }
         return ok;
+    }
+
+    /***
+     * Check the templates
+     *   returns result {ok: bool, msg) 
+     */
+    async function checkTemplates() {
+        templates = await data.checkTemplates.check(templates);
+        const emptyOk = data.checkTemplates.msg === ''
+        const ok = data.checkTemplates.msg || emptyOk;
+        const okMsg = emptyOk ? "Done." : data.checkTemplates.msg;
+        return {ok: ok, msg: ok ? okMsg : data.checkTemplates.errMsg}
     }
 
     // Mainline
@@ -185,11 +239,20 @@ $(async function () {
         storageSet(CONFIG_STORAGE, false); // reset
         if (config) {configuration = config}; // overwrite from QP
         setFormFromConfiguration();
-        data.loadingModal.delayedHide("Logged In!")
+        data.loadingModal.show("Logged in. Checking templates")
+        const result = await checkTemplates(templates);
+        if (result.ok) {
+            data.loadingModal.delayedHide(result.msg)
+        } else {
+            data.loadingModal.hide();
+            messageModal("Templates issue", `<p>Problem while loading example templates
+            to your eSignature account:</p><p>${result.msg}</p>`)
+        }
     }
 
     $("#modalLogin button").click(login);
     $("#signClickToAgree").click(signClickToAgree);
+    $("#signFocusView").click(signFocusView);
     $("#saveToUrl").click(saveToUrl);
     $('#myTab [data-bs-toggle="tab"]').on('show.bs.tab', (e) => {
         storageSet(MODE_STORAGE, $(e.target)[0].id)}); // save the mode
