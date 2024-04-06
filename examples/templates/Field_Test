@@ -440,7 +440,7 @@
 							"xPosition": "181",
 							"yPosition": "499",
 							"name": "Signer Attachment",
-							"optional": "false",
+							"optional": "true",
 							"scaleValue": "1",
 							"tabLabel": "Attachment"
 						}
