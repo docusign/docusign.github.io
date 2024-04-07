@@ -220,7 +220,7 @@
 							"xPosition": "139",
 							"yPosition": "350",
 							"locked": "false",
-							"required": "true",
+							"required": "false",
 							"allowSignerUpload": "true",
 							"shared": "false",
 							"tabLabel": "Drawing",
@@ -551,6 +551,6 @@
 	"pageCount": "1",
 	"passwordProtected": "false",
 	"shared": "false",
-	"templateId": "f4004dab-33f8-4216-972f-66326d3d0953",
-	"uri": "\/templates\/f4004dab-33f8-4216-972f-66326d3d0953"
+	"templateId": "00000000-0000-0000-0000-000000000000",
+	"uri": "\/templates\/00000000-0000-0000-0000-000000000000"
 }
