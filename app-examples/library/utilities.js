@@ -131,6 +131,9 @@ function processUrlHash(qp) {
     return query
 }
 
+/***
+ * Manage the loading modal and its text
+ */
 const LOADING_ID = "loading";
 const LOADING_SELECTOR = `#${LOADING_ID}`;
 class LoadingModal {
@@ -171,6 +174,58 @@ class LoadingModal {
     }
 }
 
+/***
+ * Manage the "on change" events for a button's colors and text
+ * constructor args
+ * buttonId -- the model button
+ * textId -- the text input field
+ * backgroundColorId
+ * textColorId
+ */
+class ButtonOnChange{
+    constructor(args) {
+        this.buttonId = args.buttonId;
+        this.textId = args.textId;
+        this.backgroundColorId  = args.backgroundColorId;
+        this.textColorId  = args.textColorId;
+        
+        // prevent action when the model button is clicked
+        $(`#${this.buttonId}`).click(e => e.preventDefault());
+        // handlers for modifying the button's UX
+        $(`#${this.textId}`).on("input", this.changed);
+        $(`#${this.backgroundColorId}`).on("input", this.changed);
+        $(`#${this.textColorId}`).on("input", this.changed);
+    }
+
+    /***
+     * One of the fields changed. figure out which one and update the button
+     */
+    changed(event) {
+        const modelButtonData = $(event.target).data("modelbutton");
+        if (!modelButtonData) {return}
+        const targetInfo = modelButtonData.split("-");
+        // [0] -- id of the button
+        // [1] -- operation; {text, textcolor, background}
+        const val = $(event.target).val();
+
+        if (targetInfo[1] === "text") {
+            $(`#${targetInfo[0]} span`).text(val);
+        } else if (targetInfo[1] === "textcolor") {
+            $(`#${targetInfo[0]} span`).css('color', val);
+        } else if (targetInfo[1] === "background") {
+            $(`#${targetInfo[0]}`).css('background-color', val);
+        }
+    }
+
+    // Save the settings to browser storage
+    save() {
+
+    }
+    // Restore the settings from browser storage
+    restore() {
+
+    }
+}
 
 /**
  * adjustRows implements the adjustable rows support
@@ -243,4 +298,4 @@ function adjustRows() {
 /////////////////////
 export { msg, htmlMsg, adjustRows, errMsg, workingUpdate, usingHttps, LoadingModal,
     getStoredAccountId, setStoredAccountId, toast, switchToHttps, messageModal, 
-    processUrlHash, storageGet, storageSet};
+    processUrlHash, storageGet, storageSet, ButtonOnChange};

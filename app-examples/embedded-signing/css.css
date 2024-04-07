@@ -8,6 +8,53 @@ body {
 .w10 {width: 10em;}
 .baseline {vertical-align: baseline;}
 
+.modelButton {  /* from the Focus View signing ceremony */
+  font-family: "DS Indigo", DSIndigo, "Neue Haas Grotesk", NeueHaasGrotesk, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.5;
+  -webkit-box-align: center;
+  align-items: center;
+  border-radius: 2px;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 1px;
+  cursor: pointer;
+  display: inline-flex;
+  -webkit-box-pack: center;
+  justify-content: center;
+  letter-spacing: normal;
+  margin: 0px;
+  overflow: visible;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  text-transform: none;
+  transition-property: background-color, border-color, box-shadow, color;
+  transition-duration: 0.1s;
+  transition-timing-function: cubic-bezier(0.33, 0, 0.67, 1);
+  vertical-align: middle;
+  background-color: rgb(51, 51, 51);
+  color: rgb(255, 255, 255);
+  min-height: 40px;
+  min-width: 80px;
+  padding: 4px 15px;
+}
+.modelButton:hover {color: rgb(255,255,255)}
+
+.modelButton span {
+  pointer-events: none;
+  font-family: "DS Indigo", DSIndigo, "Neue Haas Grotesk", NeueHaasGrotesk, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.5;
+  cursor: pointer;
+  letter-spacing: normal;
+  text-align: center;
+  text-transform: none;
+  color: rgb(255, 255, 255);
+}
+
 /* https://projects.lukehaas.me/css-loaders/ */
 .loader {
     font-size: 10px;

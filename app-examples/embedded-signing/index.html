@@ -121,12 +121,32 @@
 
           </div>
           <div class="tab-pane fade" id="focusedView-tab-pane" role="tabpanel" aria-labelledby="focusedView-tab" tabindex="0">
-            <h1 class="mt-4">Focus View</h1>
+            <h1 class="mt-4">Focused View</h1>
             <p>Focus View provides a productive user interface for the signer. The signing ceremony fits within your website using
               unobtrusive framing.</p>
             <p>This demo uploads a template to your account, and then uses it for the envelope.</p>
+            <h3 class="mt-5">The Signing Ceremony’s primary button UX can be modified by the developer</h3>
             <form>
-              <a id="signFocusView" class="btn btn-primary btn-lg mt-2" type="button" role="button">Sign</a>
+              <p>Button position on the screen:
+                <select id="buttonPosition1" class="ms-2 form-select display-inline w10" aria-label="button position">
+                  <option value="bottom-left">Bottom Left</option>
+                  <option value="bottom-center">Bottom Center</option>
+                  <option value="bottom-right" selected>Bottom Right</option>
+                </select>
+                <button id="modelButton1" class="modelButton display-inline ms-5">
+                  <span>Submit</span>
+                </button>
+              </p>
+              <p>Finish text:&nbsp;&nbsp;&nbsp;
+                <input id="buttonText1" class="form-control display-inline w10" type="text" data-modelbutton="modelButton1-text" placeholder="Submit" aria-label="button text">
+              </p>
+              <p>
+                Background color:
+                <input type="color" class="ms-2 me-5 form-control form-control-color display-inline" id="backgroundColor1" data-modelbutton="modelButton1-background" value="#333333" title="Background color">
+                Text color:
+                <input type="color" class="ms-2 form-control form-control-color display-inline" id="textColor1" data-modelbutton="modelButton1-textcolor" value="#FFFFFF" title="Text color">
+              </p>
+              <a id="signFocusView" class="btn btn-primary btn-lg mt-3" type="button" role="button">Sign</a>
             </form>
           </div>
         </div>      

@@ -3,17 +3,17 @@
 //
 // Embedded Signing main JS script
 
-import {
-    ImplicitGrant,
-} from "../library/implicitGrant.js" 
+
+import { ImplicitGrant } from "../library/implicitGrant.js" 
+import { CheckTemplates } from "../library/checkTemplates.js";
+import { Envelopes } from "./envelopes.js";
+import { Click2Agree } from "./click2agree.js"
+import { FocusedViewSigning } from "./focusedViewSigning.js";
 
 import {
     CallApi,
     UserInfo
 } from "../library/callapi.js" 
-
-import { CheckTemplates 
-} from "../library/checkTemplates.js";
 
 import {
     switchToHttps,
@@ -22,11 +22,9 @@ import {
     LoadingModal,
     processUrlHash,
     storageGet, 
-    storageSet
+    storageSet,
+    ButtonOnChange
 } from "../library/utilities.js" 
-
-import {Click2Agree} from "./click2agree.js"
-import { FocusedViewSigning } from "./focusedViewSigning.js";
 
 const CLIENT_ID = "demo";
 const CONFIG_STORAGE = "embeddedSigningConfiguration";
@@ -79,6 +77,8 @@ $(async function () {
             templateId: templates[0].templateId,
             name: data.userInfo.name,
             email: data.userInfo.email,
+            modelButtonId: "modelButton1",
+            modelButtonPosition: "buttonPosition1",
             });
     }.bind(this)
 
@@ -168,6 +168,14 @@ $(async function () {
                 callApi: data.callApi, 
                 accountId: accountId
             });    
+            data.envelopes = new Envelopes({
+                showMsg: toast,
+                messageModal: messageModal,
+                loadingModal: data.loadingModal,
+                clientId: oAuthClientID,
+                accountId: accountId,
+                callApi: data.callApi,
+            })
             data.click2agree = new Click2Agree({
                 showMsg: toast,
                 messageModal: messageModal,
@@ -177,6 +185,7 @@ $(async function () {
                 callApi: data.callApi,
                 mainElId: "main",
                 signElId: "signing-ceremony",
+                envelopes: data.envelopes,
             });
             data.focusedViewSigning = new FocusedViewSigning({
                 showMsg: toast,
@@ -187,7 +196,8 @@ $(async function () {
                 callApi: data.callApi,
                 mainElId: "main",
                 signElId: "signing-ceremony",
-            })
+                envelopes: data.envelopes,
+            });
         } else {
             // Did not complete the login
             toast(data.userInfo.errMsg);
@@ -214,6 +224,7 @@ $(async function () {
         callApi: null,
         click2agree: null,
         loadingModal: new LoadingModal(),
+        modelButton1Changes: null,
     };
 
     switchToHttps();
@@ -248,6 +259,12 @@ $(async function () {
             messageModal("Templates issue", `<p>Problem while loading example templates
             to your eSignature account:</p><p>${result.msg}</p>`)
         }
+        data.modelButton1Changes = new ButtonOnChange({
+            buttonId: "modelButton1",
+            textId: "buttonText1",
+            backgroundColorId: "backgroundColor1",
+            textColorId: "textColor1"
+        })
     }
 
     $("#modalLogin button").click(login);

@@ -9,6 +9,7 @@
  *   showMsg -- function to show a msg to the human
  *   clientId -- the actual clientId
  *   callApi -- instance of CallApi
+ *   envelopes -- instance of Envelopes
  *   mainElId -- the id of the element that will be hidden when showing the view
  *   signElId -- the id of the element where the signing ceremony will be shown
  *   
@@ -20,6 +21,7 @@ const FRAME_ANCESTORS = ["http://localhost", "https://docusign.github.io", "http
 const MESSAGE_ORIGINS = ["https://apps-d.docusign.com"];
 const RETURN_URL = `https://docusign.github.io/jsfiddleDsResponse.html`;
 const ROLE = "signer" // the role name used by the example templates
+const END_MSG = `<p>The signed documents can be seen via your developer (demo) account</p>`;
 
 /***
  * Public variables
@@ -34,6 +36,7 @@ class FocusedViewSigning {
         this.clientId = args.clientId;
         this.accountId = args.accountId;
         this.callApi = args.callApi;
+        this.envelopes = args.envelopes;
         this.mainElId = args.mainElId;
         this.signElId = args.signElId;
         this.clientId = CLIENT_USER_ID;
@@ -55,6 +58,8 @@ class FocusedViewSigning {
         this.templateId = args.templateId;
         this.name = args.name;
         this.email = args.email;
+        this.modelButtonId = args.modelButtonId;
+        this.modelButtonPosition = args.modelButtonPosition;
         this.useDisclosure = true; // why demo with this off?
 
         // supplemental = [{include: true, signerMustAcknowledge: "view"},
@@ -64,19 +69,28 @@ class FocusedViewSigning {
 
         this.signing = true;
         this.loadingModal.show("Creating the envelope");
-        await this.sendEnvelope();
+
+        this.envelopes.name = this.name;
+        this.envelopes.email = this.email;
+        this.envelopes.templateId = this.templateId;
+        this.envelopes.useDisclosure = this.useDisclosure; 
+        const request = await this.envelopes.createTemplateRequest();
+        this.envelopeId = await this.envelopes.sendEnvelope(request);
+
         if (!this.envelopeId) {
             this.loadingModal.delayedHide("Could not send the envelope");
             this.signing = false;
             return
         }
+
         this.loadingModal.show("Creating the recipient view");
-        const recipientViewUrl = await this.recipientView();
+        const recipientViewUrl = await this.envelopes.recipientView();
         if (!recipientViewUrl) {
             this.loadingModal.delayedHide("Could not open the recipient view");
             this.signing = false;
             return;
         }
+
         this.loadingModal.delayedHide("Opening the signing ceremony");
         await this.focusedView(recipientViewUrl);
         // window.open(recipientViewUrl, "_blank");
@@ -95,16 +109,16 @@ class FocusedViewSigning {
                 branding: {
                     primaryButton: {
                         /** Background color of primary button */
-                        backgroundColor: '#333',
+                        backgroundColor: $(`#${this.modelButtonId}`).css('background-color'),
                         /** Text color of primary button */
-                        color: '#fff',
+                        color: $(`#${this.modelButtonId} span`).css('color'),
                     }
                 },
                 /** High-level components we allow specific overrides for */
                 signingNavigationButton: {
-                    finishText: 'Accepted',
+                    finishText: $(`#${this.modelButtonId} span`).text(), // default is Submit
                     // 'bottom-left'|'bottom-center'|'bottom-right',  default: bottom-right
-                    position: 'bottom-left'
+                    position: $(`#${this.modelButtonPosition}`).val()
                 }
             }
         }
@@ -121,7 +135,7 @@ class FocusedViewSigning {
                 // Event: { returnUrl: url, type: "sessionEnd", sessionEndType: "signing_complete"}
                 this.signing = false;
                 if (event.type === "sessionEnd") {
-                    this.messageModal("Signing Session Ended", `<p>Result: <b>${event.sessionEndType.replace("_", " ")}</b></p>`)
+                    this.messageModal("Signing Session Ended", `<p>Result: <b>${event.sessionEndType.replace("_", " ")}</b></p>${END_MSG}`)
                 } else {
                     this.messageModal("Signing Session Message", `<p>Event data: ${JSON.stringify(event)}</p>`)
                 } 

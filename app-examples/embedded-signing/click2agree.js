@@ -24,6 +24,7 @@ const CLIENT_USER_ID = 1000;
 const FRAME_ANCESTORS = ["http://localhost", "https://docusign.github.io", "https://apps-d.docusign.com"]; 
 const MESSAGE_ORIGINS = ["https://apps-d.docusign.com"];
 const RETURN_URL = `https://docusign.github.io/jsfiddleDsResponse.html`;
+const END_MSG = `<p>The signed documents can be seen via your developer (demo) account</p>`;
 
 /***
  * Public variables
@@ -124,7 +125,7 @@ class Click2Agree {
                 // Event: { returnUrl: url, type: "sessionEnd", sessionEndType: "signing_complete"}
                 this.signing = false;
                 if (event.type === "sessionEnd") {
-                    this.messageModal("Signing Session Ended", `<p>Result: <b>${event.sessionEndType.replace("_", " ")}</b></p>`)
+                    this.messageModal("Signing Session Ended", `<p>Result: <b>${event.sessionEndType.replace("_", " ")}</b></p>${END_MSG}`)
                 } else {
                     this.messageModal("Signing Session Message", `<p>Event data: ${JSON.stringify(event)}</p>`)
                 } 
