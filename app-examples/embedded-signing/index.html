@@ -56,12 +56,16 @@
               type="button" role="tab" aria-controls="click2agree-tab-pane" aria-selected="true">Click To Agree</button>
           </li>
           <li class="nav-item" role="presentation">
-            <button class="nav-link" id="classic-tab" data-bs-toggle="tab" data-bs-target="#classic-tab-pane" 
-              type="button" role="tab" aria-controls="classic-tab-pane" aria-selected="false">Classic Embedded Signing</button>
-          </li>
-          <li class="nav-item" role="presentation">
             <button class="nav-link" id="focusedView-tab" data-bs-toggle="tab" data-bs-target="#focusedView-tab-pane" 
               type="button" role="tab" aria-controls="focusedView-tab-pane" aria-selected="false">Focused View</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="dsjsDefault-tab" data-bs-toggle="tab" data-bs-target="#dsjsDefault-tab-pane" 
+              type="button" role="tab" aria-controls="dsjsDefault-tab-pane" aria-selected="false">DocuSign.js Default View</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="classic-tab" data-bs-toggle="tab" data-bs-target="#classic-tab-pane" 
+              type="button" role="tab" aria-controls="classic-tab-pane" aria-selected="false">Classic Embedded Signing</button>
           </li>
         </ul>
         <div class="tab-content" id="myTabContent">
@@ -112,6 +116,9 @@
 
           </div>
           <div class="tab-pane fade" id="classic-tab-pane" role="tabpanel" aria-labelledby="classic-tab" tabindex="0">
+            <h1 class="mt-4">DocuSign.js Default View</h1>
+            <p>This example is tbd</p>
+
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ac diam sed tortor consectetur iaculis vel eget magna. Cras quis cursus eros, non ullamcorper enim. Nam imperdiet tempor vestibulum. Nullam ultrices, risus non feugiat cursus, purus ante viverra ligula, et porttitor lacus felis tincidunt sem. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent a justo hendrerit, luctus quam a, varius quam. Etiam scelerisque sagittis leo sed porta. Aenean at tortor fermentum, congue diam nec, blandit felis. Maecenas ut auctor nisl, non gravida ligula. Morbi tincidunt ac libero nec suscipit.
             </p><p>Sed blandit fermentum metus, sed dapibus ante fringilla ac. Morbi vitae nisl nec velit tincidunt aliquam. Praesent condimentum vitae mi quis sollicitudin. Nunc tristique eu elit eu fringilla. In ullamcorper bibendum tortor id tincidunt. Aliquam gravida pretium varius. Fusce suscipit, nibh vitae feugiat efficitur, nibh turpis ornare libero, nec fermentum arcu sapien ac nisi. Sed tempor maximus venenatis. Ut eget nibh sed felis vehicula cursus ac ut libero. Fusce porta et enim blandit ullamcorper. Aliquam lobortis purus ac ante euismod, nec ultrices leo mattis.
             </p>
@@ -122,23 +129,30 @@
           </div>
           <div class="tab-pane fade" id="focusedView-tab-pane" role="tabpanel" aria-labelledby="focusedView-tab" tabindex="0">
             <h1 class="mt-4">Focused View</h1>
-            <p>Focus View provides a productive user interface for the signer. The signing ceremony fits within your website using
-              unobtrusive framing.</p>
-            <p>This demo uploads a template to your account, and then uses it for the envelope.</p>
-            <h3 class="mt-5">The Signing Ceremony’s primary button UX can be modified by the developer</h3>
             <form>
+              <p>Focus View provides a productive user interface for the signer. The signing ceremony fits within your website using
+                unobtrusive framing.</p>
+              <p>This demo uploads a template to your account, and then uses it for the envelope.</p>
+              <p>Signer name:
+                <input id="signername1" class="ms-2 me-5form-control display-inline w10" type="text" data-modelbutton="modelButton1-text" placeholder="Submit" aria-label="button text">
+                Use a new signer name to trigger the  
+                <a href="https://support.docusign.com/s/document-item?language=en_US&rsc_301&bundleId=pik1583277475390&topicId=aqg1583277336549.html&_LANG=enus"
+                target="_blank">ERSD agreement</a>.
+              </p>
+              <h3 class="mt-5">The Signing Ceremony’s primary button UX can be modified by the developer</h3>
               <p>Button position on the screen:
-                <select id="buttonPosition1" class="ms-2 form-select display-inline w10" aria-label="button position">
+                <select id="buttonPosition1" class="ms-2 me-5 form-select display-inline w10" aria-label="button position">
                   <option value="bottom-left">Bottom Left</option>
                   <option value="bottom-center">Bottom Center</option>
                   <option value="bottom-right" selected>Bottom Right</option>
                 </select>
-                <button id="modelButton1" class="modelButton display-inline ms-5">
+                Example button:
+                <button id="modelButton1" class="modelButton display-inline ms-2">
                   <span>Submit</span>
                 </button>
               </p>
-              <p>Finish text:&nbsp;&nbsp;&nbsp;
-                <input id="buttonText1" class="form-control display-inline w10" type="text" data-modelbutton="modelButton1-text" placeholder="Submit" aria-label="button text">
+              <p>Finish text:
+                <input id="buttonText1" class="ms-2 form-control display-inline w10" type="text" data-modelbutton="modelButton1-text" placeholder="Submit" aria-label="button text">
               </p>
               <p>
                 Background color:
@@ -147,6 +161,68 @@
                 <input type="color" class="ms-2 form-control form-control-color display-inline" id="textColor1" data-modelbutton="modelButton1-textcolor" value="#FFFFFF" title="Text color">
               </p>
               <a id="signFocusView" class="btn btn-primary btn-lg mt-3" type="button" role="button">Sign</a>
+            </form>
+          </div>
+          <div class="tab-pane fade" id="dsjsDefault-tab-pane" role="tabpanel" aria-labelledby="dsjsDefault-tab" tabindex="0">
+            <h1 class="mt-4">DocuSign.js Default View</h1>
+            <form>
+              <p>DocuSign.js Default View uses the classic DocuSign signing ceremony via the convenient DocuSign.js library.</p>
+              <p>Features:
+                <ul>
+                  <li>The default view shows the envelope sender’s information, including their photo, their company (account name)
+                    and company logo (if set for the sender's account)
+                  </li>
+                  <li>You can set the text and background colors of the primary buttons</li>
+                  <li>The sending account branding is used</li>
+                  <li>The DocuSign.js library creates the iframe for you</li>
+                  <li>The completion event raises a DOM event to your JS app; the redirection page is not used</li>
+                </ul>
+              </p>
+              <p>This demo uploads a template to your account, and then uses it for the envelope.</p>
+              <h3 class="mt-5">The Signing Ceremony’s primary button UX can be modified by the developer</h3>
+              <p>Example button:
+                <button id="modelButton2" class="modelButton display-inline ms-2">
+                  <span>Submit</span>
+                </button>
+              </p>
+              <p>
+                Background color:
+                <input type="color" class="ms-2 me-5 form-control form-control-color display-inline" id="backgroundColor2" data-modelbutton="modelButton2-background" value="#333333" title="Background color">
+                Text color:
+                <input type="color" class="ms-2 form-control form-control-color display-inline" id="textColor2" data-modelbutton="modelButton2-textcolor" value="#FFFFFF" title="Text color">
+              </p>
+
+
+              
+              <p>Signer name:
+                <input id="signername2" class="ms-2 me-5form-control display-inline w10" type="text" placeholder="Submit" aria-label="button text">
+                Use a new signer name to trigger the  
+                <a href="https://support.docusign.com/s/document-item?language=en_US&rsc_301&bundleId=pik1583277475390&topicId=aqg1583277336549.html&_LANG=enus"
+                target="_blank">ERSD agreement</a>.
+              </p>
+              <!--
+              <h3 class="mt-5">The Signing Ceremony’s primary button UX can be modified by the developer</h3>
+              <p>Button position on the screen:
+                <select id="buttonPosition1" class="ms-2 me-5 form-select display-inline w10" aria-label="button position">
+                  <option value="bottom-left">Bottom Left</option>
+                  <option value="bottom-center">Bottom Center</option>
+                  <option value="bottom-right" selected>Bottom Right</option>
+                </select>
+                Example button:
+                <button id="modelButton1" class="modelButton display-inline ms-2">
+                  <span>Submit</span>
+                </button>
+              </p>
+              <p>Finish text:
+                <input id="buttonText1" class="ms-2 form-control display-inline w10" type="text" data-modelbutton="modelButton1-text" placeholder="Submit" aria-label="button text">
+              </p>
+              <p>
+                Background color:
+                <input type="color" class="ms-2 me-5 form-control form-control-color display-inline" id="backgroundColor1" data-modelbutton="modelButton1-background" value="#333333" title="Background color">
+                Text color:
+                <input type="color" class="ms-2 form-control form-control-color display-inline" id="textColor1" data-modelbutton="modelButton1-textcolor" value="#FFFFFF" title="Text color">
+              </p>  -->
+              <a id="dsjsDefault" class="btn btn-primary btn-lg mt-3" type="button" role="button">Sign</a>
             </form>
           </div>
         </div>      

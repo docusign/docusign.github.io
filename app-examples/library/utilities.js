@@ -192,9 +192,14 @@ class ButtonOnChange{
         // prevent action when the model button is clicked
         $(`#${this.buttonId}`).click(e => e.preventDefault());
         // handlers for modifying the button's UX
-        $(`#${this.textId}`).on("input", this.changed);
+        if (this.textId) {$(`#${this.textId}`).on("input", this.changed)}
         $(`#${this.backgroundColorId}`).on("input", this.changed);
         $(`#${this.textColorId}`).on("input", this.changed);
+
+        // Update the target button to reflect current values
+        if (this.textId) {this.changed({target: $(`#${this.textId}`)})}
+        this.changed({target: $(`#${this.backgroundColorId}`)});
+        this.changed({target: $(`#${this.textColorId}`)});
     }
 
     /***

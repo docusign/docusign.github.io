@@ -135,6 +135,8 @@ class Click2Agree {
             
             $(`#${this.mainElId}`).addClass("hide");
             $(`#${this.signElId}`).removeClass("hide");
+
+            // Open the signing ceremony            
             signing.mount(`#${this.signElId}`);
         } catch (error) {
               // Any configuration or API limits will be caught here

@@ -2,8 +2,8 @@
 // License: MIT Open Source https://opensource.org/licenses/MIT
 
 /*
- * CLASS FocusedViewSigning
- * The FocusedViewSigning examples
+ * CLASS DsjsDefaultSigning
+ * The DsjsDefaultSigning examples
  *
  * args -- an object containing attributes:
  *   showMsg -- function to show a msg to the human
@@ -27,7 +27,7 @@ const END_MSG = `<p>The signed documents can be seen via your developer (demo) a
  * Public variables
  * signing -- is the signing window open?
  */
-class FocusedViewSigning {
+class DsjsDefaultSigning {
 
     constructor(args) {
         this.showMsg = args.showMsg;
@@ -59,7 +59,6 @@ class FocusedViewSigning {
         this.name = args.name;
         this.email = args.email;
         this.modelButtonId = args.modelButtonId;
-        this.modelButtonPosition = args.modelButtonPosition;
         this.useDisclosure = true; // why demo with this off?
 
         // supplemental = [{include: true, signerMustAcknowledge: "view"},
@@ -103,7 +102,7 @@ class FocusedViewSigning {
     async focusedView(recipientViewUrl) {
         const signingConfiguration = {
             url: recipientViewUrl,
-            displayFormat: 'focused',
+            displayFormat: 'default', // Uses DocuSign Classic Signing ceremony
             style: {
                 /** High-level variables that mirror our existing branding APIs. Reusing the branding name here for familiarity. */
                 branding: {
@@ -114,12 +113,7 @@ class FocusedViewSigning {
                         color: $(`#${this.modelButtonId} span`).css('color'),
                     }
                 },
-                /** High-level components we allow specific overrides for */
-                signingNavigationButton: {
-                    finishText: $(`#${this.modelButtonId} span`).text(), // default is Submit
-                    // 'bottom-left'|'bottom-center'|'bottom-right',  default: bottom-right
-                    position: $(`#${this.modelButtonPosition}`).val()
-                }
+                /** High-level components we allow specific overrides for is not used with default displayFormat*/
             }
         }
 
@@ -154,4 +148,4 @@ class FocusedViewSigning {
     }
 }
 
-export { FocusedViewSigning };
+export { DsjsDefaultSigning };

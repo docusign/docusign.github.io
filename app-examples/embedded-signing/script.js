@@ -9,6 +9,7 @@ import { CheckTemplates } from "../library/checkTemplates.js";
 import { Envelopes } from "./envelopes.js";
 import { Click2Agree } from "./click2agree.js"
 import { FocusedViewSigning } from "./focusedViewSigning.js";
+import { DsjsDefaultSigning } from "./dsjsDefaultSigning.js";
 
 import {
     CallApi,
@@ -38,7 +39,14 @@ $(async function () {
         supp1include: true, 
         supp1signerMustAcknowledge: "view",
         supp2include: true, 
-        supp2signerMustAcknowledge: "accept"
+        supp2signerMustAcknowledge: "accept",
+        buttonPosition1: "bottom-right",
+        buttonText1: "Submit",
+        buttonText1: "Agree",
+        backgroundColor1: "#000000",
+        textColor1: "#FFFFFF",
+        backgroundColor2: "#000000",
+        textColor2: "#FFFFFF",
     }
     const formCheckboxes = {
         supp1include: true, 
@@ -75,13 +83,26 @@ $(async function () {
         formToConfiguration();
         await data.focusedViewSigning.sign({
             templateId: templates[0].templateId,
-            name: data.userInfo.name,
+            name: $(`#signername1`).val(),
             email: data.userInfo.email,
             modelButtonId: "modelButton1",
             modelButtonPosition: "buttonPosition1",
             });
     }.bind(this)
 
+    /***
+     * dsjsDefault -- Focus View example
+     */
+    let dsjsDefault = async function dsjsDefaultF (e) {
+        e.preventDefault();
+        formToConfiguration();
+        await data.dsjsDefaultSigning.sign({
+            templateId: templates[0].templateId,
+            name: $(`#signername2`).val(),
+            email: data.userInfo.email,
+            modelButtonId: "modelButton2",
+            });
+    }.bind(this)
 
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -133,6 +154,7 @@ $(async function () {
     const beforeUnloadHandler = function beforeUnloadHandlerF(event) {
         const signing = data.click2agree && data.click2agree.signing
             || data.focusedViewSigning && data.focusedViewSigning.signing
+            || data.dsjsDefaultSigning && data.dsjsDefaultSigning.signing;
          
         if (signing) {
             event.preventDefault();
@@ -188,6 +210,17 @@ $(async function () {
                 envelopes: data.envelopes,
             });
             data.focusedViewSigning = new FocusedViewSigning({
+                showMsg: toast,
+                messageModal: messageModal,
+                loadingModal: data.loadingModal,
+                clientId: oAuthClientID,
+                accountId: accountId,
+                callApi: data.callApi,
+                mainElId: "main",
+                signElId: "signing-ceremony",
+                envelopes: data.envelopes,
+            });
+            data.dsjsDefaultSigning = new DsjsDefaultSigning({
                 showMsg: toast,
                 messageModal: messageModal,
                 loadingModal: data.loadingModal,
@@ -259,17 +292,25 @@ $(async function () {
             messageModal("Templates issue", `<p>Problem while loading example templates
             to your eSignature account:</p><p>${result.msg}</p>`)
         }
+        $(`#signername1`).val(data.userInfo.name);
+        $(`#signername2`).val(data.userInfo.name);
         data.modelButton1Changes = new ButtonOnChange({
             buttonId: "modelButton1",
             textId: "buttonText1",
             backgroundColorId: "backgroundColor1",
             textColorId: "textColor1"
-        })
+        });
+        data.modelButton2Changes = new ButtonOnChange({
+            buttonId: "modelButton2",
+            backgroundColorId: "backgroundColor2",
+            textColorId: "textColor2"
+        });
     }
 
     $("#modalLogin button").click(login);
     $("#signClickToAgree").click(signClickToAgree);
     $("#signFocusView").click(signFocusView);
+    $("#dsjsDefault").click(dsjsDefault);
     $("#saveToUrl").click(saveToUrl);
     $('#myTab [data-bs-toggle="tab"]').on('show.bs.tab', (e) => {
         storageSet(MODE_STORAGE, $(e.target)[0].id)}); // save the mode
