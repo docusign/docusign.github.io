@@ -261,6 +261,7 @@ $(async function () {
     };
 
     switchToHttps();
+    // Start. Does the hash include a config item? Then save it.
     const config = processUrlHash("supp1signerMustAcknowledge");
     if (config) {storageSet(CONFIG_STORAGE, config)}
     // The Implicit grant constructor looks at hash data to see if we're 
@@ -270,6 +271,7 @@ $(async function () {
         clientId: CLIENT_ID,
         showMsg: toast
     });
+    // If we're not logged in, then ask to start the login flow.
     if (!data.implicitGrant.checkToken()) {
         const loginModal = new bootstrap.Modal('#modalLogin');
         loginModal.show();
