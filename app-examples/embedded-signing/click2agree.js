@@ -64,7 +64,7 @@ class Click2Agree {
         await this.envelopes.createNoTabsEnvRequest();
         // add supplemental docs
         await this.envelopes.addSupplementalDocuments(this.supplemental)
-        this.envelopeId = await this.envelopes.sendEnvelope(this.envelopes.request);
+        this.envelopeId = await this.envelopes.sendEnvelope();
 
         if (!this.envelopeId) {
             this.loadingModal.delayedHide("Could not send the envelope");

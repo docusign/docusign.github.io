@@ -56,6 +56,7 @@ class DsjsDefaultSigning {
      */
     async sign(args) {
         this.templateId = args.templateId;
+        this.supplemental = args.supplemental;
         this.name = args.name;
         this.email = args.email;
         this.modelButtonId = args.modelButtonId;
@@ -73,8 +74,10 @@ class DsjsDefaultSigning {
         this.envelopes.email = this.email;
         this.envelopes.templateId = this.templateId;
         this.envelopes.useDisclosure = this.useDisclosure; 
-        const request = await this.envelopes.createTemplateRequest();
-        this.envelopeId = await this.envelopes.sendEnvelope(request);
+        await this.envelopes.createTemplateRequest();
+        // add supplemental docs
+        await this.envelopes.addSupplementalDocuments(this.supplemental)
+        this.envelopeId = await this.envelopes.sendEnvelope();
 
         if (!this.envelopeId) {
             this.loadingModal.delayedHide("Could not send the envelope");

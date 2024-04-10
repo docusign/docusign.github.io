@@ -36,10 +36,18 @@ $(async function () {
     let accountId;
     let configuration = {
         mode: "click2agree-tab", 
-        supp1include: true, 
+        supp1include: false, 
         supp1signerMustAcknowledge: "view",
-        supp2include: true, 
+        supp2include: false, 
         supp2signerMustAcknowledge: "accept",
+        supp11include: false, 
+        supp11signerMustAcknowledge: "view",
+        supp12include: false, 
+        supp12signerMustAcknowledge: "accept",
+        supp21include: false, 
+        supp21signerMustAcknowledge: "view",
+        supp22include: false, 
+        supp22signerMustAcknowledge: "accept",
         buttonPosition1: "bottom-right",
         buttonText1: "Submit",
         buttonText1: "Agree",
@@ -47,10 +55,16 @@ $(async function () {
         textColor1: "#FFFFFF",
         backgroundColor2: "#000000",
         textColor2: "#FFFFFF",
+        backgroundColor3: "#000000",
+        textColor3: "#FFFFFF",
     }
     const formCheckboxes = {
         supp1include: true, 
         supp2include: true, 
+        supp11include: true, 
+        supp12include: true, 
+        supp21include: true, 
+        supp22include: true, 
     }
 
     let templates = [
@@ -86,8 +100,12 @@ $(async function () {
     let signFocusView = async function signFocusViewF (e) {
         e.preventDefault();
         formToConfiguration();
+        const supplemental = [
+            {include: configuration.supp11include, signerMustAcknowledge: configuration.supp11signerMustAcknowledge},
+            {include: configuration.supp12include, signerMustAcknowledge: configuration.supp12signerMustAcknowledge}];
         await data.focusedViewSigning.sign({
             templateId: templates[0].templateId,
+            supplemental: supplemental,
             name: $(`#signername1`).val(),
             email: data.userInfo.email,
             modelButtonId: "modelButton1",
@@ -101,8 +119,12 @@ $(async function () {
     let dsjsDefault = async function dsjsDefaultF (e) {
         e.preventDefault();
         formToConfiguration();
+        const supplemental = [
+            {include: configuration.supp21include, signerMustAcknowledge: configuration.supp21signerMustAcknowledge},
+            {include: configuration.supp22include, signerMustAcknowledge: configuration.supp22signerMustAcknowledge}];
         await data.dsjsDefaultSigning.sign({
             templateId: templates[0].templateId,
+            supplemental: supplemental,
             name: $(`#signername2`).val(),
             email: data.userInfo.email,
             modelButtonId: "modelButton2",

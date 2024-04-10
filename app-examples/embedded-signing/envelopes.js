@@ -54,12 +54,12 @@ class Envelopes {
      *  
      * Sets this.envelopeId. Setting it to false indicates an errror
      */
-    async sendEnvelope(request) {
+    async sendEnvelope() {
         this.envelopeId = false;
         const results = await this.callApi.callApiJson({
             apiMethod: `/accounts/${this.accountId}/envelopes`,
             httpMethod: "POST",
-            req: request
+            req: this.request
         });
         if (results !== false) {
             this.envelopeId = results.envelopeId // good result
@@ -182,12 +182,9 @@ class Envelopes {
      *  ]
      */
     async addSupplementalDocuments(supplemental){
-        // Adds supp docs to current req
-        if (!this.request.documents) {
-            this.showMsg(this.callApi.errMsg); // Error!
-            return
-        }
-        const docIdStart = this.request.documents.length + 10;
+        const compositeTemplates =  !!this.request.compositeTemplates;
+        const docIdStart = compositeTemplates ? 1 : this.request.documents.length + 10;
+        const compIdStart = compositeTemplates ? this.request.compositeTemplates.length + 10 : 0;
 
         for (let i = 0; i < supplemental.length; i++) {
             if (supplemental[i] && supplemental[i].include) {
@@ -196,14 +193,21 @@ class Envelopes {
                     this.showMsg(this.callApi.errMsg); // Error!
                     return
                 }
-                this.request.documents.push({
+                const suppDoc = {
                     name: SUPP_DOC_NAMES[i],
                     display: "modal",
                     fileExtension: "pdf",
                     documentId: `${i+docIdStart}`,
                     signerMustAcknowledge: supplemental[i].signerMustAcknowledge,
                     documentBase64: sB64
-                })
+                }
+                if (compositeTemplates) {
+                    this.request.compositeTemplates.push({
+                        compositeTemplateId: `${i+compIdStart}`,
+                        document: suppDoc,
+                        inlineTemplates: [{sequence: "1"}]
+                    })
+                } else {this.request.documents.push(suppDoc)}
             }
         }
     }
