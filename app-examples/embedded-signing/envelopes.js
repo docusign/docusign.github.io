@@ -21,6 +21,8 @@ const MESSAGE_ORIGINS = ["https://apps-d.docusign.com"];
 const RETURN_URL = `https://docusign.github.io/jsfiddleDsResponse.html`;
 const ROLE = "signer" // the role name used by the example templates
 const STATIC_DOC_URL = "../assets/Web site Access Agreement.pdf";
+const SUPP_DOCS_URL = "../assets/";
+const SUPP_DOC_NAMES = ["Terms and Conditions 1.pdf", "Terms and Conditions 2.pdf"]
 
 /***
  * instance variables
@@ -63,14 +65,26 @@ class Envelopes {
             this.envelopeId = results.envelopeId // good result
             return this.envelopeId;
         } else {
+            if (this.callApi.errMsg.indexOf("ONESIGNALLSIGN_NOT_SATISFIED") !== -1) {
+                // potential settings error:
+                // 'Problem while making API call. Error: Bad Request.{"errorCode":"ONESIGNALLSIGN_NOT_SATISFIED",
+                //    "message":"Freeform signing is not allowed for your account because it conflicts with other settings, please place signing tabs for each signer."}'
+                this.messageModal("Create Envelope Problem: Operation Canceled", 
+                    `<p>This account, ${this.accountId}, is not configured for Click To Agree envelopes.
+                    Instead, it is configured for the Document Visibility feature.
+                    Contact DocuSign customer service to change your account's configuration.
+                    Tell them you have the ONESIGNALLSIGN_NOT_SATISFIED error when you are creating a Click To Agree envelope.</p>
+                    <p><small>Error message: ${this.callApi.errMsg}</small></p>`)
+                return false
+            }
             this.messageModal("Create Envelope Problem: Operation Canceled", 
             `<p>Error message: ${this.callApi.errMsg}</p>`)
-            return this.envelopeId;
+            return false
         }
     }
 
     /***
-     * createEnvRequest returns an envelope request
+     * createTemplateRequest returns an envelope request
      * 
      * Attributes used
      * this.name
@@ -112,6 +126,7 @@ class Envelopes {
             }
             ]
         }
+        this.request = req;
         return req
     }
 
@@ -154,8 +169,79 @@ class Envelopes {
                 }
             ]
         }
+        this.request = req;
         return req
+    }
 
+    /***
+     * addSupplementalDocuments
+     * arg -- 
+     *  const supplemental = [
+     *      {include: bool, signerMustAcknowledge: string},
+     *      {include: bool, signerMustAcknowledge: string}];
+     *  ]
+     */
+    async addSupplementalDocuments(supplemental){
+        // Adds supp docs to current req
+        if (!this.request.documents) {
+            this.showMsg(this.callApi.errMsg); // Error!
+            return
+        }
+        const docIdStart = this.request.documents.length + 10;
+
+        for (let i = 0; i < supplemental.length; i++) {
+            if (supplemental[i] && supplemental[i].include) {
+                const sB64 = await this.callApi.getDocB64(SUPP_DOCS_URL + SUPP_DOC_NAMES[i]);
+                if (!sB64) {
+                    this.showMsg(this.callApi.errMsg); // Error!
+                    return
+                }
+                this.request.documents.push({
+                    name: SUPP_DOC_NAMES[i],
+                    display: "modal",
+                    fileExtension: "pdf",
+                    documentId: `${i+docIdStart}`,
+                    signerMustAcknowledge: supplemental[i].signerMustAcknowledge,
+                    documentBase64: sB64
+                })
+            }
+        }
+    }
+
+    /***
+     * No tabs envelope request. Perfect for a click to agree envelope
+     */
+    async createNoTabsEnvRequest() {
+        const docB64 = await this.callApi.getDocB64(STATIC_DOC_URL);
+        if (!docB64) {
+            this.showMsg(this.callApi.errMsg); // Error!
+            return
+        }
+        const req = {
+            useDisclosure: true,
+            emailSubject: "Please sign the attached document",
+            status: "sent",
+            recipients: {
+                signers: [
+                    {
+                    clientUserId: this.clientUserId,
+                    email: this.email,
+                    name: this.name,
+                    recipientId: "1",
+                }
+                ]
+            },
+            documents: [
+                {
+                    name: "Example document",
+                    fileExtension: "pdf",
+                    documentId: "1",
+                    documentBase64: docB64,
+                }
+            ]
+        }
+        this.request = req;
+        return req
     }
 
     /***

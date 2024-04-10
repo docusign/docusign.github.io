@@ -15,11 +15,6 @@
  *   
  * public values
  */
-const CLIENT_USER_ID = 1000;
-// See https://developers.docusign.com/docs/esign-rest-api/reference/envelopes/envelopeviews/createrecipient/#schema__recipientviewrequest_frameancestors
-const FRAME_ANCESTORS = ["http://localhost", "https://docusign.github.io", "https://apps-d.docusign.com"]; 
-const MESSAGE_ORIGINS = ["https://apps-d.docusign.com"];
-const RETURN_URL = `https://docusign.github.io/jsfiddleDsResponse.html`;
 const ROLE = "signer" // the role name used by the example templates
 const END_MSG = `<p>The signed documents can be seen via your developer (demo) account</p>`;
 
@@ -39,7 +34,6 @@ class FocusedViewSigning {
         this.envelopes = args.envelopes;
         this.mainElId = args.mainElId;
         this.signElId = args.signElId;
-        this.clientId = CLIENT_USER_ID;
         this.role = ROLE;
         this.signing = false; 
     }

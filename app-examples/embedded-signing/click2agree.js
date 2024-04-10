@@ -14,16 +14,6 @@
  *   
  * public values
  */
-const STATIC_DOC_URL = "../assets/Web site Access Agreement.pdf";
-const SUPP_DOCS_URL = "../assets/";
-const SUPP_DOC_NAMES = ["Terms and Conditions 1.pdf", "Terms and Conditions 2.pdf"]
-const EMAIL = "email@example.com";
-const NAME = "Sam Spade";
-const CLIENT_USER_ID = 1000;
-// See https://developers.docusign.com/docs/esign-rest-api/reference/envelopes/envelopeviews/createrecipient/#schema__recipientviewrequest_frameancestors
-const FRAME_ANCESTORS = ["http://localhost", "https://docusign.github.io", "https://apps-d.docusign.com"]; 
-const MESSAGE_ORIGINS = ["https://apps-d.docusign.com"];
-const RETURN_URL = `https://docusign.github.io/jsfiddleDsResponse.html`;
 const END_MSG = `<p>The signed documents can be seen via your developer (demo) account</p>`;
 
 /***
@@ -39,6 +29,7 @@ class Click2Agree {
         this.clientId = args.clientId;
         this.accountId = args.accountId;
         this.callApi = args.callApi;
+        this.envelopes = args.envelopes;
         this.mainElId = args.mainElId;
         this.signElId = args.signElId;
         this.signing = false; 
@@ -56,6 +47,9 @@ class Click2Agree {
      */
     async sign(args) {
         this.supplemental = args.supplemental;
+        this.name = args.name;
+        this.email = args.email;
+        this.modelButtonId = args.modelButtonId;
 
         // supplemental = [{include: true, signerMustAcknowledge: "view"},
         //   {include: true, signerMustAcknowledge: "accept"}];
@@ -63,30 +57,38 @@ class Click2Agree {
         // https://developers.docusign.com/docs/esign-rest-api/reference/envelopes/envelopes/create/#schema__envelopedefinition_documents_signermustacknowledge
 
         this.signing = true;
-        const recipient = {email: EMAIL, name: NAME, clientUserId: CLIENT_USER_ID}
         this.loadingModal.show("Creating the envelope");
-        const envelopeId = await this.sendEnvelope(recipient);
-        if (!envelopeId) {
+
+        this.envelopes.name = this.name;
+        this.envelopes.email = this.email;
+        await this.envelopes.createNoTabsEnvRequest();
+        // add supplemental docs
+        await this.envelopes.addSupplementalDocuments(this.supplemental)
+        this.envelopeId = await this.envelopes.sendEnvelope(this.envelopes.request);
+
+        if (!this.envelopeId) {
             this.loadingModal.delayedHide("Could not send the envelope");
             this.signing = false;
             return
         }
+
         this.loadingModal.show("Creating the recipient view");
-        const recipientViewUrl = await this.recipientView({recipient: recipient, envelopeId: envelopeId});
+        const recipientViewUrl = await this.envelopes.recipientView();
         if (!recipientViewUrl) {
             this.loadingModal.delayedHide("Could not open the recipient view");
             this.signing = false;
             return;
         }
+
         this.loadingModal.delayedHide("Opening the signing ceremony");
-        await this.focusedView(recipientViewUrl);
+        await this.focusedViewClickToAgree(recipientViewUrl);
     }
 
     /***
-     * focusedView, in the browser, calls the DocuSign.js library
+     * focusedViewClickToAgree, in the browser, calls the DocuSign.js library
      * to display the signing ceremony in an iframe
      */
-    async focusedView(recipientViewUrl) {
+    async focusedViewClickToAgree(recipientViewUrl) {
         const signingConfiguration = {
             url: recipientViewUrl,
             displayFormat: 'focused',
@@ -95,9 +97,9 @@ class Click2Agree {
                 branding: {
                     primaryButton: {
                         /** Background color of primary button */
-                        backgroundColor: '#333',
+                        backgroundColor: $(`#${this.modelButtonId}`).css('background-color'),
                         /** Text color of primary button */
-                        color: '#fff',
+                        color: $(`#${this.modelButtonId} span`).css('color'),
                     }
                 },
                 /** High-level components we allow specific overrides for */
@@ -105,9 +107,9 @@ class Click2Agree {
                  * signingNavigationButton object is NOT used when the view is Click to Agree
                  * 
                 signingNavigationButton: {
-                    finishText: 'Accepted',
+                    finishText: 'Accepted!',
                     // 'bottom-left'|'bottom-center'|'bottom-right',  default: bottom-right
-                    position: 'bottom-left'
+                    position: 'bottom-center'
                 }
                 */
             }
@@ -142,133 +144,5 @@ class Click2Agree {
               // Any configuration or API limits will be caught here
         }
     }
-
-    /***
-     * IN PRODUCTION, this method would usually be implemented on
-     * the server.
-     * 
-     * sendEnvelope sends an envelope that will be used for 
-     * Click To Send. That means (important!) that the envelope
-     * must have no tabs.
-     * 
-     * To add dynamic information to the document, 
-     * DocuSign's DocGen can be used, or create a dynamic document
-     * via HTML.
-     */
-    async sendEnvelope(recipient) {
-        const request = await this.staticDocument(recipient);
-        if (!request) {return}
-        const results = await this.callApi.callApiJson({
-            apiMethod: `/accounts/${this.accountId}/envelopes`,
-            httpMethod: "POST",
-            req: request
-        });
-        if (results !== false) {
-            return results.envelopeId // good result 
-        } else {
-            if (this.callApi.errMsg.indexOf("ONESIGNALLSIGN_NOT_SATISFIED") !== -1) {
-                // potential settings error:
-                // 'Problem while making API call. Error: Bad Request.{"errorCode":"ONESIGNALLSIGN_NOT_SATISFIED",
-                //    "message":"Freeform signing is not allowed for your account because it conflicts with other settings, please place signing tabs for each signer."}'
-                this.messageModal("Create Envelope Problem: Operation Canceled", 
-                    `<p>This account, ${this.accountId}, is not configured for Click To Send envelopes.
-                    Instead, it is configured for the Document Visibility feature.
-                    Contact DocuSign customer service to change your account's configuration.
-                    Tell them you have the ONESIGNALLSIGN_NOT_SATISFIED error when you are creating a Click To Agree envelope.</p>
-                    <p><small>Error message: ${this.callApi.errMsg}</small></p>`)
-                return false
-            }
-            this.messageModal("Create Envelope Problem: Operation Canceled", 
-            `<p>Error message: ${this.callApi.errMsg}</p>`)
-            return false
-        }
-    }
-
-    /***
-     * staticDocument returns an envelope request that uses a static PDF
-     * document. Remember, Click To Agree means no tabs!
-     */
-    async staticDocument(recipient) {
-        const addSupplemental = async function addSupplementalF(i) {
-            if (this.supplemental[i] && this.supplemental[i].include) {
-                const sB64 = await this.callApi.getDocB64(SUPP_DOCS_URL + SUPP_DOC_NAMES[i]);
-                if (!sB64) {
-                    this.showMsg(this.callApi.errMsg); // Error!
-                    return
-                }
-                req.documents.push({
-                    name: SUPP_DOC_NAMES[i],
-                    display: "modal",
-                    fileExtension: "pdf",
-                    documentId: `${i+2}`,
-                    signerMustAcknowledge: this.supplemental[i].signerMustAcknowledge,
-                    documentBase64: sB64
-                })
-            }
-        }.bind(this)
-
-        const docB64 = await this.callApi.getDocB64(STATIC_DOC_URL);
-        if (!docB64) {
-            this.showMsg(this.callApi.errMsg); // Error!
-            return
-        }
-        const req = {
-            useDisclosure: false, // ignored with click to agree
-            emailSubject: "Please sign the attached document",
-            status: "sent",
-            recipients: {
-                signers: [
-                    {
-                        email: recipient.email,
-                        name: recipient.name,
-                        clientUserId: recipient.clientUserId,
-                        recipientId: "1",
-                    }
-                ]
-            },
-            documents: [
-                {
-                    name: "Example document",
-                    fileExtension: "pdf",
-                    documentId: "1",
-                    documentBase64: docB64,
-                }
-            ]
-        }
-
-        // Add supplemental docs
-        await addSupplemental(0);
-        await addSupplemental(1);
-        return req
-    }
-
-    /***
-     * IN PRODUCTION, this method would usually be implemented on
-     * the server.
-     * 
-     * recipientView -- create the recipient view for use with 
-     *    focused view.
-     *    https://developers.docusign.com/docs/esign-rest-api/reference/envelopes/envelopeviews/createrecipient/
-     */
-    async recipientView(args){
-        const recipient = args.recipient;
-        const envelopeId = args.envelopeId;
-        const request = {
-            authenticationMethod: "None",
-            clientUserId: recipient.clientUserId,
-            email: recipient.email,
-            frameAncestors: FRAME_ANCESTORS,
-            messageOrigins: MESSAGE_ORIGINS,
-            returnUrl: RETURN_URL,
-            userName: recipient.name,
-        }
-        const results = await this.callApi.callApiJson({
-            apiMethod: `/accounts/${this.accountId}/envelopes/${envelopeId}/views/recipient`,
-            httpMethod: "POST",
-            req: request
-        });
-        return results === false ? false : results.url
-    }
 }
-
 export { Click2Agree };

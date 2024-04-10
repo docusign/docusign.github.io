@@ -72,7 +72,12 @@ $(async function () {
         const supplemental = [
             {include: configuration.supp1include, signerMustAcknowledge: configuration.supp1signerMustAcknowledge},
             {include: configuration.supp2include, signerMustAcknowledge: configuration.supp2signerMustAcknowledge}];
-        await data.click2agree.sign({supplemental: supplemental});
+        await data.click2agree.sign({
+            supplemental: supplemental,
+            name: data.userInfo.name,
+            email: data.userInfo.email,
+            modelButtonId: "modelButton3",
+        })
     }.bind(this)
 
     /***
@@ -306,6 +311,11 @@ $(async function () {
             buttonId: "modelButton2",
             backgroundColorId: "backgroundColor2",
             textColorId: "textColor2"
+        });
+        data.modelButton2Changes = new ButtonOnChange({
+            buttonId: "modelButton3",
+            backgroundColorId: "backgroundColor3",
+            textColorId: "textColor3"
         });
     }
 
