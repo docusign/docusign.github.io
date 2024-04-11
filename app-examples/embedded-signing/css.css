@@ -7,6 +7,11 @@ body {
 .display-inline {display: inline;}
 .w10 {width: 10em;}
 .baseline {vertical-align: baseline;}
+.colorpicker {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
 
 .modelButton {  /* from the Focus View signing ceremony */
   font-family: "DS Indigo", DSIndigo, "Neue Haas Grotesk", NeueHaasGrotesk, Helvetica, Arial, sans-serif;
