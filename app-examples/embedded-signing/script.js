@@ -83,6 +83,7 @@ $(async function () {
     let signClickToAgree = async function signClickToAgreeF (e) {
         e.preventDefault();
         formToConfiguration();
+        if (!checkToken()){return}
         const supplemental = [
             {include: configuration.supp1include, signerMustAcknowledge: configuration.supp1signerMustAcknowledge},
             {include: configuration.supp2include, signerMustAcknowledge: configuration.supp2signerMustAcknowledge}];
@@ -100,6 +101,7 @@ $(async function () {
     let signFocusView = async function signFocusViewF (e) {
         e.preventDefault();
         formToConfiguration();
+        if (!checkToken()){return}
         const supplemental = [
             {include: configuration.supp11include, signerMustAcknowledge: configuration.supp11signerMustAcknowledge},
             {include: configuration.supp12include, signerMustAcknowledge: configuration.supp12signerMustAcknowledge}];
@@ -119,6 +121,7 @@ $(async function () {
     let dsjsDefault = async function dsjsDefaultF (e) {
         e.preventDefault();
         formToConfiguration();
+        if (!checkToken()){return}
         const supplemental = [
             {include: configuration.supp21include, signerMustAcknowledge: configuration.supp21signerMustAcknowledge},
             {include: configuration.supp22include, signerMustAcknowledge: configuration.supp22signerMustAcknowledge}];
@@ -137,6 +140,21 @@ $(async function () {
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
     // Engine room stuff is below
+
+    /***
+     * checkToken returns true if we're good to go.
+     */
+    checkToken() {
+        const tokenOk = data.implicitGrant.checkToken();
+        if (!tokenOk) {
+            messageModal("Your Login Session Has Expired", 
+            `<p>Your 8 hour login session has expired.</p>
+            <p>Recommendation: use <b>Save to URL</b>
+            (top navigation) to save your work, then reload
+            this page from the URL and login again.</p>`)
+        }
+        return tokenOk
+    }
 
     /***
      * formToConfiguration copy data from the form to the configuration object
