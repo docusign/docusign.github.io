@@ -53,10 +53,11 @@ $(async function () {
         buttonText1: "Agree",
         backgroundColor1: "#000000",
         textColor1: "#FFFFFF",
-        backgroundColor2: "#000000",
-        textColor2: "#FFFFFF",
+        backgroundColor2: "#f7ba00",
+        textColor2: "#333333",
         backgroundColor3: "#000000",
         textColor3: "#FFFFFF",
+        useSigningCeremonyDefaultUx: true,
     }
     const formCheckboxes = {
         supp1include: true, 
@@ -64,7 +65,8 @@ $(async function () {
         supp11include: true, 
         supp12include: true, 
         supp21include: true, 
-        supp22include: true, 
+        supp22include: true,
+        useSigningCeremonyDefaultUx: true 
     }
 
     let templates = [
@@ -134,12 +136,39 @@ $(async function () {
             });
     }.bind(this)
 
+    /***
+     * A view button was clicked
+     * Call the right function
+     */
+    let view = async function viewF (e) {
+        const sectionName = $(e.target).closest(".tab-pane").attr("id");
+        if (sectionName === 'focusedView-tab-pane') {
+            await data.focusedViewSigning.view()
+        } else if (sectionName === 'click2agree-tab-pane') {
+            await data.click2agree.view()
+        } else if (sectionName === 'dsjsDefault-tab-pane') {
+            await data.dsjsDefaultSigning.view()
+        } else if (sectionName === 'classic-tab-pane') {
+            await data.classicSigning.view()
+        }
+    }.bind(this)
+
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
     // Engine room stuff is below
+
+    /***
+     * envelopeCreated
+     * An envelope was created, enable buttons to show it 
+     */
+    function envelopeCreated(e) {
+        if (e.data !== "envelopeCreated") {return}
+        // show the buttons for sending a current envelope
+        $(".env-view").removeClass("hide");
+    }
 
     /***
      * checkToken returns true if we're good to go.
@@ -174,6 +203,9 @@ $(async function () {
                 $(`#${property}`).prop('checked', configuration[property]);
             } else {
                 $(`#${property}`).val(configuration[property]);
+            }
+            if (configuration.useSigningCeremonyDefaultUx) {
+                $(`.classicColor`).attr("disabled", true);
             }
         }
         new bootstrap.Tab(`#${configuration.mode}`).show()
@@ -364,7 +396,12 @@ $(async function () {
     $("#signFocusView").click(signFocusView);
     $("#dsjsDefault").click(dsjsDefault);
     $("#saveToUrl").click(saveToUrl);
-    $('#myTab [data-bs-toggle="tab"]').on('show.bs.tab', (e) => {
-        storageSet(MODE_STORAGE, $(e.target)[0].id)}); // save the mode
+    $(".env-view").click(view);
+    $('#myTab [data-bs-toggle="tab"]').on('show.bs.tab', e => {
+        storageSet(MODE_STORAGE, $(e.target)[0].id)}); // save the mode 
     window.addEventListener("beforeunload", beforeUnloadHandler);
+    $("#useSigningCeremonyDefaultUx").change(e => {
+        $(`.classicColor`).attr("disabled", 
+        $("#useSigningCeremonyDefaultUx").prop('checked'))});
+    window.onmessage = envelopeCreated;
 })

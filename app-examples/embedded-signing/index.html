@@ -71,16 +71,17 @@
         <div class="tab-content" id="myTabContent">
           <div class="tab-pane fade show active" id="click2agree-tab-pane" role="tabpanel" aria-labelledby="click2agree-tab" tabindex="0">
             <h1 class="mt-4">Click To Agree</h1>
-            <p>Click to Agree provides an easy, productive user interface for the signer. The signing ceremony fits within your website using
+            <p>Click to Agree provides an easy, productive user interface for the signer.</p>
+            <p class="mb-0"> The signing ceremony fits within your website using
               unobtrusive framing. The signing ceremony can include supplemental documents with 
               <a hre="https://developers.docusign.com/docs/esign-rest-api/reference/envelopes/envelopes/create/#schema__envelopedefinition_documents_signermustacknowledge"
               target="_blank">different levels of signer acceptance</a>:</p>
-            <p><ul>
+            <ul>
               <li><b>No Interaction</b> No recipient action is required.</li>
               <li><b>View</b> The recipient is required to view the document.</li>
               <li><b>Accept</b> The recipient is required to accept the document by selecting accept during signing, but is not required to view the document.</li>
               <li><b>View Accept</b> The recipient is required to view and accept the document.</li>
-            </ul></p>
+            </ul>
 
             <form>
               <h4>Supplemental Documents</h4>
@@ -119,8 +120,9 @@
                 <input type="color" class="ms-2 form-control form-control-color display-inline" id="textColor3" data-modelbutton="modelButton3-textcolor" value="#FFFFFF" title="Text color">
               </p>
 
-              <a id="signClickToAgree" class="btn btn-primary btn-lg mt-2" type="button" role="button">Sign</a>
-              <a class="env-view hide btn btn-secondary btn-lg ms-5 mt-2" type="button" role="button">View the Signed Document</a>
+              <a id="signClickToAgree" class="btn btn-primary btn-lg mt-3" type="button" role="button">Sign</a>
+              <a class="env-view hide btn btn-secondary btn-lg ms-5 mt-3" type="button" role="button">View</a>
+              <p>Sign--creates a new agreement. View--view an existing agreement.</p>
             </form>
 
           </div>
@@ -192,24 +194,27 @@
                 <input type="color" class="ms-2 form-control form-control-color display-inline" id="textColor1" data-modelbutton="modelButton1-textcolor" value="#FFFFFF" title="Text color">
               </p>
               <a id="signFocusView" class="btn btn-primary btn-lg mt-3" type="button" role="button">Sign</a>
-              <a class="env-view hide btn btn-secondary btn-lg ms-5 mt-2" type="button" role="button">View the Signed Document</a>
+              <a class="env-view hide btn btn-secondary btn-lg ms-5 mt-3" type="button" role="button">View</a>
+              <p>Sign--creates a new agreement. View--view an existing agreement.</p>
             </form>
           </div>
           <div class="tab-pane fade" id="dsjsDefault-tab-pane" role="tabpanel" aria-labelledby="dsjsDefault-tab" tabindex="0">
             <h1 class="mt-4">DocuSign.js Default View</h1>
             <form>
               <p>DocuSign.js Default View uses the classic DocuSign signing ceremony via the convenient DocuSign.js library.</p>
-              <p>Features:
-                <ul>
-                  <li>The default view shows the envelope sender’s information, including their photo, their company (account name)
-                    and company logo (if set for the sender's account)
-                  </li>
-                  <li>You can set the text and background colors of the primary buttons</li>
-                  <li>The sending account branding is used</li>
-                  <li>The DocuSign.js library creates the iframe for you</li>
-                  <li>The completion event raises a DOM event to your JS app; the redirection page is not used</li>
-                </ul>
-              </p>
+              <p class="mb-0">Benefits of this view:</p>
+              <ul>
+                <li>It shows the envelope sender’s information, including their name, photo, their company (account name)
+                  and company logo (if set for the sender's account)
+                </li>
+                <li>The sending account branding is used</li>
+              </ul>
+              <p class="mb-0">Benefits of using DocuSign.js with the classic view:</p>
+              <ul>
+                <li>You can use the Signing Ceremony's default button UX, or set the text and background colors of the primary buttons</li>
+                <li>The DocuSign.js library creates the iframe for you</li>
+                <li>The events raises a DOM event to your JS app; the redirection page is not used</li>
+              </ul>
               <p>This demo uploads a template to your account, and then uses it for the envelope.</p>
               <h4>Supplemental Documents</h4>
               <div>
@@ -234,16 +239,17 @@
                 </select>  
               </div>
               <h4 class="mt-3">The Signing Ceremony’s primary button UX can be modified by the developer</h4>
-              <p>Example button:
-                <button id="modelButton2" class="modelButton display-inline ms-2">
-                  <span>Submit</span>
-                </button>
+              <p>
+                <label for="useSigningCeremonyDefaultUx" class="form-label">Use the default button UX?</label>
+                <input id="useSigningCeremonyDefaultUx" class="form-check-input baseline me-3 ms-1 me-3" type="checkbox">
+                Example button:
+                <button id="modelButton2" class="classicButton display-inline ms-2"><span>Finish</span></button>
               </p>
               <p>
                 Background color:
-                <input type="color" class="ms-2 me-5 form-control form-control-color display-inline" id="backgroundColor2" data-modelbutton="modelButton2-background" value="#333333" title="Background color">
+                <input type="color" class="ms-2 me-5 form-control form-control-color display-inline classicColor" id="backgroundColor2" data-modelbutton="modelButton2-background" value="#333333" title="Background color">
                 Text color:
-                <input type="color" class="ms-2 form-control form-control-color display-inline" id="textColor2" data-modelbutton="modelButton2-textcolor" value="#FFFFFF" title="Text color">
+                <input type="color" class="ms-2 form-control form-control-color display-inline classicColor" id="textColor2" data-modelbutton="modelButton2-textcolor" value="#FFFFFF" title="Text color">
               </p>              
               <p>Signer name:
                 <input id="signername2" class="ms-2 me-5form-control display-inline w10" type="text" placeholder="Submit" aria-label="button text">
@@ -274,7 +280,8 @@
                 <input type="color" class="ms-2 form-control form-control-color display-inline" id="textColor1" data-modelbutton="modelButton1-textcolor" value="#FFFFFF" title="Text color">
               </p>  -->
               <a id="dsjsDefault" class="btn btn-primary btn-lg mt-3" type="button" role="button">Sign</a>
-              <a class="env-view hide btn btn-secondary btn-lg ms-5 mt-2" type="button" role="button">View the Signed Document</a>
+              <a class="env-view hide btn btn-secondary btn-lg ms-5 mt-3" type="button" role="button">View</a>
+              <p>Sign--creates a new agreement. View--view an existing agreement. <b>View mode has a known bug.</b></p>
             </form>
           </div>
         </div>      

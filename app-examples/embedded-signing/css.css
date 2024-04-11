@@ -55,6 +55,24 @@ body {
   color: rgb(255, 255, 255);
 }
 
+.classicButton {
+  text-decoration: none;
+  background-color: #f7ba00;
+  color: #333333;
+  font-family: "Maven Pro","Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: .66px;
+  line-height: 20px;
+  text-transform: uppercase;
+  padding: 6px 18px;
+  border-radius: 2px;
+  text-align: center;
+  text-emphasis: #333333;
+  border-width: 0;
+
+}
+
 /* https://projects.lukehaas.me/css-loaders/ */
 .loader {
     font-size: 10px;

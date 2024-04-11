@@ -149,6 +149,31 @@ class FocusedViewSigning {
               // Any configuration or API limits will be caught here
         }
     }
+
+    /***
+     * view shows an existing envelope
+     * (that uses the same recipient)
+     */
+    async view() {
+        this.signing = true;
+        this.envelopeId = this.envelopes.envelopeId;
+        if (!this.envelopeId) {
+            this.loadingModal.delayedHide("Envelope ID not found");
+            this.signing = false;
+            return
+        }
+
+        this.loadingModal.show("Creating the recipient view");
+        const recipientViewUrl = await this.envelopes.recipientView();
+        if (!recipientViewUrl) {
+            this.loadingModal.delayedHide("Could not open the recipient view");
+            this.signing = false;
+            return;
+        }
+
+        this.loadingModal.delayedHide("Opening the view");
+        await this.focusedView(recipientViewUrl);
+    }
 }
 
 export { FocusedViewSigning };

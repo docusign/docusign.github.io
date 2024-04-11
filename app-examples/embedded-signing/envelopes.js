@@ -63,6 +63,7 @@ class Envelopes {
         });
         if (results !== false) {
             this.envelopeId = results.envelopeId // good result
+            window.postMessage("envelopeCreated");
             return this.envelopeId;
         } else {
             if (this.callApi.errMsg.indexOf("ONESIGNALLSIGN_NOT_SATISFIED") !== -1) {
