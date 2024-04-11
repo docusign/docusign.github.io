@@ -144,7 +144,7 @@ $(async function () {
     /***
      * checkToken returns true if we're good to go.
      */
-    checkToken() {
+    function checkToken() {
         const tokenOk = data.implicitGrant.checkToken();
         if (!tokenOk) {
             messageModal("Your Login Session Has Expired", 
