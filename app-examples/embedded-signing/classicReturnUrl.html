@@ -15,8 +15,11 @@
     <p>Please wait.</p>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <script>
-      const msg = {source: 'dsResponse', hash: window.location.hash || '',
-        href: window.location.href || ''}
+      const msg = {source: 'dsResponse', 
+        hash: window.location.hash || '',
+        href: window.location.href || '',
+        search: window.location.search || '',
+      }
       if (window.parent && window.parent.opener) {
         window.parent.opener.postMessage(msg, '*'); // iframed case
       } else if (window.opener) {
