@@ -114,20 +114,40 @@ function messageModal(title, msg) {
  * clear the hash
  */
 function processUrlHash(qp) {
-    const hash = location.hash.substring(1); // remove the #
+    let hash = location.hash && location.hash.substring(1); // remove the #
     if (!hash.length || hash.indexOf(qp) === -1) {return} // EARLY RETURN (Nothing to see here!)
+
+    let search = location.search && location.search.substring(1); // rm ?
+    // sometimes the hash includes the search (qp) part too!
+    // eg '#classicResults=1&envelopeId=aaddc7b3-50d9-461f-957c-599dc9aa9d48?event=signing_complete'
+    const searchInHash = hash.indexOf('?') !== -1;
+    if (searchInHash) {
+        const splitHash = hash.split('?');
+        hash = splitHash[0];
+        search = splitHash[1];
+    }
 
     window.history.pushState("", "", `${location.origin}${location.pathname}`);
     let query = {};
-    const pairs = hash.split('&');
-    for (let i = 0; i < pairs.length; i++) {
-        const pair = pairs[i].split('=');
-        if (pair.length !== 2) {continue}
-        let val = decodeURIComponent(pair[1].replace(/\+/g, '%20') || '');
-        if (val === "true") {val = true}
-        if (val === "false") {val = false} 
-        query[decodeURIComponent(pair[0])] = val;
+    let pairs;
+    for (let mode = 0; mode < 2; mode++) {
+        if (mode === 0) {
+            // process hash
+            pairs = hash.split('&');
+        } else {
+            // process search
+            pairs = search.split('&');
+        }
+        for (let i = 0; i < pairs.length; i++) {
+            const pair = pairs[i].split('=');
+            if (pair.length !== 2) {continue}
+            let val = decodeURIComponent(pair[1].replace(/\+/g, '%20') || '');
+            if (val === "true") {val = true}
+            if (val === "false") {val = false} 
+            query[decodeURIComponent(pair[0])] = val;
+        }
     }
+
     return query
 }
 

@@ -39,7 +39,6 @@ class DsjsDefaultSigning {
         this.envelopes = args.envelopes;
         this.mainElId = args.mainElId;
         this.signElId = args.signElId;
-        this.clientId = CLIENT_USER_ID;
         this.role = ROLE;
         this.signing = false; 
     }

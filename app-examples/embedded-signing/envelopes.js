@@ -18,7 +18,7 @@ const CLIENT_USER_ID = 1000;
 // See https://developers.docusign.com/docs/esign-rest-api/reference/envelopes/envelopeviews/createrecipient/#schema__recipientviewrequest_frameancestors
 const FRAME_ANCESTORS = ["http://localhost", "https://docusign.github.io", "https://apps-d.docusign.com"]; 
 const MESSAGE_ORIGINS = ["https://apps-d.docusign.com"];
-const RETURN_URL = `https://docusign.github.io/jsfiddleDsResponse.html`;
+const RETURN_URL = `https://docusign.github.io/app-examples/embedded-signing/classicReturnUrl.html`;
 const ROLE = "signer" // the role name used by the example templates
 const STATIC_DOC_URL = "../assets/Web site Access Agreement.pdf";
 const SUPP_DOCS_URL = "../assets/";
@@ -45,8 +45,9 @@ class Envelopes {
         this.clientUserId = CLIENT_USER_ID;
         this.role = ROLE;
         this.useDisclosure = true;
+        this.returnUrl = RETURN_URL;
+        this.defaultReturnUrl = RETURN_URL;
     }
-
 
     /***
      * IN PRODUCTION, this method would usually be implemented on
@@ -257,14 +258,15 @@ class Envelopes {
      *    focused view.
      *    https://developers.docusign.com/docs/esign-rest-api/reference/envelopes/envelopeviews/createrecipient/
      */
-    async recipientView(){
+    async recipientView(returnUrl = RETURN_URL){
+        this.returnUrl = returnUrl;
         const request = {
             authenticationMethod: "None",
             clientUserId: this.clientUserId,
             email: this.email,
             frameAncestors: FRAME_ANCESTORS,
             messageOrigins: MESSAGE_ORIGINS,
-            returnUrl: RETURN_URL,
+            returnUrl: this.returnUrl,
             userName: this.name,
         }
         const results = await this.callApi.callApiJson({
@@ -272,7 +274,15 @@ class Envelopes {
             httpMethod: "POST",
             req: request
         });
-        return results === false ? false : results.url
+        return results ? results.url : false;
+    }
+
+    /***
+     * setEnvelopeId enables another function to update it
+     */
+    setEnvelopeId(envelopeId) {
+        this.envelopeId = envelopeId;
+        window.postMessage("envelopeCreated");
     }
 }
 

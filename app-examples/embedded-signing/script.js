@@ -10,6 +10,7 @@ import { Envelopes } from "./envelopes.js";
 import { Click2Agree } from "./click2agree.js"
 import { FocusedViewSigning } from "./focusedViewSigning.js";
 import { DsjsDefaultSigning } from "./dsjsDefaultSigning.js";
+import { ClassicSigning } from "./classicEmbeddedSigning.js";
 
 import {
     CallApi,
@@ -30,6 +31,7 @@ import {
 const CLIENT_ID = "demo";
 const CONFIG_STORAGE = "embeddedSigningConfiguration";
 const MODE_STORAGE = "embeddedSigningMode";
+const CLASSIC_RESULT = 'classicResult'; // store the classic non-iframe signing result
 
 $(async function () {
     let oAuthClientID;
@@ -48,6 +50,10 @@ $(async function () {
         supp21signerMustAcknowledge: "view",
         supp22include: false, 
         supp22signerMustAcknowledge: "accept",
+        supp31include: false, 
+        supp31signerMustAcknowledge: "view",
+        supp32include: false, 
+        supp32signerMustAcknowledge: "accept",
         buttonPosition1: "bottom-right",
         buttonText1: "Submit",
         buttonText1: "Agree",
@@ -57,7 +63,11 @@ $(async function () {
         textColor2: "#333333",
         backgroundColor3: "#000000",
         textColor3: "#FFFFFF",
+        signername1: "",
+        signername2: "",
+        signername3: "",
         useSigningCeremonyDefaultUx: true,
+        useIframe: true
     }
     const formCheckboxes = {
         supp1include: true, 
@@ -66,7 +76,10 @@ $(async function () {
         supp12include: true, 
         supp21include: true, 
         supp22include: true,
-        useSigningCeremonyDefaultUx: true 
+        supp31include: true, 
+        supp32include: true,
+        useSigningCeremonyDefaultUx: true,
+        useIframe: true, 
     }
 
     let templates = [
@@ -110,7 +123,7 @@ $(async function () {
         await data.focusedViewSigning.sign({
             templateId: templates[0].templateId,
             supplemental: supplemental,
-            name: $(`#signername1`).val(),
+            name: configuration.signername1,
             email: data.userInfo.email,
             modelButtonId: "modelButton1",
             modelButtonPosition: "buttonPosition1",
@@ -130,9 +143,28 @@ $(async function () {
         await data.dsjsDefaultSigning.sign({
             templateId: templates[0].templateId,
             supplemental: supplemental,
-            name: $(`#signername2`).val(),
+            name: configuration.signername2,
             email: data.userInfo.email,
             modelButtonId: "modelButton2",
+            });
+    }.bind(this)
+
+    /***
+     * classicSign signing ceremony
+     */
+    let classicSign = async function classicSignF (e) {
+        e.preventDefault();
+        formToConfiguration();
+        if (!checkToken()){return}
+        const supplemental = [
+            {include: configuration.supp31include, signerMustAcknowledge: configuration.supp31signerMustAcknowledge},
+            {include: configuration.supp32include, signerMustAcknowledge: configuration.supp32signerMustAcknowledge}];
+        await data.classicSigning.sign({
+            templateId: templates[0].templateId,
+            supplemental: supplemental,
+            name: configuration.signername3,
+            email: data.userInfo.email,
+            useIframe: configuration.useIframe,
             });
     }.bind(this)
 
@@ -141,6 +173,7 @@ $(async function () {
      * Call the right function
      */
     let view = async function viewF (e) {
+        formToConfiguration();
         const sectionName = $(e.target).closest(".tab-pane").attr("id");
         if (sectionName === 'focusedView-tab-pane') {
             await data.focusedViewSigning.view()
@@ -149,7 +182,7 @@ $(async function () {
         } else if (sectionName === 'dsjsDefault-tab-pane') {
             await data.dsjsDefaultSigning.view()
         } else if (sectionName === 'classic-tab-pane') {
-            await data.classicSigning.view()
+            await data.classicSigning.view(configuration.useIframe)
         }
     }.bind(this)
 
@@ -308,6 +341,19 @@ $(async function () {
                 signElId: "signing-ceremony",
                 envelopes: data.envelopes,
             });
+            data.classicSigning = new ClassicSigning({
+                showMsg: toast,
+                messageModal: messageModal,
+                loadingModal: data.loadingModal,
+                clientId: oAuthClientID,
+                accountId: accountId,
+                callApi: data.callApi,
+                mainElId: "main",
+                signElId: "signing-ceremony",
+                envelopes: data.envelopes,
+                CLASSIC_RESULT: CLASSIC_RESULT,
+            });
+            data.classicSigning.showResults();
         } else {
             // Did not complete the login
             toast(data.userInfo.errMsg);
@@ -337,10 +383,29 @@ $(async function () {
         modelButton1Changes: null,
     };
 
+    // Register event handlers
+    $("#modalLogin button").click(login);
+    $("#signClickToAgree").click(signClickToAgree);
+    $("#signFocusView").click(signFocusView);
+    $("#dsjsDefault").click(dsjsDefault);
+    $("#classicSign").click(classicSign);
+    $("#saveToUrl").click(saveToUrl);
+    $(".env-view").click(view);
+    $('#myTab [data-bs-toggle="tab"]').on('show.bs.tab', e => {
+        storageSet(MODE_STORAGE, $(e.target)[0].id)}); // save the mode 
+    window.addEventListener("beforeunload", beforeUnloadHandler);
+    window.addEventListener("message", envelopeCreated);
+    $("#useSigningCeremonyDefaultUx").change(e => {
+        $(`.classicColor`).attr("disabled", 
+        $("#useSigningCeremonyDefaultUx").prop('checked'))});   
+
+    // Starting up...
     switchToHttps();
-    // Start. Does the hash include a config item? Then save it.
+    // Does the hash include a config item? Then save it.
     const config = processUrlHash("supp1signerMustAcknowledge");
     if (config) {storageSet(CONFIG_STORAGE, config)}
+    const classicResults = processUrlHash("classicResults");
+    if (classicResults) {storageSet(CLASSIC_RESULT, classicResults)}
     // The Implicit grant constructor looks at hash data to see if we're 
     // now receiving the OAuth response
     data.implicitGrant = new ImplicitGrant({
@@ -373,6 +438,7 @@ $(async function () {
         }
         $(`#signername1`).val(data.userInfo.name);
         $(`#signername2`).val(data.userInfo.name);
+        $(`#signername3`).val(data.userInfo.name);
         data.modelButton1Changes = new ButtonOnChange({
             buttonId: "modelButton1",
             textId: "buttonText1",
@@ -384,24 +450,10 @@ $(async function () {
             backgroundColorId: "backgroundColor2",
             textColorId: "textColor2"
         });
-        data.modelButton2Changes = new ButtonOnChange({
+        data.modelButton3Changes = new ButtonOnChange({
             buttonId: "modelButton3",
             backgroundColorId: "backgroundColor3",
             textColorId: "textColor3"
         });
     }
-
-    $("#modalLogin button").click(login);
-    $("#signClickToAgree").click(signClickToAgree);
-    $("#signFocusView").click(signFocusView);
-    $("#dsjsDefault").click(dsjsDefault);
-    $("#saveToUrl").click(saveToUrl);
-    $(".env-view").click(view);
-    $('#myTab [data-bs-toggle="tab"]').on('show.bs.tab', e => {
-        storageSet(MODE_STORAGE, $(e.target)[0].id)}); // save the mode 
-    window.addEventListener("beforeunload", beforeUnloadHandler);
-    $("#useSigningCeremonyDefaultUx").change(e => {
-        $(`.classicColor`).attr("disabled", 
-        $("#useSigningCeremonyDefaultUx").prop('checked'))});
-    window.onmessage = envelopeCreated;
 })

@@ -127,16 +127,56 @@
 
           </div>
           <div class="tab-pane fade" id="classic-tab-pane" role="tabpanel" aria-labelledby="classic-tab" tabindex="0">
-            <h1 class="mt-4">Docusign.js Default View</h1>
-            <p>This example is tbd</p>
+            <h1 class="mt-4">Classic Signing Ceremony</h1>
+            <form>
+              <p>The classic Docusign signing ceremony can be used standalone or within an iframe.</p>
+              <p>Standalone (no iframe) is recommended. In particular, some Docusign signing features,
+                including IDV, are not available if an iframe is used.
+              </p>
+              <p class="mb-0">Benefits of the classic signing ceremony:</p>
+              <ul>
+                <li>It shows the envelope sender’s information, including their name, photo, their company (account name)
+                  and company logo (if set for the sender's account)
+                </li>
+                <li>The sending account branding is used</li>
+                <li>All Docusign authentication features can be used</li>
+              </ul>
+              <p>This demo uploads a template to your account, and then uses it for the envelope.</p>
+              <h4>Supplemental Documents</h4>
+              <div>
+                <label for="supp31include" class="form-label">Include supplemental #1?</label>
+                <input id="supp31include" class="form-check-input baseline me-3 ms-1" type="checkbox">
+                Signer acceptance:
+                <select id="supp31signerMustAcknowledge" class="ms-2 form-select display-inline w10" aria-label="Action select">
+                  <option value="no_interaction">No Interaction</option>
+                  <option value="view">View</option>
+                  <option value="accept">Accept</option>
+                  <option value="view_accept">View Accept</option>
+                </select>
 
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ac diam sed tortor consectetur iaculis vel eget magna. Cras quis cursus eros, non ullamcorper enim. Nam imperdiet tempor vestibulum. Nullam ultrices, risus non feugiat cursus, purus ante viverra ligula, et porttitor lacus felis tincidunt sem. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent a justo hendrerit, luctus quam a, varius quam. Etiam scelerisque sagittis leo sed porta. Aenean at tortor fermentum, congue diam nec, blandit felis. Maecenas ut auctor nisl, non gravida ligula. Morbi tincidunt ac libero nec suscipit.
-            </p><p>Sed blandit fermentum metus, sed dapibus ante fringilla ac. Morbi vitae nisl nec velit tincidunt aliquam. Praesent condimentum vitae mi quis sollicitudin. Nunc tristique eu elit eu fringilla. In ullamcorper bibendum tortor id tincidunt. Aliquam gravida pretium varius. Fusce suscipit, nibh vitae feugiat efficitur, nibh turpis ornare libero, nec fermentum arcu sapien ac nisi. Sed tempor maximus venenatis. Ut eget nibh sed felis vehicula cursus ac ut libero. Fusce porta et enim blandit ullamcorper. Aliquam lobortis purus ac ante euismod, nec ultrices leo mattis.
-            </p>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ac diam sed tortor consectetur iaculis vel eget magna. Cras quis cursus eros, non ullamcorper enim. Nam imperdiet tempor vestibulum. Nullam ultrices, risus non feugiat cursus, purus ante viverra ligula, et porttitor lacus felis tincidunt sem. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent a justo hendrerit, luctus quam a, varius quam. Etiam scelerisque sagittis leo sed porta. Aenean at tortor fermentum, congue diam nec, blandit felis. Maecenas ut auctor nisl, non gravida ligula. Morbi tincidunt ac libero nec suscipit.
-            </p><p>Sed blandit fermentum metus, sed dapibus ante fringilla ac. Morbi vitae nisl nec velit tincidunt aliquam. Praesent condimentum vitae mi quis sollicitudin. Nunc tristique eu elit eu fringilla. In ullamcorper bibendum tortor id tincidunt. Aliquam gravida pretium varius. Fusce suscipit, nibh vitae feugiat efficitur, nibh turpis ornare libero, nec fermentum arcu sapien ac nisi. Sed tempor maximus venenatis. Ut eget nibh sed felis vehicula cursus ac ut libero. Fusce porta et enim blandit ullamcorper. Aliquam lobortis purus ac ante euismod, nec ultrices leo mattis.
-            </p>
-
+                <label for="supp32include" class="form-label ms-3">#2?</label>
+                <input id="supp32include" class="form-check-input baseline me-3 ms-1" type="checkbox">
+                Signer acceptance:
+                <select id="supp32signerMustAcknowledge" class="ms-2 form-select display-inline w10" aria-label="Action select">
+                  <option value="no_interaction">No Interaction</option>
+                  <option value="view">View</option>
+                  <option value="accept">Accept</option>
+                  <option value="view_accept">View Accept</option>
+                </select>  
+              </div>
+              <p>Signer name:
+                <input id="signername3" class="ms-2 me-5form-control display-inline w10" type="text" placeholder="Submit" aria-label="button text">
+                Use a new signer name to trigger the  
+                <a href="https://support.docusign.com/s/document-item?language=en_US&rsc_301&bundleId=pik1583277475390&topicId=aqg1583277336549.html&_LANG=enus"
+                target="_blank">ERSD agreement</a>.
+              </p>
+              <p>
+                <label for="useIframe" class="form-label">Use an iframe?</label>
+                <input id="useIframe" class="form-check-input baseline me-3 ms-1" type="checkbox">
+              </p>
+              <a id="classicSign" class="btn btn-primary btn-lg mt-3" type="button" role="button">Sign</a>
+              <a class="env-view hide btn btn-secondary btn-lg ms-5 mt-3" type="button" role="button">View</a>
+              <p>Sign--creates a new agreement. View--view an existing agreement. </p>
           </div>
           <div class="tab-pane fade" id="focusedView-tab-pane" role="tabpanel" aria-labelledby="focusedView-tab" tabindex="0">
             <h1 class="mt-4">Focused View</h1>
