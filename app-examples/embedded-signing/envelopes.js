@@ -276,7 +276,7 @@ class Envelopes {
         });
         const url = results ? results.url  : false;
         if (!url) {return false}
-        const locale = this.locale !== "default" ? `?locale=${this.locale}` : "";
+        const locale = this.locale !== "default" ? `&locale=${this.locale}` : "";
         return url + locale;
     }
 
