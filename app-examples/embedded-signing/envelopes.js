@@ -274,7 +274,10 @@ class Envelopes {
             httpMethod: "POST",
             req: request
         });
-        return results ? results.url : false;
+        const url = results ? results.url  : false;
+        if (!url) {return false}
+        const locale = this.locale !== "default" ? `?locale=${this.locale}` : "";
+        return url + locale;
     }
 
     /***

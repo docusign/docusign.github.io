@@ -67,7 +67,11 @@ $(async function () {
         signername2: "",
         signername3: "",
         useSigningCeremonyDefaultUx: true,
-        useIframe: true
+        useIframe: true,
+        locale: "default",
+        locale1: "default",
+        locale2: "default",
+        locale3: "default",
     }
     const formCheckboxes = {
         supp1include: true, 
@@ -107,6 +111,7 @@ $(async function () {
             name: data.userInfo.name,
             email: data.userInfo.email,
             modelButtonId: "modelButton3",
+            locale: configuration.locale
         })
     }.bind(this)
 
@@ -127,6 +132,7 @@ $(async function () {
             email: data.userInfo.email,
             modelButtonId: "modelButton1",
             modelButtonPosition: "buttonPosition1",
+            locale: configuration.locale1
             });
     }.bind(this)
 
@@ -146,6 +152,7 @@ $(async function () {
             name: configuration.signername2,
             email: data.userInfo.email,
             modelButtonId: "modelButton2",
+            locale: configuration.locale2,
             });
     }.bind(this)
 
@@ -165,6 +172,7 @@ $(async function () {
             name: configuration.signername3,
             email: data.userInfo.email,
             useIframe: configuration.useIframe,
+            locale: configuration.locale3
             });
     }.bind(this)
 

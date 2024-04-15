@@ -55,6 +55,7 @@ class FocusedViewSigning {
         this.email = args.email;
         this.modelButtonId = args.modelButtonId;
         this.modelButtonPosition = args.modelButtonPosition;
+        this.locale = args.locale;
         this.useDisclosure = true; // why demo with this off?
 
         // supplemental = [{include: true, signerMustAcknowledge: "view"},
@@ -69,6 +70,7 @@ class FocusedViewSigning {
         this.envelopes.email = this.email;
         this.envelopes.templateId = this.templateId;
         this.envelopes.useDisclosure = this.useDisclosure; 
+        this.envelopes.locale = this.locale; 
         await this.envelopes.createTemplateRequest();
         // add supplemental docs
         await this.envelopes.addSupplementalDocuments(this.supplemental)
