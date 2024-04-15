@@ -71,6 +71,7 @@ class ClassicSigning {
         this.name = args.name;
         this.email = args.email;
         this.useIframe = args.useIframe;
+        this.locale = args.locale;
 
         this.useDisclosure = true; // why demo with this off?
 
@@ -86,6 +87,7 @@ class ClassicSigning {
         this.envelopes.email = this.email;
         this.envelopes.templateId = this.templateId;
         this.envelopes.useDisclosure = this.useDisclosure; 
+        this.envelopes.locale = this.locale; 
         await this.envelopes.createTemplateRequest();
         // add supplemental docs
         await this.envelopes.addSupplementalDocuments(this.supplemental)

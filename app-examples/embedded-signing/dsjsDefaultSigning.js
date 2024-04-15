@@ -58,6 +58,7 @@ class DsjsDefaultSigning {
         this.supplemental = args.supplemental;
         this.name = args.name;
         this.email = args.email;
+        this.locale = args.locale;
         this.modelButtonId = args.modelButtonId;
         this.useDisclosure = true; // why demo with this off?
 
@@ -72,7 +73,8 @@ class DsjsDefaultSigning {
         this.envelopes.name = this.name;
         this.envelopes.email = this.email;
         this.envelopes.templateId = this.templateId;
-        this.envelopes.useDisclosure = this.useDisclosure; 
+        this.envelopes.useDisclosure = this.useDisclosure;
+        this.envelopes.locale = this.locale; 
         await this.envelopes.createTemplateRequest();
         // add supplemental docs
         await this.envelopes.addSupplementalDocuments(this.supplemental)
