@@ -6,7 +6,6 @@ const oAuthServiceProviderDemo = "https://account-d.docusign.com";
 const oAuthServiceProviderStage = "https://account-s.docusign.com"; 
 const authPath = "/oauth/auth";
 const tokenPath = "/oauth/token";
-const userInfoPath = "/oauth/userinfo";
 // Client IDs are NOT secrets. See
 // https://www.rfc-editor.org/rfc/rfc6749.html#section-2.2
 const oAuthClientIDdemo = ""; // demo
@@ -14,7 +13,6 @@ const oAuthClientIDstage = "ec5769e4-ec17-494c-98a7-bcc0a289e214"; // stage
 const oAuthClientIDprod = ""; // prod
 
 const oAuthScopes = "signature cors";
-const eSignBase = "/restapi/v2.1";
 const oAuthReturnUrl =
     "https://docusign.github.io/authGrantReturn.html";
 const logLevel = 0; // 0 is terse; 9 is verbose
@@ -159,6 +157,7 @@ class AuthCodePkce {
 
         // exchange the authorization code for the access token
         // https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.3
+        let returnStatus;
         try {
             const formData = new FormData();
             formData.append('grant_type', 'authorization_code');
@@ -173,23 +172,24 @@ class AuthCodePkce {
                     body: formData
                     });
             const response = rawResponse && rawResponse.ok && await rawResponse.json();
+            this.accessToken = response.access_token;
+            this.refreshToken = response.refresh_token;
+            this.accessTokenExpires = new Date(
+                Date.now() + response.expires_in * 1000
+            );
+            console.log (`\n\n#### Access Token expiration: ${response.expires_in / 60 / 60} hours\n\n`);
+            returnStatus = "ok";
+            // done!
         } catch (e) {
             this.err ("Bad OAuth response");
-            return ("error");
+            returnStatus = "error";
+        } finally {
+            this.working = false;
+            if (this.workingUpdateF) {
+                this.workingUpdateF(this.working);
+            }
+            return returnStatus;
         }
-
-        this.accessToken = response.access_token;
-        this.refreshToken = response.refresh_token;
-        this.accessTokenExpires = new Date(
-            Date.now() + response.expires_in * 1000
-        );
-        console.log (`\n\n#### Access Token expiration: ${response.expires_in / 60 / 60} hours\n\n`);
-        // done!
-        this.working = false;
-        if (this.workingUpdateF) {
-            this.workingUpdateF(this.working);
-        }
-        return "ok";
     }
 
     err (msg) {
