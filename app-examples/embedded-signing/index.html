@@ -84,8 +84,8 @@
             </ul>
 
             <form>
-              <div class="hide"> <!-- Jira C2A-3474 -->
-                Locale: 
+              <div> <!-- Jira C2A-3474 -->
+                <span  class="hide">Locale: 
                 <select id="locale" class="ms-2 form-select display-inline w10" aria-label="locale select">
                   <option value="default">Default</option>
                   <option value="ar">Arabic (ar)</option>
@@ -133,6 +133,15 @@
                   <option value="uk">Ukrainian (uk)</option>
                   <option value="vi">Vietnamese (vi)</option>
                 </select>
+                </span> <!-- the span hides the select due to the bug -->
+                <span class="hide">
+                <label for="document" class="form-label">Document:</label>
+                <select id="document" class="ms-2 form-select display-inline w19" aria-label="Document select">
+                  <option value="default">Default</option>
+                  <option value="htmlRegResp">HTML regular responsive</option>
+                  <option value="htmlResponsive">HTML smart sections responsive</option>
+                </select>
+              </span> <!-- responsive not working for c2a -->
               </div>
               <h4 class="mt-3">Supplemental Documents</h4>
               <div>
@@ -241,6 +250,12 @@
                   <option value="uk">Ukrainian (uk)</option>
                   <option value="vi">Vietnamese (vi)</option>
                 </select>
+                <label for="document3" class="form-label ms-5">Document:</label>
+                <select id="document3" class="ms-2 form-select display-inline w19" aria-label="Document select">
+                  <option value="default">Default</option>
+                  <option value="htmlRegResp">HTML regular responsive</option>
+                  <option value="htmlResponsive">HTML smart sections responsive</option>
+                </select>
               </div>
               <h4 class="mt-3">Supplemental Documents</h4>
               <div>
@@ -338,6 +353,12 @@
                   <option value="tr">Turkish (tr)</option>
                   <option value="uk">Ukrainian (uk)</option>
                   <option value="vi">Vietnamese (vi)</option>
+                </select>
+                <label for="document1" class="form-label ms-5">Document:</label>
+                <select id="document1" class="ms-2 form-select display-inline w19" aria-label="Document select">
+                  <option value="default">Default</option>
+                  <option value="htmlRegResp">HTML regular responsive</option>
+                  <option value="htmlResponsive">HTML smart sections responsive</option>
                 </select>
               </div>
               <h4 class="mt-3">Supplemental Documents</h4>
@@ -454,6 +475,12 @@
                   <option value="tr">Turkish (tr)</option>
                   <option value="uk">Ukrainian (uk)</option>
                   <option value="vi">Vietnamese (vi)</option>
+                </select>
+                <label for="document2" class="form-label ms-5">Document:</label>
+                <select id="document2" class="ms-2 form-select display-inline w19" aria-label="Document select">
+                  <option value="default">Default</option>
+                  <option value="htmlRegResp">HTML regular responsive</option>
+                  <option value="htmlResponsive">HTML smart sections responsive</option>
                 </select>
               </div>
               <h4 class="mt-3">Supplemental Documents</h4>

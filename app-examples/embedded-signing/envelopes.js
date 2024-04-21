@@ -20,9 +20,11 @@ const FRAME_ANCESTORS = ["http://localhost", "https://docusign.github.io", "http
 const MESSAGE_ORIGINS = ["https://apps-d.docusign.com"];
 const RETURN_URL = `https://docusign.github.io/app-examples/embedded-signing/classicReturnUrl.html`;
 const ROLE = "signer" // the role name used by the example templates
-const STATIC_DOC_URL = "../assets/Web site Access Agreement.pdf";
-const SUPP_DOCS_URL = "../assets/";
-const SUPP_DOC_NAMES = ["Terms and Conditions 1.pdf", "Terms and Conditions 2.pdf"]
+const STATIC_DOC_URL = "Web site Access Agreement.pdf";
+const SUPP_DOCS_URL = "../../examples/docs/";
+const SUPP_DOC_NAMES = ["Terms and Conditions 1.pdf", "Terms and Conditions 2.pdf"];
+const SIMPLE_HTML = "simple_with_image.html.txt";
+const HTML_RESPONSIVE = "htmlSmartSections.html.txt"
 
 /***
  * instance variables
@@ -132,8 +134,11 @@ class Envelopes {
         return req
     }
 
+    /***
+     * A simple pdf request
+     */
     async createSimpleEnvRequest() {
-        const docB64 = await this.callApi.getDocB64(STATIC_DOC_URL);
+        const docB64 = await this.callApi.getDocB64(SUPP_DOCS_URL + STATIC_DOC_URL);
         if (!docB64) {
             this.showMsg(this.callApi.errMsg); // Error!
             return
@@ -176,6 +181,202 @@ class Envelopes {
     }
 
     /***
+     * HTML source document
+     */
+    async createHtmlRegRequest() {
+        const docB64 = await this.callApi.getDocB64(SUPP_DOCS_URL + SIMPLE_HTML);
+        if (!docB64) {
+            this.showMsg(this.callApi.errMsg); // Error!
+            return
+        }
+        const req = {
+            emailSubject: "Please sign the attached document",
+            status: "sent",
+            documents: [
+                {
+                    name: "Example document",
+                    documentBase64: docB64,
+                    fileExtension: "html",
+                    documentId: "1",
+                }
+            ],
+            recipients: {
+                signers: [
+                    {
+                        email: this.email,
+                        name: this.name,
+                        clientUserId: this.clientUserId,
+                        recipientId: "1",
+                        tabs: {
+                            signHereTabs: [
+                                {
+                                    anchorString: "/sig1/",
+                                    anchorXOffset: "20",
+                                    anchorUnits: "pixels"
+                                }
+                            ],
+                            fullNameTabs: [
+                                {
+                                  anchorString: "/name1/",
+                                  anchorYOffset: "-5",
+                                  anchorUnits: "pixels",
+                                  bold: "true",
+                                  font: "Arial",
+                                  fontSize: "Size12"
+                                }
+                            ],
+                              emailAddressTabs: [
+                                {
+                                  anchorString: "/email1/",
+                                  anchorUnits: "pixels",
+                                  font: "Arial",
+                                  fontSize: "Size12",
+                                  anchorYOffset: "-5"
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        };
+        this.request = req;
+        return req
+    }
+    
+    /***
+     * Responsive HTML with smart sections
+     */
+    async createHtmlResponsiveRequest() {
+        const doc = await this.callApi.getDoc(SUPP_DOCS_URL + HTML_RESPONSIVE);
+        if (!doc) {
+            this.showMsg(this.callApi.errMsg); // Error!
+            return
+        }
+
+        const req = {
+        emailSubject: "Business Credit Card Approval",
+        status: "sent",
+        recipients: {
+        signers: [
+            {
+            email: this.email,
+            name: this.name,
+            clientUserId: this.clientUserId,
+            recipientId: "1",
+            tabs: {
+                signHereTabs: [
+                {
+                    tabLabel: "clientSignature"
+                }
+                ],
+                dateSignedTabs: [
+                {
+                    tabLabel: "clientDateSigned",
+                    font: "Arial",
+                    fontSize: "Size12"
+                }
+                ],
+                textTabs: [
+                {
+                    tabLabel: "Approver",
+                    value: "Samantha Approver",
+                    locked: "true",
+                    font: "Arial",
+                    fontSize: "Size12",
+                    maxLength: "4000",
+                    height: "11",
+                    width: "100"
+                },
+                {
+                    tabLabel: "BusinessName",
+                    value: "ACME Widgets",
+                    locked: "true",
+                    font: "Arial",
+                    fontSize: "Size12",
+                    maxLength: "4000",
+                    height: "11",
+                    width: "60"
+                }
+                ]
+            }
+            }
+        ]
+        },
+        documents: [
+        {
+            name: "Business Credit Card Approval.html",
+            documentId: "1",
+            htmlDefinition: {
+                source: doc,
+                displayAnchors: [
+                    {
+                    caseSensitive: true,
+                    startAnchor: "responsive_table_start",
+                    endAnchor: "responsive_table_end",
+                    removeEndAnchor: true,
+                    removeStartAnchor: true,
+                    displaySettings: {
+                        cellStyle: "text-align:left;border:solid 0px #000;margin:0px;padding:0px;",
+                        display: "responsive_table_single_column",
+                        tableStyle: "margin-bottom: 20px;width:100%;max-width:816px;margin-left:auto;margin-right:auto;"
+                    }
+                }
+            ]
+            }
+        }
+        ]
+    }
+    this.request = req;
+    return req
+    }
+    
+    /***
+     * No tabs envelope request. Perfect for a click to agree envelope
+     */
+    async createNoTabsEnvRequest() {
+        const docB64 = await this.callApi.getDocB64(SUPP_DOCS_URL + STATIC_DOC_URL);
+        if (!docB64) {
+            this.showMsg(this.callApi.errMsg); // Error!
+            return
+        }
+        const req = {
+            useDisclosure: true,
+            emailSubject: "Please sign the attached document",
+            status: "sent",
+            recipients: {
+                signers: [
+                    {
+                    clientUserId: this.clientUserId,
+                    email: this.email,
+                    name: this.name,
+                    recipientId: "1",
+                }
+                ]
+            },
+            documents: [
+                {
+                    name: "Example document",
+                    fileExtension: "pdf",
+                    documentId: "1",
+                    documentBase64: docB64,
+                }
+            ]
+        }
+        this.request = req;
+        return req
+    }    
+
+    /***
+     * updateRequest munges the request 
+     * 1. Adds supplemental docs
+     * 2. Sets responsive bit
+     */
+    async updateRequest(supplemental){
+        await this.addSupplementalDocuments(supplemental);
+        this.setResponsiveMode();
+    }
+
+    /***
      * addSupplementalDocuments
      * arg -- 
      *  const supplemental = [
@@ -215,39 +416,28 @@ class Envelopes {
     }
 
     /***
-     * No tabs envelope request. Perfect for a click to agree envelope
+     * Sets the disableResponsiveDocument attribute. 
+     * See https://developers.docusign.com/docs/esign-rest-api/reference/envelopes/envelopes/create/#schema__envelopedefinition_disableresponsivedocument
+     * and
+     * https://developers.docusign.com/docs/esign-rest-api/reference/envelopes/envelopes/create/#schema__envelopedefinition_compositetemplates_document_htmldefinition_source 
      */
-    async createNoTabsEnvRequest() {
-        const docB64 = await this.callApi.getDocB64(STATIC_DOC_URL);
-        if (!docB64) {
-            this.showMsg(this.callApi.errMsg); // Error!
-            return
-        }
-        const req = {
-            useDisclosure: true,
-            emailSubject: "Please sign the attached document",
-            status: "sent",
-            recipients: {
-                signers: [
-                    {
-                    clientUserId: this.clientUserId,
-                    email: this.email,
-                    name: this.name,
-                    recipientId: "1",
+    setResponsiveMode() {
+        const compositeTemplates =  this.request.compositeTemplates;
+        if (!this.responsive) {return} // EARLY RETURN
+        if (compositeTemplates) {
+            for (let i=0; i< compositeTemplates.length; i++) {
+                if (compositeTemplates[i].document && !compositeTemplates[i].document.htmlDefinition) {
+                    compositeTemplates[i].document.htmlDefinition = {source: "document"}
                 }
-                ]
-            },
-            documents: [
-                {
-                    name: "Example document",
-                    fileExtension: "pdf",
-                    documentId: "1",
-                    documentBase64: docB64,
+            }
+        } else {
+            const documents = this.request.documents;
+            for (let i=0; i< documents.length; i++) {
+                if (!documents[i].htmlDefinition) {
+                    documents[i].htmlDefinition = {source: "document"}
                 }
-            ]
+            }
         }
-        this.request = req;
-        return req
     }
 
     /***

@@ -6,6 +6,7 @@ body {
 .hide {display: none;}
 .display-inline {display: inline;}
 .w10 {width: 10em;}
+.w19 {width: 19em;}
 .baseline {vertical-align: baseline;}
 .colorpicker {
   display: flex;

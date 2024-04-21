@@ -41,6 +41,11 @@ class DsjsDefaultSigning {
         this.signElId = args.signElId;
         this.role = ROLE;
         this.signing = false; 
+        this.documentChoice = { // response means generic "document" responsive
+            default: {responsive: false, request: this.envelopes.createTemplateRequest.bind(this.envelopes)},
+            htmlRegResp: {responsive: true, request: this.envelopes.createHtmlRegRequest.bind(this.envelopes)},
+            htmlResponsive: {responsive: false, request: this.envelopes.createHtmlResponsiveRequest.bind(this.envelopes)},
+        }
     }
 
     /***
@@ -60,6 +65,7 @@ class DsjsDefaultSigning {
         this.email = args.email;
         this.locale = args.locale;
         this.modelButtonId = args.modelButtonId;
+        this.document = args.document;
         this.useDisclosure = true; // why demo with this off?
 
         // supplemental = [{include: true, signerMustAcknowledge: "view"},
@@ -75,9 +81,10 @@ class DsjsDefaultSigning {
         this.envelopes.templateId = this.templateId;
         this.envelopes.useDisclosure = this.useDisclosure;
         this.envelopes.locale = this.locale; 
-        await this.envelopes.createTemplateRequest();
+        this.envelopes.responsive = this.documentChoice[this.document].responsive;
+        await this.documentChoice[this.document].request();
         // add supplemental docs
-        await this.envelopes.addSupplementalDocuments(this.supplemental)
+        await this.envelopes.updateRequest(this.supplemental)
         this.envelopeId = await this.envelopes.sendEnvelope();
 
         if (!this.envelopeId) {

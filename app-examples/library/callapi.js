@@ -455,6 +455,33 @@ class CallApi {
     }
     
     /*
+     * GET a non-binary document from a CORS source and return it as a string.
+     */
+    async getDoc(docUrl) {
+        try {
+            let results = await fetch(docUrl, {
+                mode: "cors",
+                headers: new Headers({
+                    Accept: `*/*`
+                })
+            });
+            if (results && results.ok) {
+                const doc = await results.text();
+                return doc;
+            } else {
+                errMsg = 
+                    `Problem while making API call. ` +
+                        `Error: ${results ? results.statusText : "no response"}`;
+                return false;
+            }
+        } catch (e) {
+            errMsg = 
+                `Problem while making API call. ` + `Error: ${e.toString()}.`;
+            return false;
+        }
+    }
+
+    /*
      * https://stackoverflow.com/a/61226119/64904
      * Create a data URL, then strip the extra stuff to leave just
      * the content with BASE64 encoding
