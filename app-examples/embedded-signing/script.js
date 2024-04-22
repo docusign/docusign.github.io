@@ -211,7 +211,8 @@ $(async function () {
 
     /***
      * envelopeCreated
-     * An envelope was created, enable buttons to show it 
+     * An envelope was created, enable buttons to view the existing
+     * vs only enabling new envelopes to be created and sent.
      */
     function envelopeCreated(e) {
         if (e.data !== "envelopeCreated") {return}
@@ -275,7 +276,7 @@ $(async function () {
     }.bind(this);
 
     /***
-     * Ask for confirmation before
+     * Ask for confirmation before leaving window
      */
     const beforeUnloadHandler = function beforeUnloadHandlerF(event) {
         const signing = data.click2agree && data.click2agree.signing
