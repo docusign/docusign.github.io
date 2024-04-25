@@ -34,6 +34,7 @@ class FocusedViewSigning {
         this.envelopes = args.envelopes;
         this.mainElId = args.mainElId;
         this.signElId = args.signElId;
+        this.logger = args.logger;
         this.role = ROLE;
         this.signing = false; 
         this.document = args.document;
@@ -142,9 +143,13 @@ class FocusedViewSigning {
                 // Event: { returnUrl: url, type: "sessionEnd", sessionEndType: "signing_complete"}
                 this.signing = false;
                 if (event.type === "sessionEnd") {
-                    this.messageModal("Signing Session Ended", `<p>Result: <b>${event.sessionEndType.replace("_", " ")}</b></p>${END_MSG}`)
+                    const msg = `<p>Result: <b>${event.sessionEndType.replace("_", " ")}</b></p>${END_MSG}`;
+                    this.messageModal("Signing Session Ended", msg);
+                    this.logger.post("Signing session ended", msg);
                 } else {
-                    this.messageModal("Signing Session Message", `<p>Event data: ${JSON.stringify(event)}</p>`)
+                    const msg = `<p>Event data: ${JSON.stringify(event)}</p>`;
+                    this.messageModal("Signing Session Message", msg);
+                    this.logger.post("Signing session ended", msg);
                 } 
                 $(`#${this.signElId}`).addClass("hide").empty(); // Important! REMOVE the signing ceremony
                 $(`#${this.mainElId}`).removeClass("hide");

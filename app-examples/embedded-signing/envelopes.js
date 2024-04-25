@@ -44,6 +44,7 @@ class Envelopes {
         this.clientId = args.clientId;
         this.accountId = args.accountId;
         this.callApi = args.callApi;
+        this.logger = args.logger;
         this.clientUserId = CLIENT_USER_ID;
         this.role = ROLE;
         this.useDisclosure = true;
@@ -73,16 +74,18 @@ class Envelopes {
                 // potential settings error:
                 // 'Problem while making API call. Error: Bad Request.{"errorCode":"ONESIGNALLSIGN_NOT_SATISFIED",
                 //    "message":"Freeform signing is not allowed for your account because it conflicts with other settings, please place signing tabs for each signer."}'
-                this.messageModal("Create Envelope Problem: Operation Canceled", 
-                    `<p>This account, ${this.accountId}, is not configured for Click To Agree envelopes.
+                const msg = `<p>This account, ${this.accountId}, is not configured for Click To Agree envelopes.
                     Instead, it is configured for the Document Visibility feature.
                     Contact DocuSign customer service to change your account's configuration.
                     Tell them you have the ONESIGNALLSIGN_NOT_SATISFIED error when you are creating a Click To Agree envelope.</p>
-                    <p><small>Error message: ${this.callApi.errMsg}</small></p>`)
+                    <p><small>Error message: ${this.callApi.errMsg}</small></p>`;
+                this.messageModal("Create Envelope Problem: Operation Canceled", msg);
+                this.logger.post("Create Envelope Problem: Operation Canceled", msg);                    
                 return false
             }
             this.messageModal("Create Envelope Problem: Operation Canceled", 
-            `<p>Error message: ${this.callApi.errMsg}</p>`)
+            `<p>Error message: ${this.callApi.errMsg}</p>`);
+            this.logger.post("Create Envelope Problem: Operation Canceled", `<p>Error message: ${this.callApi.errMsg}</p>`);
             return false
         }
     }

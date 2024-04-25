@@ -47,6 +47,7 @@ class ClassicSigning {
         this.mainElId = args.mainElId;
         this.signElId = args.signElId;
         this.classicResult = args.CLASSIC_RESULT; // storage location
+        this.logger = args.logger;
         this.role = ROLE;
         this.signing = false; 
 
@@ -146,8 +147,9 @@ class ClassicSigning {
         if (items[0] !== "event") {return}
         const event = items[1]; // "signing_complete" or something else
 
-        this.messageModal("Signing Session Ended", 
-            `<p>Result: <b>${event.replace("_", " ")}</b></p>${END_MSG}`)
+        const msg = `<p>Result: <b>${event.replace("_", " ")}</b></p>${END_MSG}`;
+        this.messageModal("Signing Session Ended", msg);
+        this.logger.post("Signing session ended", msg);
         
         $(`#${this.signElId}`).addClass("hide").empty(); // Important! REMOVE the signing ceremony
         $(`#${this.mainElId}`).removeClass("hide");

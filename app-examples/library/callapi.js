@@ -442,13 +442,13 @@ class CallApi {
                 const doc = await results.blob().then(this.blobToBase64);
                 return doc;
             } else {
-                errMsg = 
+                this.errMsg = 
                     `Problem while making API call. ` +
                         `Error: ${results ? results.statusText : "no response"}`;
                 return false;
             }
         } catch (e) {
-            errMsg = 
+            this.errMsg = 
                 `Problem while making API call. ` + `Error: ${e.toString()}.`;
             return false;
         }
@@ -469,13 +469,13 @@ class CallApi {
                 const doc = await results.text();
                 return doc;
             } else {
-                errMsg = 
+                this.errMsg = 
                     `Problem while making API call. ` +
                         `Error: ${results ? results.statusText : "no response"}`;
                 return false;
             }
         } catch (e) {
-            errMsg = 
+            this.errMsg = 
                 `Problem while making API call. ` + `Error: ${e.toString()}.`;
             return false;
         }

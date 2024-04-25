@@ -11,6 +11,7 @@ import { Click2Agree } from "./click2agree.js"
 import { FocusedViewSigning } from "./focusedViewSigning.js";
 import { DsjsDefaultSigning } from "./dsjsDefaultSigning.js";
 import { ClassicSigning } from "./classicEmbeddedSigning.js";
+import { Logger } from "../library/logger.js";
 
 import {
     CallApi,
@@ -107,6 +108,7 @@ $(async function () {
         e.preventDefault();
         formToConfiguration();
         if (!checkToken()){return}
+        data.logger.post("Click to Agree");
         const supplemental = [
             {include: configuration.supp1include, signerMustAcknowledge: configuration.supp1signerMustAcknowledge},
             {include: configuration.supp2include, signerMustAcknowledge: configuration.supp2signerMustAcknowledge}];
@@ -127,6 +129,7 @@ $(async function () {
         e.preventDefault();
         formToConfiguration();
         if (!checkToken()){return}
+        data.logger.post("Focus View");
         const supplemental = [
             {include: configuration.supp11include, signerMustAcknowledge: configuration.supp11signerMustAcknowledge},
             {include: configuration.supp12include, signerMustAcknowledge: configuration.supp12signerMustAcknowledge}];
@@ -149,6 +152,7 @@ $(async function () {
         e.preventDefault();
         formToConfiguration();
         if (!checkToken()){return}
+        data.logger.post("docusign.js Default View");
         const supplemental = [
             {include: configuration.supp21include, signerMustAcknowledge: configuration.supp21signerMustAcknowledge},
             {include: configuration.supp22include, signerMustAcknowledge: configuration.supp22signerMustAcknowledge}];
@@ -170,6 +174,7 @@ $(async function () {
         e.preventDefault();
         formToConfiguration();
         if (!checkToken()){return}
+        data.logger.post("Classic View");
         const supplemental = [
             {include: configuration.supp31include, signerMustAcknowledge: configuration.supp31signerMustAcknowledge},
             {include: configuration.supp32include, signerMustAcknowledge: configuration.supp32signerMustAcknowledge}];
@@ -308,7 +313,7 @@ $(async function () {
         const ok = await data.userInfo.getUserInfo();
         if (ok) {
             accountId = data.userInfo.defaultAccount;
-            console.log (`ACCOUNT INFORMATION Account ID: ${accountId}, Name: ${data.userInfo.defaultAccountName}`);
+            data.logger.post('Account Information', `Account ID: ${accountId}, Name: ${data.userInfo.defaultAccountName}`);
             data.callApi = new CallApi({
                 accessToken: data.implicitGrant.accessToken,
                 apiBaseUrl: data.userInfo.defaultBaseUrl
@@ -324,6 +329,7 @@ $(async function () {
                 clientId: oAuthClientID,
                 accountId: accountId,
                 callApi: data.callApi,
+                logger: data.logger,
             })
             data.click2agree = new Click2Agree({
                 showMsg: toast,
@@ -335,6 +341,7 @@ $(async function () {
                 mainElId: "main",
                 signElId: "signing-ceremony",
                 envelopes: data.envelopes,
+                logger: data.logger,
             });
             data.focusedViewSigning = new FocusedViewSigning({
                 showMsg: toast,
@@ -346,6 +353,7 @@ $(async function () {
                 mainElId: "main",
                 signElId: "signing-ceremony",
                 envelopes: data.envelopes,
+                logger: data.logger,
             });
             data.dsjsDefaultSigning = new DsjsDefaultSigning({
                 showMsg: toast,
@@ -357,6 +365,7 @@ $(async function () {
                 mainElId: "main",
                 signElId: "signing-ceremony",
                 envelopes: data.envelopes,
+                logger: data.logger,
             });
             data.classicSigning = new ClassicSigning({
                 showMsg: toast,
@@ -369,6 +378,7 @@ $(async function () {
                 signElId: "signing-ceremony",
                 envelopes: data.envelopes,
                 CLASSIC_RESULT: CLASSIC_RESULT,
+                logger: data.logger,
             });
             data.classicSigning.showResults();
         } else {
@@ -398,6 +408,7 @@ $(async function () {
         click2agree: null,
         loadingModal: new LoadingModal(),
         modelButton1Changes: null,
+        logger: new Logger(),
     };
 
     // Register event handlers
