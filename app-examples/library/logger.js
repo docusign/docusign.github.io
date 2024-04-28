@@ -146,6 +146,7 @@ class Logger {
 
         const features = `popup=1,height=${height},width=${width},top=${top},left=${left},toolbar=1,Location=1,Directories=1,Status=1,menubar=1,Scrollbars=1,Resizable=1`;
         this.window = window.open(LOGGER_URL, features);
+        window.focus(); // show the main window
         if(!this.window || this.window.closed || 
             typeof this.window.closed=='undefined') {
              // popup blocked
@@ -153,7 +154,6 @@ class Logger {
              alert ("Please enable the popup window");
              this.stopLogging();
          }
-         this.window.focus();
     }
 
 
