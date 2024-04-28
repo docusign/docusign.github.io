@@ -165,7 +165,7 @@ $(async function () {
             {include: configuration.supp21include, signerMustAcknowledge: configuration.supp21signerMustAcknowledge},
             {include: configuration.supp22include, signerMustAcknowledge: configuration.supp22signerMustAcknowledge}];
         await data.dsjsDefaultSigning.sign({
-            templateId: templates[0].templateId,
+            templateId: getTemplateId(configuration.document2),
             supplemental: supplemental,
             name: configuration.signername2,
             email: data.userInfo.email,
