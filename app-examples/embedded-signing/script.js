@@ -97,8 +97,16 @@ $(async function () {
             name: "DevCenter example: Field Test",
             description:
                 "This DevCenter example template includes multiple types of fields.",
-            templateId: null
-        }
+            templateId: null,
+            docChoice: "default",
+        },
+        {
+            url:  "https://docusign.github.io/examples/templates/docx_responsive",
+            name: "DevCenter example: docx responsive",
+            description: "",
+            templateId: null,
+            docChoice: "docxResponsive",
+        },
     ];
 
     /***
@@ -179,7 +187,7 @@ $(async function () {
             {include: configuration.supp31include, signerMustAcknowledge: configuration.supp31signerMustAcknowledge},
             {include: configuration.supp32include, signerMustAcknowledge: configuration.supp32signerMustAcknowledge}];
         await data.classicSigning.sign({
-            templateId: templates[0].templateId,
+            templateId: getTemplateId(configuration.document3),
             supplemental: supplemental,
             name: configuration.signername3,
             email: data.userInfo.email,
@@ -206,6 +214,20 @@ $(async function () {
             await data.classicSigning.view(configuration.useIframe)
         }
     }.bind(this)
+
+    /***
+     * find the template ID for the document choice
+     */
+    function getTemplateId(docChoice) {
+        let templateId = null;
+        let defaultTemplateId;
+        templates.forEach(t => {
+            if (t.docChoice === "default") {defaultTemplateId = t.templateId}
+            if (t.docChoice === docChoice) {templateId = t.templateId}
+        })
+        if (!templateId){templateId = defaultTemplateId}
+        return templateId
+    }
 
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
