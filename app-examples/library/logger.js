@@ -5,11 +5,11 @@
  */
 
 
-import { ApiMethods } from "./apiMethods";
+import { ApiMethods } from "./apiMethods.js";
 import {
     storageGet,
     storageSet
-} from "./utilities";
+} from "./utilities.js";
 
 const NAV_ITEM_ID = "#logger";
 const LOGGER_URL = "../library/logger.html";
