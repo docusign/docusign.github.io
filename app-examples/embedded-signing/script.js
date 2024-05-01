@@ -107,6 +107,13 @@ $(async function () {
             templateId: null,
             docChoice: "docxResponsive",
         },
+        {
+            url:  "https://docusign.github.io/examples/templates/PDF_responsive",
+            name: "DevCenter example: PDF responsive",
+            description: "",
+            templateId: null,
+            docChoice: "pdfResponsive",
+        },
     ];
 
     /***

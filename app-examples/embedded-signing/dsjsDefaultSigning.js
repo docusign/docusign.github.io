@@ -47,7 +47,7 @@ class DsjsDefaultSigning {
             htmlRegResp: {responsive: true, request: this.envelopes.createHtmlRegRequest.bind(this.envelopes)},
             htmlResponsive: {responsive: false, request: this.envelopes.createHtmlResponsiveRequest.bind(this.envelopes)},
             docxResponsive: {responsive: true, request: this.envelopes.createTemplateRequest.bind(this.envelopes)},
-
+            pdfResponsive: {responsive: true, request: this.envelopes.createTemplateRequest.bind(this.envelopes)},
         }
     }
 
