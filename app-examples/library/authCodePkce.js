@@ -169,14 +169,19 @@ class AuthCodePkce {
                     body: formData
                     });
             const response = rawResponse && rawResponse.ok && await rawResponse.json();
-            this.accessToken = response.access_token;
-            this.refreshToken = response.refresh_token;
-            this.accessTokenExpires = new Date(
-                Date.now() + response.expires_in * 1000
-            );
-            console.log (`\n\n#### Access Token expiration: ${response.expires_in / 60 / 60} hours`);
-            console.log (`\n\n#### Access Token expiration datetime: ${this.accessTokenExpires}`);
-            returnStatus = "ok";
+            if (response) {
+                this.accessToken = response.access_token;
+                this.refreshToken = response.refresh_token;
+                this.accessTokenExpires = new Date(
+                    Date.now() + response.expires_in * 1000
+                );
+                console.log (`\n\n#### Access Token expiration: ${response.expires_in / 60 / 60} hours`);
+                console.log (`\n\n#### Access Token expiration datetime: ${this.accessTokenExpires}`);
+                returnStatus = "ok";    
+            } else {
+                returnStatus = "error";
+                this.err ("Could not exchange code for tokens");
+            }
             // done!
         } catch (e) {
             this.err ("Bad OAuth response");
@@ -223,7 +228,7 @@ class AuthCodePkce {
     async createCodeVerifierChallenge() {
         this.codeVerifier = this.generateCodeVerifier();
         
-        function sha256(plain) {
+        async function sha256(plain) {
             // returns promise ArrayBuffer
             const encoder = new TextEncoder();
             const data = encoder.encode(plain);
