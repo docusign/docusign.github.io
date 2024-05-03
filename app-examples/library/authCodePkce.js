@@ -140,9 +140,8 @@ class AuthCodePkce {
             return "error";
         }
 
-        // curl command to obtain the access token
-        console.log(`
-        curl -X POST -d "grant_type=authorization_code&code=${code}&client_id=${this.oAuthClientID}&code_verifier=${this.codeVerifier}" -H "origin: http://localhost" ${this.oAuthServiceProvider}${this.tokenPath}`);
+        // exchange the authorization code for the access token
+        // https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.3
 
         // Token exchange example response:
         /**
@@ -155,8 +154,6 @@ class AuthCodePkce {
             }
         */ 
 
-        // exchange the authorization code for the access token
-        // https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.3
         let returnStatus;
         try {
             const formData = new FormData();
@@ -168,7 +165,7 @@ class AuthCodePkce {
             const rawResponse = await fetch(url,
                     {mode: 'cors',
                     method: 'POST',
-                    //headers: new Headers({"X-DocuSign-SDK": "CodePen"}), 
+                    headers: new Headers({"X-DocuSign-SDK": "CodePen"}), 
                     body: formData
                     });
             const response = rawResponse && rawResponse.ok && await rawResponse.json();
@@ -177,7 +174,8 @@ class AuthCodePkce {
             this.accessTokenExpires = new Date(
                 Date.now() + response.expires_in * 1000
             );
-            console.log (`\n\n#### Access Token expiration: ${response.expires_in / 60 / 60} hours\n\n`);
+            console.log (`\n\n#### Access Token expiration: ${response.expires_in / 60 / 60} hours`);
+            console.log (`\n\n#### Access Token expiration datetime: ${this.accessTokenExpires}`);
             returnStatus = "ok";
             // done!
         } catch (e) {
