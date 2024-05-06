@@ -151,7 +151,7 @@ class FocusedViewSigning {
                     this.messageModal("Signing Session Message", msg);
                     this.logger.post("Signing session ended", msg);
                 } 
-                $(`#${this.signElId}`).addClass("hide").empty(); // Important! REMOVE the signing ceremony
+                $(`#${this.signElId}`).addClass("hide");//.empty(); // Important! REMOVE the signing ceremony
                 $(`#${this.mainElId}`).removeClass("hide");
             });
             
