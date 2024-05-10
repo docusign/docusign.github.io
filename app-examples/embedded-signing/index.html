@@ -1,32 +1,35 @@
 <!doctype html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Docusign Embedded Signing Examples</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" 
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <link rel="stylesheet" href="css.css">
-  </head>
-  <body class="bg-light d-flex flex-column vh-100">
+</head>
+
+<body class="bg-light d-flex flex-column vh-100">
     <nav class="navbar d-md-flex navbar navbar-expand-lg fixed-top bg-warning-subtle">
         <!-- https://getbootstrap.com/docs/5.3/components/navbar/ -->
         <div class="container-fluid">
-          <a class="navbar-brand" href="#">Docusign Embedded Signing Examples</a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" 
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-              <li class="nav-item">
-                <a id="logger" class="nav-link" aria-current="page"  href="#">Start Logging</a>
-              </li>
-              <li class="nav-item">
-                <a id="saveToUrl" class="nav-link" aria-current="page"  href="#">Save to URL</a>
-              </li>
-              <!--
+            <a class="navbar-brand" href="#">Docusign Embedded Signing Examples</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a id="logger" class="nav-link" aria-current="page" href="#">Start Logging</a>
+                    </li>
+                    <li class="nav-item">
+                        <a id="saveToUrl" class="nav-link" aria-current="page" href="#">Save to URL</a>
+                    </li>
+                    <!--
               <li class="nav-item">
                 <a class="nav-link" aria-current="page" disabled href="#">Show Log</a>
               </li>
@@ -42,498 +45,594 @@
                 </ul>
               </li>
             </ul>-->
-            <!--
+                    <!--
             <form class="d-flex" role="search">
               <button id="sign" class="btn btn-outline-success">Sign</button>
             </form> -->
-          </div>
+            </div>
         </div>
     </nav>
-    
+
     <div class="container-fluid d-flex flex-column flex-grow-1 p-3">
-      <div id="signing-ceremony" class="hide col-12 col-lg-10 flex-grow-1 mx-auto"></div>
-      <div id="main" class="container">
-        <ul class="nav nav-tabs nav-fill" id="myTab" role="tablist">
-          <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="click2agree-tab" data-bs-toggle="tab" data-bs-target="#click2agree-tab-pane" 
-              type="button" role="tab" aria-controls="click2agree-tab-pane" aria-selected="true">Click To Agree</button>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button class="nav-link" id="focusedView-tab" data-bs-toggle="tab" data-bs-target="#focusedView-tab-pane" 
-              type="button" role="tab" aria-controls="focusedView-tab-pane" aria-selected="false">Focused View</button>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button class="nav-link" id="dsjsDefault-tab" data-bs-toggle="tab" data-bs-target="#dsjsDefault-tab-pane" 
-              type="button" role="tab" aria-controls="dsjsDefault-tab-pane" aria-selected="false">Docusign.js Default View</button>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button class="nav-link" id="classic-tab" data-bs-toggle="tab" data-bs-target="#classic-tab-pane" 
-              type="button" role="tab" aria-controls="classic-tab-pane" aria-selected="false">Classic Embedded Signing</button>
-          </li>
-        </ul>
-        <div class="tab-content" id="myTabContent">
-          <div class="tab-pane fade show active" id="click2agree-tab-pane" role="tabpanel" aria-labelledby="click2agree-tab" tabindex="0">
-            <h2 class="mt-4">Click To Agree</h2>
-            <p>Click to Agree provides an easy, productive user interface for the signer.</p>
-            <p class="mb-0"> The signing ceremony fits within your website using
-              unobtrusive framing. The signing ceremony can include supplemental documents with 
-              <a hre="https://developers.docusign.com/docs/esign-rest-api/reference/envelopes/envelopes/create/#schema__envelopedefinition_documents_signermustacknowledge"
-              target="_blank">different levels of signer acceptance</a>:</p>
-            <ul>
-              <li><b>No Interaction</b> No recipient action is required.</li>
-              <li><b>View</b> The recipient is required to view the document.</li>
-              <li><b>Accept</b> The recipient is required to accept the document by selecting accept during signing, but is not required to view the document.</li>
-              <li><b>View Accept</b> The recipient is required to view and accept the document.</li>
+        <div id="signing-ceremony" class="hide col-12 col-lg-10 flex-grow-1 mx-auto"></div>
+        <div id="main" class="container">
+            <ul class="nav nav-tabs nav-fill" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="click2agree-tab" data-bs-toggle="tab"
+                        data-bs-target="#click2agree-tab-pane" type="button" role="tab"
+                        aria-controls="click2agree-tab-pane" aria-selected="true">Click To Agree</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="focusedView-tab" data-bs-toggle="tab"
+                        data-bs-target="#focusedView-tab-pane" type="button" role="tab"
+                        aria-controls="focusedView-tab-pane" aria-selected="false">Focused View</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="dsjsDefault-tab" data-bs-toggle="tab"
+                        data-bs-target="#dsjsDefault-tab-pane" type="button" role="tab"
+                        aria-controls="dsjsDefault-tab-pane" aria-selected="false">Docusign.js Default
+                        View</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="classic-tab" data-bs-toggle="tab" data-bs-target="#classic-tab-pane"
+                        type="button" role="tab" aria-controls="classic-tab-pane" aria-selected="false">Classic Embedded
+                        Signing</button>
+                </li>
             </ul>
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="click2agree-tab-pane" role="tabpanel"
+                    aria-labelledby="click2agree-tab" tabindex="0">
+                    <h2 class="mt-4">Click To Agree
+                        <button class="btn btn-info btn-sm ms-4" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#c2ainfo" aria-expanded="false"
+                            aria-controls="collapseExample">Information</button>
+                    </h2>
+                    <div class="collapse" id="c2ainfo">
+                        <div class="card card-body mb-3">
+                            <p>Click to Agree provides an easy, productive user interface for the signer.</p>
+                            <p>The signing ceremony fits within your website using
+                                unobtrusive framing. An optional modal ERSD can be included.</p>
+                            <p class="mb-0"> The signing ceremony can include supplemental documents with
+                                <a hre="https://developers.docusign.com/docs/esign-rest-api/reference/envelopes/envelopes/create/#schema__envelopedefinition_documents_signermustacknowledge"
+                                    target="_blank">different levels of signer acceptance</a>:
+                            </p>
+                            <ul>
+                                <li><b>No Interaction</b> No recipient action is required.</li>
+                                <li><b>View</b> The recipient is required to view the document.</li>
+                                <li><b>Accept</b> The recipient is required to accept the document by selecting accept
+                                    during signing,
+                                    but is not required to view the document.</li>
+                                <li><b>View Accept</b> The recipient is required to view and accept the document.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <form>
+                        <div> <!-- Jira C2A-3474 -->
+                            <span class="hide">Locale:
+                                <select id="locale" class="ms-2 form-select display-inline w10"
+                                    aria-label="locale select">
+                                    <option value="default">Default</option>
+                                    <option value="ar">Arabic (ar)</option>
+                                    <option value="hy">Armenian (hy)</option>
+                                    <option value="id">Bahasa Indonesia (id)</option>
+                                    <option value="ms">Bahasa Malay (ms)</option>
+                                    <option value="bg">Bulgarian (bg)</option>
+                                    <option value="zh_CN">Chinese Simplified (zh-CN)</option>
+                                    <option value="zh_TW">Chinese Traditional (zh-TW)</option>
+                                    <option value="hr">Croatian (hr)</option>
+                                    <option value="cs">Czech (cs)</option>
+                                    <option value="da">Danish (da)</option>
+                                    <option value="nl">Dutch (nl)</option>
+                                    <option value="en_GB">English UK (en-GB)</option>
+                                    <option value="en">English US (en)</option>
+                                    <option value="et">Estonian (et)</option>
+                                    <option value="fa">Farsi (fa)</option>
+                                    <option value="fi">Finnish (fi)</option>
+                                    <option value="fr">French (fr)</option>
+                                    <option value="fr_CA">French Canada (fr-CA)</option>
+                                    <option value="de">German (de)</option>
+                                    <option value="el">Greek (el)</option>
+                                    <option value="he">Hebrew (he)</option>
+                                    <option value="hi">Hindi (hi)</option>
+                                    <option value="hu">Hungarian (hu)</option>
+                                    <option value="it">Italian (it)</option>
+                                    <option value="ja">Japanese (ja)</option>
+                                    <option value="ko">Korean (ko)</option>
+                                    <option value="lv">Latvian (lv)</option>
+                                    <option value="lt">Lithuanian (lt)</option>
+                                    <option value="no">Norwegian (no)</option>
+                                    <option value="pl">Polish (pl)</option>
+                                    <option value="pt">Portuguese (pt)</option>
+                                    <option value="pt_BR">Portuguese Brasil (pt-BR)</option>
+                                    <option value="ro">Romanian (ro)</option>
+                                    <option value="ru">Russian (ru)</option>
+                                    <option value="sr">Serbian (sr)</option>
+                                    <option value="sk">Slovak (sk)</option>
+                                    <option value="sl">Slovenian (sl)</option>
+                                    <option value="es">Spanish (es)</option>
+                                    <option value="es_MX">Spanish Latin America (es-MX)</option>
+                                    <option value="sv">Swedish (sv)</option>
+                                    <option value="th">Thai (th)</option>
+                                    <option value="tr">Turkish (tr)</option>
+                                    <option value="uk">Ukrainian (uk)</option>
+                                    <option value="vi">Vietnamese (vi)</option>
+                                </select>
+                            </span> <!-- the span hides the select due to the bug -->
+                            <span class="hide">
+                                <label for="document" class="form-label">Document:</label>
+                                <select id="document" class="ms-2 form-select display-inline w19"
+                                    aria-label="Document select">
+                                    <option value="default">Default</option>
+                                    <option value="htmlRegResp">HTML regular responsive</option>
+                                    <option value="htmlResponsive">HTML smart sections responsive</option>
+                                </select>
+                            </span> <!-- responsive not working for c2a -->
+                        </div>
+                        <p>Signer name:
+                            <input id="signername" class="ms-2 me-5form-control display-inline w10" type="text"
+                                placeholder="Submit" aria-label="button text">
+                            Use a new signer name to trigger the
+                            <a href="https://support.docusign.com/s/document-item?language=en_US&rsc_301&bundleId=pik1583277475390&topicId=aqg1583277336549.html&_LANG=enus"
+                                target="_blank">ERSD agreement</a>.
+                        </p>
+                        <p>
+                            <label for="useErsd" class="form-label">Use ERSD?</label>
+                            <input id="useErsd" class="form-check-input baseline me-3 ms-1" type="checkbox">
+                        </p>
+                        <h4 class="mt-3">Supplemental Documents</h4>
+                        <div>
+                            <label for="supp1include" class="form-label">Include supplemental #1?</label>
+                            <input id="supp1include" class="form-check-input baseline me-3 ms-1" type="checkbox">
+                            Signer acceptance:
+                            <select id="supp1signerMustAcknowledge" class="ms-2 form-select display-inline w10"
+                                aria-label="Action select">
+                                <option value="no_interaction">No Interaction</option>
+                                <option value="view">View</option>
+                                <option value="accept">Accept</option>
+                                <option value="view_accept">View Accept</option>
+                            </select>
 
-            <form>
-              <div> <!-- Jira C2A-3474 -->
-                <span  class="hide">Locale: 
-                <select id="locale" class="ms-2 form-select display-inline w10" aria-label="locale select">
-                  <option value="default">Default</option>
-                  <option value="ar">Arabic (ar)</option>
-                  <option value="hy">Armenian (hy)</option>
-                  <option value="id">Bahasa Indonesia (id)</option>
-                  <option value="ms">Bahasa Malay (ms)</option>
-                  <option value="bg">Bulgarian (bg)</option>
-                  <option value="zh_CN">Chinese Simplified (zh-CN)</option>
-                  <option value="zh_TW">Chinese Traditional (zh-TW)</option>
-                  <option value="hr">Croatian (hr)</option>
-                  <option value="cs">Czech (cs)</option>
-                  <option value="da">Danish (da)</option>
-                  <option value="nl">Dutch (nl)</option>
-                  <option value="en_GB">English UK (en-GB)</option>
-                  <option value="en">English US (en)</option>
-                  <option value="et">Estonian (et)</option>
-                  <option value="fa">Farsi (fa)</option>
-                  <option value="fi">Finnish (fi)</option>
-                  <option value="fr">French (fr)</option>
-                  <option value="fr_CA">French Canada (fr-CA)</option>
-                  <option value="de">German (de)</option>
-                  <option value="el">Greek (el)</option>
-                  <option value="he">Hebrew (he)</option>
-                  <option value="hi">Hindi (hi)</option>
-                  <option value="hu">Hungarian (hu)</option>
-                  <option value="it">Italian (it)</option>
-                  <option value="ja">Japanese (ja)</option>
-                  <option value="ko">Korean (ko)</option>
-                  <option value="lv">Latvian (lv)</option>
-                  <option value="lt">Lithuanian (lt)</option>
-                  <option value="no">Norwegian (no)</option>
-                  <option value="pl">Polish (pl)</option>
-                  <option value="pt">Portuguese (pt)</option>
-                  <option value="pt_BR">Portuguese Brasil (pt-BR)</option>
-                  <option value="ro">Romanian (ro)</option>
-                  <option value="ru">Russian (ru)</option>
-                  <option value="sr">Serbian (sr)</option>
-                  <option value="sk">Slovak (sk)</option>
-                  <option value="sl">Slovenian (sl)</option>
-                  <option value="es">Spanish (es)</option>
-                  <option value="es_MX">Spanish Latin America (es-MX)</option>
-                  <option value="sv">Swedish (sv)</option>
-                  <option value="th">Thai (th)</option>
-                  <option value="tr">Turkish (tr)</option>
-                  <option value="uk">Ukrainian (uk)</option>
-                  <option value="vi">Vietnamese (vi)</option>
-                </select>
-                </span> <!-- the span hides the select due to the bug -->
-                <span class="hide">
-                <label for="document" class="form-label">Document:</label>
-                <select id="document" class="ms-2 form-select display-inline w19" aria-label="Document select">
-                  <option value="default">Default</option>
-                  <option value="htmlRegResp">HTML regular responsive</option>
-                  <option value="htmlResponsive">HTML smart sections responsive</option>
-                </select>
-              </span> <!-- responsive not working for c2a -->
-              </div>
-              <h4 class="mt-3">Supplemental Documents</h4>
-              <div>
-                <label for="supp1include" class="form-label">Include supplemental #1?</label>
-                <input id="supp1include" class="form-check-input baseline me-3 ms-1" type="checkbox">
-                Signer acceptance:
-                <select id="supp1signerMustAcknowledge" class="ms-2 form-select display-inline w10" aria-label="Action select">
-                  <option value="no_interaction">No Interaction</option>
-                  <option value="view">View</option>
-                  <option value="accept">Accept</option>
-                  <option value="view_accept">View Accept</option>
-                </select>
+                            <label for="supp2include" class="form-label ms-3">#2?</label>
+                            <input id="supp2include" class="form-check-input baseline me-3 ms-1" type="checkbox">
+                            Signer acceptance:
+                            <select id="supp2signerMustAcknowledge" class="ms-2 form-select display-inline w10"
+                                aria-label="Action select">
+                                <option value="no_interaction">No Interaction</option>
+                                <option value="view">View</option>
+                                <option value="accept">Accept</option>
+                                <option value="view_accept">View Accept</option>
+                            </select>
+                        </div>
 
-                <label for="supp2include" class="form-label ms-3">#2?</label>
-                <input id="supp2include" class="form-check-input baseline me-3 ms-1" type="checkbox">
-                Signer acceptance:
-                <select id="supp2signerMustAcknowledge" class="ms-2 form-select display-inline w10" aria-label="Action select">
-                  <option value="no_interaction">No Interaction</option>
-                  <option value="view">View</option>
-                  <option value="accept">Accept</option>
-                  <option value="view_accept">View Accept</option>
-                </select>  
-              </div>
+                        <h4 class="mt-3">The Signing Ceremony’s primary button UX can be modified by the developer</h4>
+                        <p>Example button:
+                            <button id="modelButton3" class="modelButton display-inline ms-2">
+                                <span>Submit</span>
+                            </button>
+                        </p>
+                        <div class="colorpicker">
+                            <label>Background color:</label>
+                            <input type="color" class="ms-2 me-5 form-control-color" id="backgroundColor3"
+                                data-modelbutton="modelButton3-background" value="#333333" title="Background color">
+                            <label>Text color:</label>
+                            <input type="color" class="ms-2 form-control-color" id="textColor3"
+                                data-modelbutton="modelButton3-textcolor" value="#FFFFFF" title="Text color">
+                        </div>
 
-              <h4 class="mt-3">The Signing Ceremony’s primary button UX can be modified by the developer</h4>
-              <p>Example button:
-                <button id="modelButton3" class="modelButton display-inline ms-2">
-                  <span>Submit</span>
-                </button>
-              </p>
-              <div class="colorpicker">
-                <label>Background color:</label>
-                <input type="color" class="ms-2 me-5 form-control-color" id="backgroundColor3" data-modelbutton="modelButton3-background" value="#333333" title="Background color">
-                <label>Text color:</label>
-                <input type="color" class="ms-2 form-control-color" id="textColor3" data-modelbutton="modelButton3-textcolor" value="#FFFFFF" title="Text color">
-              </div>
-
-              <a id="signClickToAgree" class="btn btn-primary btn-lg mt-3" type="button" role="button">Sign</a>
-              <!-- Only view envelopes to be signed (not completed envelopes)
+                        <a id="signClickToAgree" class="btn btn-primary btn-lg mt-3" type="button"
+                            role="button">Sign</a>
+                        <!-- Only view envelopes to be signed (not completed envelopes)
               <a class="env-view hide btn btn-secondary btn-lg ms-5 mt-3" type="button" role="button">View</a>
               <p>Sign--creates a new agreement. View--view an existing agreement.</p>  -->
-            </form>
+                    </form>
 
-          </div>
-          <div class="tab-pane fade" id="classic-tab-pane" role="tabpanel" aria-labelledby="classic-tab" tabindex="0">
-            <h2 class="mt-4">Classic Signing Ceremony</h2>
-            <form>
-              <p>The classic Docusign signing ceremony can be used standalone or within an iframe.</p>
-              <p>Standalone (no iframe) is recommended. In particular, some Docusign signing features,
-                including IDV, are not available if an iframe is used.
-              </p>
-              <p class="mb-0">Benefits of the classic signing ceremony:</p>
-              <ul>
-                <li>It shows the envelope sender’s information, including their name, photo, their company (account name)
-                  and company logo (if set for the sender's account)
-                </li>
-                <li>The sending account branding is used</li>
-                <li>Many Docusign signer authentication features can be used</li>
-              </ul>
-              <p>This demo uploads a template to your account, and then uses it for the envelope.</p>
-              <div>
-                Locale: 
-                <select id="locale3" class="ms-2 form-select display-inline w10" aria-label="locale select">
-                  <option value="default">Default</option>
-                  <option value="ar">Arabic (ar)</option>
-                  <option value="hy">Armenian (hy)</option>
-                  <option value="id">Bahasa Indonesia (id)</option>
-                  <option value="ms">Bahasa Malay (ms)</option>
-                  <option value="bg">Bulgarian (bg)</option>
-                  <option value="zh_CN">Chinese Simplified (zh-CN)</option>
-                  <option value="zh_TW">Chinese Traditional (zh-TW)</option>
-                  <option value="hr">Croatian (hr)</option>
-                  <option value="cs">Czech (cs)</option>
-                  <option value="da">Danish (da)</option>
-                  <option value="nl">Dutch (nl)</option>
-                  <option value="en_GB">English UK (en-GB)</option>
-                  <option value="en">English US (en)</option>
-                  <option value="et">Estonian (et)</option>
-                  <option value="fa">Farsi (fa)</option>
-                  <option value="fi">Finnish (fi)</option>
-                  <option value="fr">French (fr)</option>
-                  <option value="fr_CA">French Canada (fr-CA)</option>
-                  <option value="de">German (de)</option>
-                  <option value="el">Greek (el)</option>
-                  <option value="he">Hebrew (he)</option>
-                  <option value="hi">Hindi (hi)</option>
-                  <option value="hu">Hungarian (hu)</option>
-                  <option value="it">Italian (it)</option>
-                  <option value="ja">Japanese (ja)</option>
-                  <option value="ko">Korean (ko)</option>
-                  <option value="lv">Latvian (lv)</option>
-                  <option value="lt">Lithuanian (lt)</option>
-                  <option value="no">Norwegian (no)</option>
-                  <option value="pl">Polish (pl)</option>
-                  <option value="pt">Portuguese (pt)</option>
-                  <option value="pt_BR">Portuguese Brasil (pt-BR)</option>
-                  <option value="ro">Romanian (ro)</option>
-                  <option value="ru">Russian (ru)</option>
-                  <option value="sr">Serbian (sr)</option>
-                  <option value="sk">Slovak (sk)</option>
-                  <option value="sl">Slovenian (sl)</option>
-                  <option value="es">Spanish (es)</option>
-                  <option value="es_MX">Spanish Latin America (es-MX)</option>
-                  <option value="sv">Swedish (sv)</option>
-                  <option value="th">Thai (th)</option>
-                  <option value="tr">Turkish (tr)</option>
-                  <option value="uk">Ukrainian (uk)</option>
-                  <option value="vi">Vietnamese (vi)</option>
-                </select>
-                <label for="document3" class="form-label ms-5">Document:</label>
-                <select id="document3" class="ms-2 form-select display-inline w19" aria-label="Document select">
-                  <option value="default">Default</option>
-                  <option value="htmlRegResp">HTML regular responsive</option>
-                  <option value="htmlResponsive">HTML smart sections responsive</option>
-                  <option value="docxResponsive">docx file responsive</option> 
-                  <option value="pdfResponsive">PDF file responsive</option>
-                </select>
-              </div>
-              <h4 class="mt-3">Supplemental Documents</h4>
-              <div>
-                <label for="supp31include" class="form-label">Include supplemental #1?</label>
-                <input id="supp31include" class="form-check-input baseline me-3 ms-1" type="checkbox">
-                Signer acceptance:
-                <select id="supp31signerMustAcknowledge" class="ms-2 form-select display-inline w10" aria-label="Action select">
-                  <option value="no_interaction">No Interaction</option>
-                  <option value="view">View</option>
-                  <option value="accept">Accept</option>
-                  <option value="view_accept">View Accept</option>
-                </select>
+                </div>
+                <div class="tab-pane fade" id="classic-tab-pane" role="tabpanel" aria-labelledby="classic-tab"
+                    tabindex="0">
+                    <h2 class="mt-4">Classic Signing Ceremony
+                        <button class="btn btn-info btn-sm ms-4" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#classicinfo" aria-expanded="false"
+                            aria-controls="collapseExample">Information</button>
+                    </h2>
+                    <div class="collapse" id="classicinfo">
+                        <div class="card card-body mb-3">
+                            <p>The classic Docusign signing ceremony can be used standalone or within an iframe.</p>
+                            <p>Standalone (no iframe) is recommended. In particular, some Docusign signing features,
+                                including IDV, are not available if an iframe is used.
+                            </p>
+                            <p class="mb-0">Benefits of the classic signing ceremony:</p>
+                            <ul>
+                                <li>It shows the envelope sender’s information, including their name, photo, their company
+                                    (account name)
+                                    and company logo (if set for the sender's account)
+                                </li>
+                                <li>The sending account branding is used</li>
+                                <li>Many Docusign signer authentication features can be used</li>
+                            </ul>
+                            <p>This demo uploads a template to your account, and then uses it for the envelope.</p>
+                        </div>
+                    </div>
 
-                <label for="supp32include" class="form-label ms-3">#2?</label>
-                <input id="supp32include" class="form-check-input baseline me-3 ms-1" type="checkbox">
-                Signer acceptance:
-                <select id="supp32signerMustAcknowledge" class="ms-2 form-select display-inline w10" aria-label="Action select">
-                  <option value="no_interaction">No Interaction</option>
-                  <option value="view">View</option>
-                  <option value="accept">Accept</option>
-                  <option value="view_accept">View Accept</option>
-                </select>  
-              </div>
-              <p>Signer name:
-                <input id="signername3" class="ms-2 me-5form-control display-inline w10" type="text" placeholder="Submit" aria-label="button text">
-                Use a new signer name to trigger the  
-                <a href="https://support.docusign.com/s/document-item?language=en_US&rsc_301&bundleId=pik1583277475390&topicId=aqg1583277336549.html&_LANG=enus"
-                target="_blank">ERSD agreement</a>.
-              </p>
-              <p>
-                <label for="useIframe" class="form-label">Use an iframe?</label>
-                <input id="useIframe" class="form-check-input baseline me-3 ms-1" type="checkbox">
-              </p>
-              <a id="classicSign" class="btn btn-primary btn-lg mt-3" type="button" role="button">Sign</a>
-              <a class="env-view hide btn btn-secondary btn-lg ms-5 mt-3" type="button" role="button">View</a>
-              <p>Sign--creates a new agreement. View--view an existing agreement. </p>
-          </div>
-          <div class="tab-pane fade" id="focusedView-tab-pane" role="tabpanel" aria-labelledby="focusedView-tab" tabindex="0">
-            <h2 class="mt-4">Focused View</h2>
-            <form>
-              <p>Focus View provides a productive user interface for the signer. The signing ceremony fits within your website using
-                unobtrusive framing.</p>
-              <p>This demo uploads a template to your account, and then uses it for the envelope.</p>
-              <p>Signer name:
-                <input id="signername1" class="ms-2 me-5form-control display-inline w10" type="text" data-modelbutton="modelButton1-text" placeholder="Submit" aria-label="button text">
-                Use a new signer name to trigger the  
-                <a href="https://support.docusign.com/s/document-item?language=en_US&rsc_301&bundleId=pik1583277475390&topicId=aqg1583277336549.html&_LANG=enus"
-                target="_blank">ERSD agreement</a>.
-              </p>
-              <div>
-                Locale: 
-                <select id="locale1" class="ms-2 form-select display-inline w10" aria-label="locale select">
-                  <option value="default">Default</option>
-                  <option value="ar">Arabic (ar)</option>
-                  <option value="hy">Armenian (hy)</option>
-                  <option value="id">Bahasa Indonesia (id)</option>
-                  <option value="ms">Bahasa Malay (ms)</option>
-                  <option value="bg">Bulgarian (bg)</option>
-                  <option value="zh_CN">Chinese Simplified (zh-CN)</option>
-                  <option value="zh_TW">Chinese Traditional (zh-TW)</option>
-                  <option value="hr">Croatian (hr)</option>
-                  <option value="cs">Czech (cs)</option>
-                  <option value="da">Danish (da)</option>
-                  <option value="nl">Dutch (nl)</option>
-                  <option value="en_GB">English UK (en-GB)</option>
-                  <option value="en">English US (en)</option>
-                  <option value="et">Estonian (et)</option>
-                  <option value="fa">Farsi (fa)</option>
-                  <option value="fi">Finnish (fi)</option>
-                  <option value="fr">French (fr)</option>
-                  <option value="fr_CA">French Canada (fr-CA)</option>
-                  <option value="de">German (de)</option>
-                  <option value="el">Greek (el)</option>
-                  <option value="he">Hebrew (he)</option>
-                  <option value="hi">Hindi (hi)</option>
-                  <option value="hu">Hungarian (hu)</option>
-                  <option value="it">Italian (it)</option>
-                  <option value="ja">Japanese (ja)</option>
-                  <option value="ko">Korean (ko)</option>
-                  <option value="lv">Latvian (lv)</option>
-                  <option value="lt">Lithuanian (lt)</option>
-                  <option value="no">Norwegian (no)</option>
-                  <option value="pl">Polish (pl)</option>
-                  <option value="pt">Portuguese (pt)</option>
-                  <option value="pt_BR">Portuguese Brasil (pt-BR)</option>
-                  <option value="ro">Romanian (ro)</option>
-                  <option value="ru">Russian (ru)</option>
-                  <option value="sr">Serbian (sr)</option>
-                  <option value="sk">Slovak (sk)</option>
-                  <option value="sl">Slovenian (sl)</option>
-                  <option value="es">Spanish (es)</option>
-                  <option value="es_MX">Spanish Latin America (es-MX)</option>
-                  <option value="sv">Swedish (sv)</option>
-                  <option value="th">Thai (th)</option>
-                  <option value="tr">Turkish (tr)</option>
-                  <option value="uk">Ukrainian (uk)</option>
-                  <option value="vi">Vietnamese (vi)</option>
-                </select>
-                <label for="document1" class="form-label ms-5">Document:</label>
-                <select id="document1" class="ms-2 form-select display-inline w19" aria-label="Document select">
-                  <option value="default">Default</option>
-                  <option value="htmlRegResp">HTML regular responsive</option>
-                  <option value="htmlResponsive">HTML smart sections responsive</option>
-                </select>
-              </div>
-              <h4 class="mt-3">Supplemental Documents</h4>
-              <div>
-                <label for="supp11include" class="form-label">Include supplemental #1?</label>
-                <input id="supp11include" class="form-check-input baseline me-3 ms-1" type="checkbox">
-                Signer acceptance:
-                <select id="supp11signerMustAcknowledge" class="ms-2 form-select display-inline w10" aria-label="Action select">
-                  <option value="no_interaction">No Interaction</option>
-                  <option value="view">View</option>
-                  <option value="accept">Accept</option>
-                  <option value="view_accept">View Accept</option>
-                </select>
+                    <form>
+                        <div>
+                            Locale:
+                            <select id="locale3" class="ms-2 form-select display-inline w10" aria-label="locale select">
+                                <option value="default">Default</option>
+                                <option value="ar">Arabic (ar)</option>
+                                <option value="hy">Armenian (hy)</option>
+                                <option value="id">Bahasa Indonesia (id)</option>
+                                <option value="ms">Bahasa Malay (ms)</option>
+                                <option value="bg">Bulgarian (bg)</option>
+                                <option value="zh_CN">Chinese Simplified (zh-CN)</option>
+                                <option value="zh_TW">Chinese Traditional (zh-TW)</option>
+                                <option value="hr">Croatian (hr)</option>
+                                <option value="cs">Czech (cs)</option>
+                                <option value="da">Danish (da)</option>
+                                <option value="nl">Dutch (nl)</option>
+                                <option value="en_GB">English UK (en-GB)</option>
+                                <option value="en">English US (en)</option>
+                                <option value="et">Estonian (et)</option>
+                                <option value="fa">Farsi (fa)</option>
+                                <option value="fi">Finnish (fi)</option>
+                                <option value="fr">French (fr)</option>
+                                <option value="fr_CA">French Canada (fr-CA)</option>
+                                <option value="de">German (de)</option>
+                                <option value="el">Greek (el)</option>
+                                <option value="he">Hebrew (he)</option>
+                                <option value="hi">Hindi (hi)</option>
+                                <option value="hu">Hungarian (hu)</option>
+                                <option value="it">Italian (it)</option>
+                                <option value="ja">Japanese (ja)</option>
+                                <option value="ko">Korean (ko)</option>
+                                <option value="lv">Latvian (lv)</option>
+                                <option value="lt">Lithuanian (lt)</option>
+                                <option value="no">Norwegian (no)</option>
+                                <option value="pl">Polish (pl)</option>
+                                <option value="pt">Portuguese (pt)</option>
+                                <option value="pt_BR">Portuguese Brasil (pt-BR)</option>
+                                <option value="ro">Romanian (ro)</option>
+                                <option value="ru">Russian (ru)</option>
+                                <option value="sr">Serbian (sr)</option>
+                                <option value="sk">Slovak (sk)</option>
+                                <option value="sl">Slovenian (sl)</option>
+                                <option value="es">Spanish (es)</option>
+                                <option value="es_MX">Spanish Latin America (es-MX)</option>
+                                <option value="sv">Swedish (sv)</option>
+                                <option value="th">Thai (th)</option>
+                                <option value="tr">Turkish (tr)</option>
+                                <option value="uk">Ukrainian (uk)</option>
+                                <option value="vi">Vietnamese (vi)</option>
+                            </select>
+                            <label for="document3" class="form-label ms-5">Document:</label>
+                            <select id="document3" class="ms-2 form-select display-inline w19"
+                                aria-label="Document select">
+                                <option value="default">Default</option>
+                                <option value="htmlRegResp">HTML regular responsive</option>
+                                <option value="htmlResponsive">HTML smart sections responsive</option>
+                                <option value="docxResponsive">docx file responsive</option>
+                                <option value="pdfResponsive">PDF file responsive</option>
+                            </select>
+                        </div>
+                        <h4 class="mt-3">Supplemental Documents</h4>
+                        <div>
+                            <label for="supp31include" class="form-label">Include supplemental #1?</label>
+                            <input id="supp31include" class="form-check-input baseline me-3 ms-1" type="checkbox">
+                            Signer acceptance:
+                            <select id="supp31signerMustAcknowledge" class="ms-2 form-select display-inline w10"
+                                aria-label="Action select">
+                                <option value="no_interaction">No Interaction</option>
+                                <option value="view">View</option>
+                                <option value="accept">Accept</option>
+                                <option value="view_accept">View Accept</option>
+                            </select>
 
-                <label for="supp12include" class="form-label ms-3">#2?</label>
-                <input id="supp12include" class="form-check-input baseline me-3 ms-1" type="checkbox">
-                Signer acceptance:
-                <select id="supp12signerMustAcknowledge" class="ms-2 form-select display-inline w10" aria-label="Action select">
-                  <option value="no_interaction">No Interaction</option>
-                  <option value="view">View</option>
-                  <option value="accept">Accept</option>
-                  <option value="view_accept">View Accept</option>
-                </select>  
-              </div>
-              <h4 class="mt-3">The Signing Ceremony’s primary button UX can be modified by the developer</h4>
-              <p>Button position on the screen:
-                <select id="buttonPosition1" class="ms-2 me-5 form-select display-inline w10" aria-label="button position">
-                  <option value="bottom-left">Bottom Left</option>
-                  <option value="bottom-center">Bottom Center</option>
-                  <option value="bottom-right" selected>Bottom Right</option>
-                </select>
-                Example button:
-                <button id="modelButton1" class="modelButton display-inline ms-2">
-                  <span>Submit</span>
-                </button>
-              </p>
-              <p>Finish text:
-                <input id="buttonText1" class="ms-2 form-control display-inline w10" type="text" data-modelbutton="modelButton1-text" placeholder="Submit" aria-label="button text">
-              </p>
-              <div class="colorpicker">
-                <label>Background color:</label>
-                <input type="color" class="ms-2 me-5 form-control-color display-inline" id="backgroundColor1" data-modelbutton="modelButton1-background" value="#333333" title="Background color">
-                <label>Text color:</label>
-                <input type="color" class="ms-2  form-control-color display-inline" id="textColor1" data-modelbutton="modelButton1-textcolor" value="#FFFFFF" title="Text color">
-              </div>
-              <a id="signFocusView" class="btn btn-primary btn-lg mt-3" type="button" role="button">Sign</a>
-              <!-- Only view envelopes to be signed (not completed envelopes)
+                            <label for="supp32include" class="form-label ms-3">#2?</label>
+                            <input id="supp32include" class="form-check-input baseline me-3 ms-1" type="checkbox">
+                            Signer acceptance:
+                            <select id="supp32signerMustAcknowledge" class="ms-2 form-select display-inline w10"
+                                aria-label="Action select">
+                                <option value="no_interaction">No Interaction</option>
+                                <option value="view">View</option>
+                                <option value="accept">Accept</option>
+                                <option value="view_accept">View Accept</option>
+                            </select>
+                        </div>
+                        <p>Signer name:
+                            <input id="signername3" class="ms-2 me-5form-control display-inline w10" type="text"
+                                placeholder="Submit" aria-label="button text">
+                            Use a new signer name to trigger the
+                            <a href="https://support.docusign.com/s/document-item?language=en_US&rsc_301&bundleId=pik1583277475390&topicId=aqg1583277336549.html&_LANG=enus"
+                                target="_blank">ERSD agreement</a>.
+                        </p>
+                        <p>
+                            <label for="useIframe" class="form-label">Use an iframe?</label>
+                            <input id="useIframe" class="form-check-input baseline me-3 ms-1" type="checkbox">
+                        </p>
+                        <a id="classicSign" class="btn btn-primary btn-lg mt-3" type="button" role="button">Sign</a>
+                        <a class="env-view hide btn btn-secondary btn-lg ms-5 mt-3" type="button" role="button">View</a>
+                        <p>Sign--creates a new agreement. View--view an existing agreement. </p>
+                </div>
+                <div class="tab-pane fade" id="focusedView-tab-pane" role="tabpanel" aria-labelledby="focusedView-tab"
+                    tabindex="0">
+                    <h2 class="mt-4">Focused View                        
+                        <button class="btn btn-info btn-sm ms-4" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#fvinfo" aria-expanded="false"
+                        aria-controls="collapseExample">Information</button>
+                    </h2>
+                    <div class="collapse" id="fvinfo">
+                        <div class="card card-body mb-3">
+                            <p>Focus View provides a productive user interface for the signer. The signing ceremony fits
+                                within your
+                                website using
+                                unobtrusive framing.</p>
+                            <p>This demo uploads a template to your account, and then uses it for the envelope.</p>
+                            </div>
+                    </div>
+
+                    <form>
+                        <p>Signer name:
+                            <input id="signername1" class="ms-2 me-5form-control display-inline w10" type="text"
+                                data-modelbutton="modelButton1-text" placeholder="Submit" aria-label="button text">
+                            Use a new signer name to trigger the
+                            <a href="https://support.docusign.com/s/document-item?language=en_US&rsc_301&bundleId=pik1583277475390&topicId=aqg1583277336549.html&_LANG=enus"
+                                target="_blank">ERSD agreement</a>.
+                        </p>
+                        <div>
+                            Locale:
+                            <select id="locale1" class="ms-2 form-select display-inline w10" aria-label="locale select">
+                                <option value="default">Default</option>
+                                <option value="ar">Arabic (ar)</option>
+                                <option value="hy">Armenian (hy)</option>
+                                <option value="id">Bahasa Indonesia (id)</option>
+                                <option value="ms">Bahasa Malay (ms)</option>
+                                <option value="bg">Bulgarian (bg)</option>
+                                <option value="zh_CN">Chinese Simplified (zh-CN)</option>
+                                <option value="zh_TW">Chinese Traditional (zh-TW)</option>
+                                <option value="hr">Croatian (hr)</option>
+                                <option value="cs">Czech (cs)</option>
+                                <option value="da">Danish (da)</option>
+                                <option value="nl">Dutch (nl)</option>
+                                <option value="en_GB">English UK (en-GB)</option>
+                                <option value="en">English US (en)</option>
+                                <option value="et">Estonian (et)</option>
+                                <option value="fa">Farsi (fa)</option>
+                                <option value="fi">Finnish (fi)</option>
+                                <option value="fr">French (fr)</option>
+                                <option value="fr_CA">French Canada (fr-CA)</option>
+                                <option value="de">German (de)</option>
+                                <option value="el">Greek (el)</option>
+                                <option value="he">Hebrew (he)</option>
+                                <option value="hi">Hindi (hi)</option>
+                                <option value="hu">Hungarian (hu)</option>
+                                <option value="it">Italian (it)</option>
+                                <option value="ja">Japanese (ja)</option>
+                                <option value="ko">Korean (ko)</option>
+                                <option value="lv">Latvian (lv)</option>
+                                <option value="lt">Lithuanian (lt)</option>
+                                <option value="no">Norwegian (no)</option>
+                                <option value="pl">Polish (pl)</option>
+                                <option value="pt">Portuguese (pt)</option>
+                                <option value="pt_BR">Portuguese Brasil (pt-BR)</option>
+                                <option value="ro">Romanian (ro)</option>
+                                <option value="ru">Russian (ru)</option>
+                                <option value="sr">Serbian (sr)</option>
+                                <option value="sk">Slovak (sk)</option>
+                                <option value="sl">Slovenian (sl)</option>
+                                <option value="es">Spanish (es)</option>
+                                <option value="es_MX">Spanish Latin America (es-MX)</option>
+                                <option value="sv">Swedish (sv)</option>
+                                <option value="th">Thai (th)</option>
+                                <option value="tr">Turkish (tr)</option>
+                                <option value="uk">Ukrainian (uk)</option>
+                                <option value="vi">Vietnamese (vi)</option>
+                            </select>
+                            <label for="document1" class="form-label ms-5">Document:</label>
+                            <select id="document1" class="ms-2 form-select display-inline w19"
+                                aria-label="Document select">
+                                <option value="default">Default</option>
+                                <option value="htmlRegResp">HTML regular responsive</option>
+                                <option value="htmlResponsive">HTML smart sections responsive</option>
+                            </select>
+                        </div>
+                        <h4 class="mt-3">Supplemental Documents</h4>
+                        <div>
+                            <label for="supp11include" class="form-label">Include supplemental #1?</label>
+                            <input id="supp11include" class="form-check-input baseline me-3 ms-1" type="checkbox">
+                            Signer acceptance:
+                            <select id="supp11signerMustAcknowledge" class="ms-2 form-select display-inline w10"
+                                aria-label="Action select">
+                                <option value="no_interaction">No Interaction</option>
+                                <option value="view">View</option>
+                                <option value="accept">Accept</option>
+                                <option value="view_accept">View Accept</option>
+                            </select>
+
+                            <label for="supp12include" class="form-label ms-3">#2?</label>
+                            <input id="supp12include" class="form-check-input baseline me-3 ms-1" type="checkbox">
+                            Signer acceptance:
+                            <select id="supp12signerMustAcknowledge" class="ms-2 form-select display-inline w10"
+                                aria-label="Action select">
+                                <option value="no_interaction">No Interaction</option>
+                                <option value="view">View</option>
+                                <option value="accept">Accept</option>
+                                <option value="view_accept">View Accept</option>
+                            </select>
+                        </div>
+                        <h4 class="mt-3">The Signing Ceremony’s primary button UX can be modified by the developer</h4>
+                        <p>Button position on the screen:
+                            <select id="buttonPosition1" class="ms-2 me-5 form-select display-inline w10"
+                                aria-label="button position">
+                                <option value="bottom-left">Bottom Left</option>
+                                <option value="bottom-center">Bottom Center</option>
+                                <option value="bottom-right" selected>Bottom Right</option>
+                            </select>
+                            Example button:
+                            <button id="modelButton1" class="modelButton display-inline ms-2">
+                                <span>Submit</span>
+                            </button>
+                        </p>
+                        <p>Finish text:
+                            <input id="buttonText1" class="ms-2 form-control display-inline w10" type="text"
+                                data-modelbutton="modelButton1-text" placeholder="Submit" aria-label="button text">
+                        </p>
+                        <div class="colorpicker">
+                            <label>Background color:</label>
+                            <input type="color" class="ms-2 me-5 form-control-color display-inline"
+                                id="backgroundColor1" data-modelbutton="modelButton1-background" value="#333333"
+                                title="Background color">
+                            <label>Text color:</label>
+                            <input type="color" class="ms-2  form-control-color display-inline" id="textColor1"
+                                data-modelbutton="modelButton1-textcolor" value="#FFFFFF" title="Text color">
+                        </div>
+                        <a id="signFocusView" class="btn btn-primary btn-lg mt-3" type="button" role="button">Sign</a>
+                        <!-- Only view envelopes to be signed (not completed envelopes)
               <a class="env-view hide btn btn-secondary btn-lg ms-5 mt-3" type="button" role="button">View</a>
               <p>Sign--creates a new agreement. View--view an existing agreement.</p>  -->
-            </form>
-          </div>
-          <div class="tab-pane fade" id="dsjsDefault-tab-pane" role="tabpanel" aria-labelledby="dsjsDefault-tab" tabindex="0">
-            <h2 class="mt-4">Docusign.js Default View</h2>
-            <form>
-              <p>Docusign.js Default View uses the classic Docusign signing ceremony via the convenient Docusign.js library.</p>
-              <p class="mb-0">Benefits of this view:</p>
-              <ul>
-                <li>It shows the envelope sender’s information, including their name, photo, their company (account name)
-                  and company logo (if set for the sender's account)
-                </li>
-                <li>The sending account branding is used</li>
-              </ul>
-              <p class="mb-0">Benefits of using Docusign.js with the classic view:</p>
-              <ul>
-                <li>You can use the Signing Ceremony's default button UX, or set the text and background colors of the primary buttons</li>
-                <li>The Docusign.js library creates the iframe for you</li>
-                <li>The events raises a DOM event to your JS app; the redirection page is not used</li>
-              </ul>
-              <p>This demo uploads a template to your account, and then uses it for the envelope.</p>
-              <div>
-                Locale: 
-                <select id="locale2" class="ms-2 form-select display-inline w10" aria-label="locale select">
-                  <option value="default">Default</option>
-                  <option value="ar">Arabic (ar)</option>
-                  <option value="hy">Armenian (hy)</option>
-                  <option value="id">Bahasa Indonesia (id)</option>
-                  <option value="ms">Bahasa Malay (ms)</option>
-                  <option value="bg">Bulgarian (bg)</option>
-                  <option value="zh_CN">Chinese Simplified (zh-CN)</option>
-                  <option value="zh_TW">Chinese Traditional (zh-TW)</option>
-                  <option value="hr">Croatian (hr)</option>
-                  <option value="cs">Czech (cs)</option>
-                  <option value="da">Danish (da)</option>
-                  <option value="nl">Dutch (nl)</option>
-                  <option value="en_GB">English UK (en-GB)</option>
-                  <option value="en">English US (en)</option>
-                  <option value="et">Estonian (et)</option>
-                  <option value="fa">Farsi (fa)</option>
-                  <option value="fi">Finnish (fi)</option>
-                  <option value="fr">French (fr)</option>
-                  <option value="fr_CA">French Canada (fr-CA)</option>
-                  <option value="de">German (de)</option>
-                  <option value="el">Greek (el)</option>
-                  <option value="he">Hebrew (he)</option>
-                  <option value="hi">Hindi (hi)</option>
-                  <option value="hu">Hungarian (hu)</option>
-                  <option value="it">Italian (it)</option>
-                  <option value="ja">Japanese (ja)</option>
-                  <option value="ko">Korean (ko)</option>
-                  <option value="lv">Latvian (lv)</option>
-                  <option value="lt">Lithuanian (lt)</option>
-                  <option value="no">Norwegian (no)</option>
-                  <option value="pl">Polish (pl)</option>
-                  <option value="pt">Portuguese (pt)</option>
-                  <option value="pt_BR">Portuguese Brasil (pt-BR)</option>
-                  <option value="ro">Romanian (ro)</option>
-                  <option value="ru">Russian (ru)</option>
-                  <option value="sr">Serbian (sr)</option>
-                  <option value="sk">Slovak (sk)</option>
-                  <option value="sl">Slovenian (sl)</option>
-                  <option value="es">Spanish (es)</option>
-                  <option value="es_MX">Spanish Latin America (es-MX)</option>
-                  <option value="sv">Swedish (sv)</option>
-                  <option value="th">Thai (th)</option>
-                  <option value="tr">Turkish (tr)</option>
-                  <option value="uk">Ukrainian (uk)</option>
-                  <option value="vi">Vietnamese (vi)</option>
-                </select>
-                <label for="document2" class="form-label ms-5">Document:</label>
-                <select id="document2" class="ms-2 form-select display-inline w19" aria-label="Document select">
-                  <option value="default">Default</option>
-                  <option value="htmlRegResp">HTML regular responsive</option>
-                  <option value="htmlResponsive">HTML smart sections responsive</option>
-                  <option value="docxResponsive">docx file responsive</option>
-                  <option value="pdfResponsive">PDF file responsive</option>
-                </select>
-              </div>
-              <h4 class="mt-3">Supplemental Documents</h4>
-              <div>
-                <label for="supp21include" class="form-label">Include supplemental #1?</label>
-                <input id="supp21include" class="form-check-input baseline me-3 ms-1" type="checkbox">
-                Signer acceptance:
-                <select id="supp21signerMustAcknowledge" class="ms-2 form-select display-inline w10" aria-label="Action select">
-                  <option value="no_interaction">No Interaction</option>
-                  <option value="view">View</option>
-                  <option value="accept">Accept</option>
-                  <option value="view_accept">View Accept</option>
-                </select>
+                    </form>
+                </div>
+                <div class="tab-pane fade" id="dsjsDefault-tab-pane" role="tabpanel" aria-labelledby="dsjsDefault-tab"
+                    tabindex="0">
+                    <h2 class="mt-4">Docusign.js Default View
+                        <button class="btn btn-info btn-sm ms-4" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#dsjsdefaultinfo" aria-expanded="false"
+                            aria-controls="collapseExample">Information</button>
+                    </h2>
+                    <div class="collapse" id="dsjsdefaultinfo">
+                        <div class="card card-body mb-3">
+                            <p>Docusign.js Default View uses the classic Docusign signing ceremony via the convenient
+                                Docusign.js
+                                library.</p>
+                            <p class="mb-0">Benefits of this view:</p>
+                            <ul>
+                                <li>It shows the envelope sender’s information, including their name, photo, their company
+                                    (account name)
+                                    and company logo (if set for the sender's account)
+                                </li>
+                                <li>The sending account branding is used</li>
+                            </ul>
+                            <p class="mb-0">Benefits of using Docusign.js with the classic view:</p>
+                            <ul>
+                                <li>You can use the Signing Ceremony's default button UX, or set the text and background
+                                    colors of the
+                                    primary buttons</li>
+                                <li>The Docusign.js library creates the iframe for you</li>
+                                <li>The events raises a DOM event to your JS app; the redirection page is not used</li>
+                            </ul>
+                            <p>This demo uploads a template to your account, and then uses it for the envelope.</p>
+                        </div>
+                    </div>
+                    <form>
+                        <div>
+                            Locale:
+                            <select id="locale2" class="ms-2 form-select display-inline w10" aria-label="locale select">
+                                <option value="default">Default</option>
+                                <option value="ar">Arabic (ar)</option>
+                                <option value="hy">Armenian (hy)</option>
+                                <option value="id">Bahasa Indonesia (id)</option>
+                                <option value="ms">Bahasa Malay (ms)</option>
+                                <option value="bg">Bulgarian (bg)</option>
+                                <option value="zh_CN">Chinese Simplified (zh-CN)</option>
+                                <option value="zh_TW">Chinese Traditional (zh-TW)</option>
+                                <option value="hr">Croatian (hr)</option>
+                                <option value="cs">Czech (cs)</option>
+                                <option value="da">Danish (da)</option>
+                                <option value="nl">Dutch (nl)</option>
+                                <option value="en_GB">English UK (en-GB)</option>
+                                <option value="en">English US (en)</option>
+                                <option value="et">Estonian (et)</option>
+                                <option value="fa">Farsi (fa)</option>
+                                <option value="fi">Finnish (fi)</option>
+                                <option value="fr">French (fr)</option>
+                                <option value="fr_CA">French Canada (fr-CA)</option>
+                                <option value="de">German (de)</option>
+                                <option value="el">Greek (el)</option>
+                                <option value="he">Hebrew (he)</option>
+                                <option value="hi">Hindi (hi)</option>
+                                <option value="hu">Hungarian (hu)</option>
+                                <option value="it">Italian (it)</option>
+                                <option value="ja">Japanese (ja)</option>
+                                <option value="ko">Korean (ko)</option>
+                                <option value="lv">Latvian (lv)</option>
+                                <option value="lt">Lithuanian (lt)</option>
+                                <option value="no">Norwegian (no)</option>
+                                <option value="pl">Polish (pl)</option>
+                                <option value="pt">Portuguese (pt)</option>
+                                <option value="pt_BR">Portuguese Brasil (pt-BR)</option>
+                                <option value="ro">Romanian (ro)</option>
+                                <option value="ru">Russian (ru)</option>
+                                <option value="sr">Serbian (sr)</option>
+                                <option value="sk">Slovak (sk)</option>
+                                <option value="sl">Slovenian (sl)</option>
+                                <option value="es">Spanish (es)</option>
+                                <option value="es_MX">Spanish Latin America (es-MX)</option>
+                                <option value="sv">Swedish (sv)</option>
+                                <option value="th">Thai (th)</option>
+                                <option value="tr">Turkish (tr)</option>
+                                <option value="uk">Ukrainian (uk)</option>
+                                <option value="vi">Vietnamese (vi)</option>
+                            </select>
+                            <label for="document2" class="form-label ms-5">Document:</label>
+                            <select id="document2" class="ms-2 form-select display-inline w19"
+                                aria-label="Document select">
+                                <option value="default">Default</option>
+                                <option value="htmlRegResp">HTML regular responsive</option>
+                                <option value="htmlResponsive">HTML smart sections responsive</option>
+                                <option value="docxResponsive">docx file responsive</option>
+                                <option value="pdfResponsive">PDF file responsive</option>
+                            </select>
+                        </div>
+                        <h4 class="mt-3">Supplemental Documents</h4>
+                        <div>
+                            <label for="supp21include" class="form-label">Include supplemental #1?</label>
+                            <input id="supp21include" class="form-check-input baseline me-3 ms-1" type="checkbox">
+                            Signer acceptance:
+                            <select id="supp21signerMustAcknowledge" class="ms-2 form-select display-inline w10"
+                                aria-label="Action select">
+                                <option value="no_interaction">No Interaction</option>
+                                <option value="view">View</option>
+                                <option value="accept">Accept</option>
+                                <option value="view_accept">View Accept</option>
+                            </select>
 
-                <label for="supp22include" class="form-label ms-3">#2?</label>
-                <input id="supp22include" class="form-check-input baseline me-3 ms-1" type="checkbox">
-                Signer acceptance:
-                <select id="supp22signerMustAcknowledge" class="ms-2 form-select display-inline w10" aria-label="Action select">
-                  <option value="no_interaction">No Interaction</option>
-                  <option value="view">View</option>
-                  <option value="accept">Accept</option>
-                  <option value="view_accept">View Accept</option>
-                </select>  
-              </div>
-              <h4 class="mt-3">The Signing Ceremony’s primary button UX can be modified by the developer</h4>
-              <p>
-                <label for="useSigningCeremonyDefaultUx" class="form-label">Use the default button UX?</label>
-                <input id="useSigningCeremonyDefaultUx" class="form-check-input baseline me-3 ms-1 me-3" type="checkbox">
-                Example button:
-                <button id="modelButton2" class="classicButton display-inline ms-2"><span>Finish</span></button>
-              </p>
-              <div class="colorpicker">
-                <label>Background color:</label>
-                <input type="color" class="ms-2 me-5 form-control-color display-inline classicColor" id="backgroundColor2" data-modelbutton="modelButton2-background" value="#333333" title="Background color">
-                <label>Text color:</label>
-                <input type="color" class="ms-2 form-control-color display-inline classicColor" id="textColor2" data-modelbutton="modelButton2-textcolor" value="#FFFFFF" title="Text color">
-              </div>              
-              <p>Signer name:
-                <input id="signername2" class="ms-2 me-5form-control display-inline w10" type="text" placeholder="Submit" aria-label="button text">
-                Use a new signer name to trigger the  
-                <a href="https://support.docusign.com/s/document-item?language=en_US&rsc_301&bundleId=pik1583277475390&topicId=aqg1583277336549.html&_LANG=enus"
-                target="_blank">ERSD agreement</a>.
-              </p>
-              <!--
+                            <label for="supp22include" class="form-label ms-3">#2?</label>
+                            <input id="supp22include" class="form-check-input baseline me-3 ms-1" type="checkbox">
+                            Signer acceptance:
+                            <select id="supp22signerMustAcknowledge" class="ms-2 form-select display-inline w10"
+                                aria-label="Action select">
+                                <option value="no_interaction">No Interaction</option>
+                                <option value="view">View</option>
+                                <option value="accept">Accept</option>
+                                <option value="view_accept">View Accept</option>
+                            </select>
+                        </div>
+                        <h4 class="mt-3">The Signing Ceremony’s primary button UX can be modified by the developer</h4>
+                        <p>
+                            <label for="useSigningCeremonyDefaultUx" class="form-label">Use the default button
+                                UX?</label>
+                            <input id="useSigningCeremonyDefaultUx" class="form-check-input baseline me-3 ms-1 me-3"
+                                type="checkbox">
+                            Example button:
+                            <button id="modelButton2"
+                                class="classicButton display-inline ms-2"><span>Finish</span></button>
+                        </p>
+                        <div class="colorpicker">
+                            <label>Background color:</label>
+                            <input type="color" class="ms-2 me-5 form-control-color display-inline classicColor"
+                                id="backgroundColor2" data-modelbutton="modelButton2-background" value="#333333"
+                                title="Background color">
+                            <label>Text color:</label>
+                            <input type="color" class="ms-2 form-control-color display-inline classicColor"
+                                id="textColor2" data-modelbutton="modelButton2-textcolor" value="#FFFFFF"
+                                title="Text color">
+                        </div>
+                        <p>Signer name:
+                            <input id="signername2" class="ms-2 me-5form-control display-inline w10" type="text"
+                                placeholder="Submit" aria-label="button text">
+                            Use a new signer name to trigger the
+                            <a href="https://support.docusign.com/s/document-item?language=en_US&rsc_301&bundleId=pik1583277475390&topicId=aqg1583277336549.html&_LANG=enus"
+                                target="_blank">ERSD agreement</a>.
+                        </p>
+                        <!--
               <h4 class="mt-3">The Signing Ceremony’s primary button UX can be modified by the developer</h4>
               <p>Button position on the screen:
                 <select id="buttonPosition1" class="ms-2 me-5 form-select display-inline w10" aria-label="button position">
@@ -555,78 +654,81 @@
                 Text color:
                 <input type="color" class="ms-2 form-control form-control-color display-inline" id="textColor1" data-modelbutton="modelButton1-textcolor" value="#FFFFFF" title="Text color">
               </p>  -->
-              <a id="dsjsDefault" class="btn btn-primary btn-lg mt-3" type="button" role="button">Sign</a>
-              <!--  -->
-              <a class="env-view hide btn btn-secondary btn-lg ms-5 mt-3" type="button" role="button">View</a>
-              
-              <p>Sign--creates a new agreement. </p> <!-- View--view an existing agreement. </p> -->
-            </form>
-          </div>
-        </div>      
-      </div>
+                        <a id="dsjsDefault" class="btn btn-primary btn-lg mt-3" type="button" role="button">Sign</a>
+                        <!--  -->
+                        <a class="env-view hide btn btn-secondary btn-lg ms-5 mt-3" type="button" role="button">View</a>
+
+                        <p>Sign--creates a new agreement. </p> <!-- View--view an existing agreement. </p> -->
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- LOGIN MODAL -->
     <div id="modalLogin" class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
         <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">Please Login to your Demo Account</h5>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Please Login to your Demo Account</h5>
+                </div>
+                <div class="modal-body">
+                    <p>Demo Login is required.</p>
+                    <p>Why do I need to login? This is a developer example with no server component, so you
+                        login to obtain an access token for the example.</p>
+                    <p>Production apps used by signers usually obtain an access token from the app’s server.
+                        An access token can be created on the server by using the JWT Impersonation OAuth flow.</p>
+                    <p>Don't have a Demo account?
+                        <a href="https://go.docusign.com/o/sandbox/" target="_blank">Signup for a free account!</a>
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary">Demo Account Login</button>
+                </div>
             </div>
-            <div class="modal-body">
-              <p>Demo Login is required.</p>
-              <p>Why do I need to login? This is a developer example with no server component, so you 
-                 login to obtain an access token for the example.</p>
-              <p>Production apps used by signers usually obtain an access token from the app’s server. 
-                 An access token can be created on the server by using the JWT Impersonation OAuth flow.</p>
-              <p>Don't have a Demo account? 
-                <a href="https://go.docusign.com/o/sandbox/" target="_blank">Signup for a free account!</a></p>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-primary">Demo Account Login</button>
-            </div>
-          </div>
         </div>
     </div>
 
     <!-- LOGIN MODAL -->
     <div id="loading" class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
         <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">Completing Login Process</h5>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Completing Login Process</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="loader"></div>
+                </div>
             </div>
-            <div class="modal-body">
-                <div class="loader"></div>
-            </div>
-          </div>
         </div>
     </div>
 
     <!-- MESSAGE MODAL -->
     <div id="messageModal" class="modal fade" tabindex="-1">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Modal title</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <p>Modal body text goes here.</p>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
-          </div>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Modal title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Modal body text goes here.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-    
+
 
     <script src="https://js-d.docusign.com/bundle.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" 
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script src="script.js" type="module"></script>
-  </body>
+</body>
+
 </html>

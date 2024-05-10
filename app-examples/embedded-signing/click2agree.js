@@ -53,6 +53,7 @@ class Click2Agree {
         this.modelButtonId = args.modelButtonId;
         this.locale = args.locale;
         this.document = args.document;
+        this.ersd = args.ersd;
 
         // supplemental = [{include: true, signerMustAcknowledge: "view"},
         //   {include: true, signerMustAcknowledge: "accept"}];
@@ -66,6 +67,7 @@ class Click2Agree {
         this.envelopes.email = this.email;
         this.envelopes.locale = this.locale; 
         this.envelopes.responsive = this.responsive;
+        this.envelopes.ersd = this.ersd === false ? null : true;
         await this.envelopes.createNoTabsEnvRequest();
         // add supplemental docs
         await this.envelopes.updateRequest(this.supplemental)

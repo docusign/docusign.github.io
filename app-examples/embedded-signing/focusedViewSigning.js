@@ -59,6 +59,7 @@ class FocusedViewSigning {
         this.templateId = args.templateId;
         this.supplemental = args.supplemental;
         this.name = args.name;
+        this.ersd = args.ersd;
         this.email = args.email;
         this.modelButtonId = args.modelButtonId;
         this.modelButtonPosition = args.modelButtonPosition;
@@ -78,7 +79,8 @@ class FocusedViewSigning {
         this.envelopes.email = this.email;
         this.envelopes.templateId = this.templateId;
         this.envelopes.useDisclosure = this.useDisclosure; 
-        this.envelopes.locale = this.locale; 
+        this.envelopes.locale = this.locale;
+        this.envelopes.ersd = this.ersd === false ? null : true; 
         this.envelopes.responsive = this.documentChoice[this.document].responsive;
         await this.documentChoice[this.document].request();
         // add supplemental docs

@@ -299,6 +299,17 @@ class UserInfo {
         this.defaultAccount = this.accounts[this.defaultAccountIndex].accountId;
         this.defaultAccountName = this.accounts[this.defaultAccountIndex].accountName;
         this.defaultBaseUrl = this.accounts[this.defaultAccountIndex].accountBaseUrl;
+        if (this.accounts[this.defaultAccountIndex].corsError) {
+            this.errMsg =
+            `Problem while completing login. Check the CORS configuration for account ` +
+            `${this.defaultAccountName} (${this.defaultAccount}) ` +
+            `Error: ${this.accounts[this.defaultAccountIndex].corsError}`;
+            this.working = false;
+            if (this.workingUpdateF) {
+                this.workingUpdateF(this.working);
+            }
+            return false;
+        }
 
         this.working = false;
         if (this.workingUpdateF) {

@@ -86,10 +86,10 @@ function storageSet(name, val) {
     } catch {};
 }
 
-function toast (msg) {
+function toast (msg, durationSec = 5) {
     Toastify({ // https://github.com/apvarun/toastify-js/blob/master/README.md
         text: msg,
-        duration: 5000,
+        duration: 1000 * durationSec,
         close: true,
         gravity: "top", // `top` or `bottom`
         position: "center", // `left`, `center` or `right`

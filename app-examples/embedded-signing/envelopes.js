@@ -373,10 +373,14 @@ class Envelopes {
      * updateRequest munges the request 
      * 1. Adds supplemental docs
      * 2. Sets responsive bit
+     * 3. sets useDisclosure
+     *    https://developers.docusign.com/docs/esign-rest-api/reference/envelopes/envelopes/create/#schema__envelopedefinition_usedisclosure
      */
     async updateRequest(supplemental){
         await this.addSupplementalDocuments(supplemental);
         this.setResponsiveMode();
+        if (this.ersd === true || this.ersd === false) {this.request.useDisclosure = this.ersd}
+        // if null, don't add the attribute     
     }
 
     /***

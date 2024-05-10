@@ -64,11 +64,13 @@ $(async function () {
         textColor2: "#333333",
         backgroundColor3: "#000000",
         textColor3: "#FFFFFF",
+        signername: "",
         signername1: "",
         signername2: "",
         signername3: "",
         useSigningCeremonyDefaultUx: true,
         useIframe: true,
+        useErsd: false,
         locale: "default",
         locale1: "default",
         locale2: "default",
@@ -89,6 +91,7 @@ $(async function () {
         supp32include: true,
         useSigningCeremonyDefaultUx: true,
         useIframe: true, 
+        useErsd: true,
     }
 
     let templates = [
@@ -129,8 +132,9 @@ $(async function () {
             {include: configuration.supp2include, signerMustAcknowledge: configuration.supp2signerMustAcknowledge}];
         await data.click2agree.sign({
             supplemental: supplemental,
-            name: data.userInfo.name,
+            name: configuration.signername,
             email: data.userInfo.email,
+            ersd: configuration.ersd,
             modelButtonId: "modelButton3",
             locale: configuration.locale,
             document: configuration.document,
@@ -412,7 +416,8 @@ $(async function () {
             data.classicSigning.showResults();
         } else {
             // Did not complete the login
-            toast(data.userInfo.errMsg);
+            toast(data.userInfo.errMsg, 20);
+            data.logger.post('Startup Error', data.userInfo.errMsg)
         }
         return ok;
     }
@@ -477,40 +482,47 @@ $(async function () {
     } else {
         // logged in
         data.loadingModal.show("Completing Login Process")
-        await completeLogin();
-        const mode = storageGet(MODE_STORAGE); // restore mode
-        if (mode) {configuration.mode = mode}
-        let config = storageGet(CONFIG_STORAGE);
-        storageSet(CONFIG_STORAGE, false); // reset
-        if (config) {configuration = config}; // overwrite from QP
-        setFormFromConfiguration();
-        data.loadingModal.show("Logged in. Checking templates")
-        const result = await checkTemplates(templates);
-        if (result.ok) {
-            data.loadingModal.delayedHide(result.msg)
+        if (await completeLogin()) {
+            const mode = storageGet(MODE_STORAGE); // restore mode
+            if (mode) {configuration.mode = mode}
+            let config = storageGet(CONFIG_STORAGE);
+            storageSet(CONFIG_STORAGE, false); // reset
+            if (config) {configuration = config}; // overwrite from QP
+            setFormFromConfiguration();
+            data.loadingModal.show("Logged in. Checking templates")
+            const result = await checkTemplates(templates);
+            if (result.ok) {
+                data.loadingModal.delayedHide(result.msg)
+            } else {
+                data.loadingModal.hide();
+                messageModal("Templates issue", `<p>Problem while loading example templates
+                to your eSignature account:</p><p>${result.msg}</p>`)
+            }
+            $(`#signername` ).val(data.userInfo.name);
+            $(`#signername1`).val(data.userInfo.name);
+            $(`#signername2`).val(data.userInfo.name);
+            $(`#signername3`).val(data.userInfo.name);
+            data.modelButton1Changes = new ButtonOnChange({
+                buttonId: "modelButton1",
+                textId: "buttonText1",
+                backgroundColorId: "backgroundColor1",
+                textColorId: "textColor1"
+            });
+            data.modelButton2Changes = new ButtonOnChange({
+                buttonId: "modelButton2",
+                backgroundColorId: "backgroundColor2",
+                textColorId: "textColor2"
+            });
+            data.modelButton3Changes = new ButtonOnChange({
+                buttonId: "modelButton3",
+                backgroundColorId: "backgroundColor3",
+                textColorId: "textColor3"
+            });
         } else {
+            // couldn't login
             data.loadingModal.hide();
-            messageModal("Templates issue", `<p>Problem while loading example templates
-            to your eSignature account:</p><p>${result.msg}</p>`)
+            const loginModal = new bootstrap.Modal('#modalLogin');
+            loginModal.show();            
         }
-        $(`#signername1`).val(data.userInfo.name);
-        $(`#signername2`).val(data.userInfo.name);
-        $(`#signername3`).val(data.userInfo.name);
-        data.modelButton1Changes = new ButtonOnChange({
-            buttonId: "modelButton1",
-            textId: "buttonText1",
-            backgroundColorId: "backgroundColor1",
-            textColorId: "textColor1"
-        });
-        data.modelButton2Changes = new ButtonOnChange({
-            buttonId: "modelButton2",
-            backgroundColorId: "backgroundColor2",
-            textColorId: "textColor2"
-        });
-        data.modelButton3Changes = new ButtonOnChange({
-            buttonId: "modelButton3",
-            backgroundColorId: "backgroundColor3",
-            textColorId: "textColor3"
-        });
     }
 })
