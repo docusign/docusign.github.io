@@ -78,9 +78,10 @@ class ClassicSigning {
         this.supplemental = args.supplemental;
         this.name = args.name;
         this.email = args.email;
-        this.useIframe = args.useIframe;
         this.locale = args.locale;
         this.document = args.document;
+        this.outputStyle = args.outputStyle;
+        this.useIframe = args.useIframe;
 
         this.useDisclosure = true; // why demo with this off?
 
@@ -150,7 +151,7 @@ class ClassicSigning {
         const event = items[1]; // "signing_complete" or something else
 
         const msg = `<p>Result: <b>${event.replace("_", " ")}</b></p>${END_MSG}`;
-        this.messageModal("Signing Session Ended", msg);
+        this.messageModal({style: 'text', title: "Signing Session Ended", msg: msg});
         this.logger.post("Signing session ended", msg);
         
         $(`#${this.signElId}`).addClass("hide").empty(); // Important! REMOVE the signing ceremony
@@ -166,9 +167,9 @@ class ClassicSigning {
         storageSet(this.classicResult, false); // reset
 
         if (!results || !results.event) {return}
-        this.messageModal("Signing Session Ended", 
+        this.messageModal({style: 'text', title: "Signing Session Ended", msg: 
             `<p>Result: <b>${results.event.replace("_", " ")}</b></p>
-            ${END_MSG_NO_IFRAME}`);
+            ${END_MSG_NO_IFRAME}`});
         if (!results.envelopeId) {return}
         this.envelopes.name = results.name;
         this.envelopes.email = results.email;

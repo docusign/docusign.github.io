@@ -26,7 +26,9 @@ import {
     processUrlHash,
     storageGet, 
     storageSet,
-    ButtonOnChange
+    ButtonOnChange,
+    settingsGet, 
+    settingsSet
 } from "../library/utilities.js" 
 
 const CLIENT_ID = "demo";
@@ -69,7 +71,6 @@ $(async function () {
         signername2: "",
         signername3: "",
         useSigningCeremonyDefaultUx: true,
-        useIframe: true,
         useErsd: false,
         locale: "default",
         locale1: "default",
@@ -79,6 +80,10 @@ $(async function () {
         document1: "default",
         document2: "default",
         document3: "default",
+        outputStyle: "openUrl",
+        useIframe: true,
+
+
     }
     const formCheckboxes = {
         supp1include: true, 
@@ -138,6 +143,9 @@ $(async function () {
             modelButtonId: "modelButton3",
             locale: configuration.locale,
             document: configuration.document,
+            outputStyle: configuration.outputStyle,
+            useIframe: configuration.useIframe,
+    
         })
     }.bind(this)
 
@@ -161,6 +169,8 @@ $(async function () {
             modelButtonPosition: "buttonPosition1",
             locale: configuration.locale1,
             document: configuration.document1,
+            outputStyle: configuration.outputStyle,
+            useIframe: configuration.useIframe,
             });
     }.bind(this)
 
@@ -183,6 +193,8 @@ $(async function () {
             modelButtonId: "modelButton2",
             locale: configuration.locale2,
             document: configuration.document2,
+            outputStyle: configuration.outputStyle,
+            useIframe: configuration.useIframe,
             });
     }.bind(this)
 
@@ -202,9 +214,10 @@ $(async function () {
             supplemental: supplemental,
             name: configuration.signername3,
             email: data.userInfo.email,
-            useIframe: configuration.useIframe,
             locale: configuration.locale3,
             document: configuration.document3,
+            outputStyle: configuration.outputStyle,
+            useIframe: configuration.useIframe,
             });
     }.bind(this)
 
@@ -455,6 +468,8 @@ $(async function () {
     $(".env-view").click(view);
     $('#myTab [data-bs-toggle="tab"]').on('show.bs.tab', e => {
         storageSet(MODE_STORAGE, $(e.target)[0].id)}); // save the mode 
+    $('#settingsModal').on('hide.bs.modal', e => {
+        formToConfiguration(); settingsSet(configuration)});
     window.addEventListener("beforeunload", beforeUnloadHandler);
     window.addEventListener("message", envelopeCreated);
     $("#useSigningCeremonyDefaultUx").change(e => {
@@ -484,7 +499,8 @@ $(async function () {
         data.loadingModal.show("Completing Login Process")
         if (await completeLogin()) {
             const mode = storageGet(MODE_STORAGE); // restore mode
-            if (mode) {configuration.mode = mode}
+            if (mode) {configuration.mode = mode};
+            settingsGet(configuration);
             let config = storageGet(CONFIG_STORAGE);
             storageSet(CONFIG_STORAGE, false); // reset
             if (config) {configuration = config}; // overwrite from QP

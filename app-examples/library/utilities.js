@@ -3,6 +3,8 @@
 
 // Local storage account key
 const DSexampleAccountId = "DSCodePenAccountId";
+const EMBEDDED_SIGNING_SETTINGS_STORAGE = "embeddedSigningSettings";
+const EMBEDDED_SIGNING_SETTINGS = ["outputStyle", "useIframe"]; // names of the settings
 
 // Busy indicator
 const workingUpdate = function workingUpdateF(working) {
@@ -86,6 +88,23 @@ function storageSet(name, val) {
     } catch {};
 }
 
+function settingsGet(configuration) {
+    const settings = storageGet(EMBEDDED_SIGNING_SETTINGS_STORAGE);
+    if (settings) {
+        Object.keys(settings).forEach(item => {
+            configuration[item] = settings [item]
+        })
+    }
+}
+
+function settingsSet(configuration) {
+    let settings = {};
+    EMBEDDED_SIGNING_SETTINGS.forEach(item => {
+        settings[item] = configuration [item];
+    });
+    storageSet(EMBEDDED_SIGNING_SETTINGS_STORAGE, settings); // save the settings 
+}
+
 function toast (msg, durationSec = 5) {
     Toastify({ // https://github.com/apvarun/toastify-js/blob/master/README.md
         text: msg,
@@ -100,7 +119,15 @@ function toast (msg, durationSec = 5) {
       }).showToast();
 }
 
-function messageModal(title, msg) {
+/***
+ * Arguments
+ *   style: text | qr
+ *   title
+ *   msg -- can be html
+ *   url
+ * qr mode uses a template
+ */
+function messageModal({style, title, msg, url}) {
     $("#messageModal .modal-title").text(title);
     $("#messageModal .modal-body").html(msg);
     const modal = new bootstrap.Modal('#messageModal');
@@ -323,4 +350,4 @@ function adjustRows() {
 /////////////////////
 export { msg, htmlMsg, adjustRows, errMsg, workingUpdate, usingHttps, LoadingModal,
     getStoredAccountId, setStoredAccountId, toast, switchToHttps, messageModal, 
-    processUrlHash, storageGet, storageSet, ButtonOnChange};
+    processUrlHash, storageGet, storageSet, ButtonOnChange, settingsGet, settingsSet};

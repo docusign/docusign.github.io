@@ -24,6 +24,9 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
+                        <button type="button" class="btn btn-link nav-link" aria-current="page" data-bs-toggle="modal" data-bs-target="#settingsModal"></a>Settings</a>
+                    </li>
+                    <li class="nav-item">
                         <a id="logger" class="nav-link" aria-current="page" href="#">Start Logging</a>
                     </li>
                     <li class="nav-item">
@@ -344,13 +347,10 @@
                             <a href="https://support.docusign.com/s/document-item?language=en_US&rsc_301&bundleId=pik1583277475390&topicId=aqg1583277336549.html&_LANG=enus"
                                 target="_blank">ERSD agreement</a>.
                         </p>
-                        <p>
-                            <label for="useIframe" class="form-label">Use an iframe?</label>
-                            <input id="useIframe" class="form-check-input baseline me-3 ms-1" type="checkbox">
-                        </p>
                         <a id="classicSign" class="btn btn-primary btn-lg mt-3" type="button" role="button">Sign</a>
                         <a class="env-view hide btn btn-secondary btn-lg ms-5 mt-3" type="button" role="button">View</a>
                         <p>Sign--creates a new agreement. View--view an existing agreement. </p>
+                    </form>
                 </div>
                 <div class="tab-pane fade" id="focusedView-tab-pane" role="tabpanel" aria-labelledby="focusedView-tab"
                     tabindex="0">
@@ -655,9 +655,9 @@
                 <input type="color" class="ms-2 form-control form-control-color display-inline" id="textColor1" data-modelbutton="modelButton1-textcolor" value="#FFFFFF" title="Text color">
               </p>  -->
                         <a id="dsjsDefault" class="btn btn-primary btn-lg mt-3" type="button" role="button">Sign</a>
-                        <!--  -->
+                        <!--
                         <a class="env-view hide btn btn-secondary btn-lg ms-5 mt-3" type="button" role="button">View</a>
-
+                        -->
                         <p>Sign--creates a new agreement. </p> <!-- View--view an existing agreement. </p> -->
                     </form>
                 </div>
@@ -689,7 +689,7 @@
         </div>
     </div>
 
-    <!-- LOGIN MODAL -->
+    <!-- LOADING MODAL -->
     <div id="loading" class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -721,6 +721,37 @@
         </div>
     </div>
 
+    <!-- SETTINGS MODAL -->
+    <div id="settingsModal" class="modal fade" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Settings</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <h5>Output</h5>
+                        <div>
+                            <label for="outputStyle" class="form-label ms-5">Output style:</label>
+                            <select id="outputStyle" class="ms-2 form-select display-inline w19"
+                                aria-label="Output style">
+                                <option value="openUrl">Open the Signing Ceremony</option>
+                                <option value="showUrl">Show the URL</option>
+                            </select>
+                        </div>
+                        <p>
+                            <label for="useIframe" class="ms-2 form-label">Use an iframe?</label>
+                            <input id="useIframe" class="form-check-input baseline me-3 ms-1" type="checkbox">
+                        </p>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="https://js-d.docusign.com/bundle.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>

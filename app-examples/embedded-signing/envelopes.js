@@ -79,12 +79,12 @@ class Envelopes {
                     Contact DocuSign customer service to change your account's configuration.
                     Tell them you have the ONESIGNALLSIGN_NOT_SATISFIED error when you are creating a Click To Agree envelope.</p>
                     <p><small>Error message: ${this.callApi.errMsg}</small></p>`;
-                this.messageModal("Create Envelope Problem: Operation Canceled", msg);
+                this.messageModal({style: 'text', title: "Create Envelope Problem: Operation Canceled", msg: msg});
                 this.logger.post("Create Envelope Problem: Operation Canceled", msg);                    
                 return false
             }
-            this.messageModal("Create Envelope Problem: Operation Canceled", 
-            `<p>Error message: ${this.callApi.errMsg}</p>`);
+            this.messageModal({style: 'text', title: "Create Envelope Problem: Operation Canceled", msg: 
+            `<p>Error message: ${this.callApi.errMsg}</p>`});
             this.logger.post("Create Envelope Problem: Operation Canceled", `<p>Error message: ${this.callApi.errMsg}</p>`);
             return false
         }

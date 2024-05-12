@@ -70,6 +70,8 @@ class DsjsDefaultSigning {
         this.modelButtonId = args.modelButtonId;
         this.document = args.document;
         this.useDisclosure = true; // why demo with this off?
+        this.outputStyle = args.outputStyle;
+        this.useIframe = args.useIframe;
 
         // supplemental = [{include: true, signerMustAcknowledge: "view"},
         //   {include: true, signerMustAcknowledge: "accept"}];
@@ -144,11 +146,11 @@ class DsjsDefaultSigning {
                 this.signing = false;
                 if (event.type === "sessionEnd") {
                     const msg = `<p>Result: <b>${event.sessionEndType.replace("_", " ")}</b></p>${END_MSG}`;
-                    this.messageModal("Signing Session Ended", msg);
+                    this.messageModal({style: 'text', title: "Signing Session Ended", msg: msg});
                     this.logger.post("Signing session ended", msg);
                 } else {
                     msg = `<p>Event data: ${JSON.stringify(event)}</p>`;
-                    this.messageModal("Signing Session Message", msg);
+                    this.messageModal({style: 'text', title: "Signing Session Message", msg: msg});
                     this.logger.post("Signing session ended", msg);
 
                 } 
