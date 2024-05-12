@@ -712,7 +712,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <p>Modal body text goes here.</p>
+                    <div>Modal body text goes here.</div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
@@ -741,8 +741,11 @@
                             </select>
                         </div>
                         <p>
-                            <label for="useIframe" class="ms-2 form-label">Use an iframe?</label>
+                            <label for="useIframe" class="ms-2 form-label">Use an iframe/extra chrome?</label>
                             <input id="useIframe" class="form-check-input baseline me-3 ms-1" type="checkbox">
+                        </p>
+                        <p>
+                            For docusign.js signing ceremonies, if «iframe» is off, a zero chrome iframe is used.
                         </p>
                     </form>
                 </div>
@@ -760,6 +763,7 @@
         crossorigin="anonymous"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script src="script.js" type="module"></script>
+    <script type="application/javascript" src="../library/ts/qrcodegen.js"></script>
 </body>
 
 </html>

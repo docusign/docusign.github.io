@@ -12,18 +12,6 @@
 </head>
 
 <body class="bg-light d-flex flex-column vh-100">
-    <nav class="navbar d-md-flex navbar navbar-expand-lg fixed-top bg-warning-subtle">
-        <!-- https://getbootstrap.com/docs/5.3/components/navbar/ -->
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">Docusign Embedded Signing Examples</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-        </div>
-    </nav>
-
     <div class="container-fluid d-flex flex-column flex-grow-1 p-3">
         <div id="main" class="container">
             <h2>Returned Event Data</h2>
@@ -41,6 +29,7 @@
     import { processUrlHash } from "../library/utilities.js";
 
     $(async function () {
+        debugger;
         const config = processUrlHash("event");
         Object.keys(config).forEach(item => {
             const msg = `<p><b>${item} = ${config[item]}</b></p>`;

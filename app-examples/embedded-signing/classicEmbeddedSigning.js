@@ -16,8 +16,7 @@
  * public values
  */
 
-import { storageGet, storageSet } from "../library/utilities.js" 
-
+import { storageGet, storageSet } from "../library/utilities.js"; 
 
 const CLIENT_USER_ID = 1000;
 // See https://developers.docusign.com/docs/esign-rest-api/reference/envelopes/envelopeviews/createrecipient/#schema__recipientviewrequest_frameancestors
@@ -29,6 +28,8 @@ const END_MSG_NO_IFRAME = `<p>The signed documents can be seen via your develope
     was reloaded. (That is why you logged in again.) In production, you can 
     save state across page reloads by using a server-based session or 
     local storage.</p>`;
+const EXTERNAL_FRAMED_URL = "classicExternalFramed.html";
+const EXTERNAL_RETURN_URL = "classicExternalReturn.html";
 
 /***
  * Public variables
@@ -80,7 +81,7 @@ class ClassicSigning {
         this.email = args.email;
         this.locale = args.locale;
         this.document = args.document;
-        this.outputStyle = args.outputStyle;
+        this.outputStyle = args.outputStyle; // openUrl, showUrl
         this.useIframe = args.useIframe;
 
         this.useDisclosure = true; // why demo with this off?
@@ -111,8 +112,14 @@ class ClassicSigning {
         }
 
         this.loadingModal.show("Creating the recipient view");
-        const returnUrl = this.useIframe ? this.envelopes.defaultReturnUrl : 
+        let returnUrl;
+        if (this.outputStyle === "openUrl") {
+            returnUrl = this.useIframe ? this.envelopes.defaultReturnUrl : 
             this.returnUrlState();
+        } else {
+            returnUrl = 
+                `${window.location.origin}${window.location.pathname}${EXTERNAL_RETURN_URL}`;
+        }
         const recipientViewUrl = await this.envelopes.recipientView(returnUrl);
         if (!recipientViewUrl) {
             this.loadingModal.delayedHide("Could not open the recipient view");
@@ -125,15 +132,28 @@ class ClassicSigning {
     }
 
     showSigningCeremony (recipientViewUrl) {
-        if (this.useIframe) {
-            $(`#${this.mainElId}`).addClass("hide");
-            $(`#${this.signElId}`).removeClass("hide").html(`
-                <iframe src="${recipientViewUrl}" frameborder="0" 
-                    style="height:100%;width:100%" height="100%" width="100%"></iframe>`);
+        if (this.outputStyle === "openUrl") {
+            if (this.useIframe) {
+                $(`#${this.mainElId}`).addClass("hide");
+                $(`#${this.signElId}`).removeClass("hide").html(`
+                    <iframe src="${recipientViewUrl}" frameborder="0" 
+                        style="height:100%;width:100%" height="100%" width="100%"></iframe>`);
+            } else {
+                // no iframe! Redirect the entire tab
+                this.signing = false;
+                window.location = recipientViewUrl;
+            }
         } else {
-            // no iframe! Redirect the entire tab
-            this.signing = false;
-            window.location = recipientViewUrl;
+            // provide an external URL
+            let url;
+            if (this.useIframe) {
+                url = `${window.location.origin}${window.location.pathname}${EXTERNAL_FRAMED_URL}` +
+                `#url=${this.encd(recipientViewUrl)}`
+            } else {
+                url = recipientViewUrl;
+            }
+            this.loadingModal.hide();
+            this.messageModal({style: 'qr', title: "Signing Ceremony URL", url: url});
         }
     }
     
@@ -204,19 +224,20 @@ class ClassicSigning {
         this.showSigningCeremony(recipientViewUrl);
     }
     
+    encd(val) {
+        return encodeURIComponent(val).replace(/\%20/g, '+')
+    }
+
+
     /***
      * returnUrlState -- returns a url to this page including
      * key envelope state attributes: envelopeId, name, email
      */
     returnUrlState() {
-        function encd(val) {
-            return encodeURIComponent(val).replace(/\%20/g, '+')
-        }
-
         return `${window.location.origin}${window.location.pathname}` +
             `${RESULT_FLAG}&envelopeId=${this.envelopeId}` +
-            `&name=${encd(this.envelopes.name)}` +
-            `&email=${encd(this.envelopes.email)}`
+            `&name=${this.encd(this.envelopes.name)}` +
+            `&email=${this.encd(this.envelopes.email)}`
     }
 }
 

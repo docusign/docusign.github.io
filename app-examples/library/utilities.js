@@ -129,10 +129,43 @@ function toast (msg, durationSec = 5) {
  */
 function messageModal({style, title, msg, url}) {
     $("#messageModal .modal-title").text(title);
-    $("#messageModal .modal-body").html(msg);
+    if (style === "text") {
+        $("#messageModal .modal-body").html(msg);
+    } else if (style === "qr") {
+        const body = `<p>Open the URL to see the Signing Ceremony</p>`
+            + `<p><a href='${url}' target='_blank'>url</a></p>`
+            + `<div>${qrcode(url)}</div>`;
+        $("#messageModal .modal-body").html(body);
+    }
     const modal = new bootstrap.Modal('#messageModal');
     modal.show();
 }
+
+// https://github.com/nayuki/QR-Code-generator/blob/master/typescript-javascript/Readme.markdown
+function qrcode (url) {
+    const QRC = qrcodegen.QrCode;
+    const qr0 = QRC.encodeText(url, QRC.Ecc.MEDIUM);
+    const svg = toSvgString({qr: qr0, border: 4});  // See qrcodegen-input-demo
+    return svg
+}
+
+// https://github.com/nayuki/QR-Code-generator/blob/master/typescript-javascript/qrcodegen-input-demo.ts#L171C1-L189C1
+function toSvgString({qr, border, lightColor = "white", darkColor = "black"}){
+    let parts = [];
+    for (let y = 0; y < qr.size; y++) {
+        for (let x = 0; x < qr.size; x++) {
+            if (qr.getModule(x, y))
+                parts.push(`M${x + border},${y + border}h1v1h-1z`);
+        }
+    }
+    return `
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 ${qr.size + border * 2} ${qr.size + border * 2}" stroke="none">
+    <rect width="100%" height="100%" fill="${lightColor}"/>
+    <path d="${parts.join(" ")}" fill="${darkColor}"/>
+</svg>
+`;
+}
+
 
 /***
  * processUrlHash 
@@ -142,9 +175,10 @@ function messageModal({style, title, msg, url}) {
  */
 function processUrlHash(qp) {
     let hash = location.hash && location.hash.substring(1); // remove the #
-    if (!hash.length || hash.indexOf(qp) === -1) {return} // EARLY RETURN (Nothing to see here!)
-
     let search = location.search && location.search.substring(1); // rm ?
+    if ((!hash.length && !search.length) ||
+         (hash.indexOf(qp) === -1 && search.indexOf(qp) === -1)) {return} // EARLY RETURN (Nothing to see here!)
+
     // sometimes the hash includes the search (qp) part too!
     // eg '#classicResults=1&envelopeId=aaddc7b3-50d9-461f-957c-599dc9aa9d48?event=signing_complete'
     const searchInHash = hash.indexOf('?') !== -1;
