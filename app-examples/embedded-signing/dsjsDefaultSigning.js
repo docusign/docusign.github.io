@@ -22,6 +22,7 @@ const MESSAGE_ORIGINS = ["https://apps-d.docusign.com"];
 const RETURN_URL = `https://docusign.github.io/jsfiddleDsResponse.html`;
 const ROLE = "signer" // the role name used by the example templates
 const END_MSG = `<p>The signed documents can be seen via your developer (demo) account</p>`;
+const EXTERNAL_FRAMED_URL = "dsjsExternal.html";
 
 /***
  * Public variables
@@ -107,8 +108,11 @@ class DsjsDefaultSigning {
         }
 
         this.loadingModal.delayedHide("Opening the signing ceremony");
-        await this.focusedView(recipientViewUrl);
-        // window.open(recipientViewUrl, "_blank");
+        if (this.outputStyle === "openUrl") {
+            await this.focusedView(recipientViewUrl);
+        } else {
+            this.externalFocusedView(recipientViewUrl);
+        }
     }
 
     /***
@@ -169,6 +173,29 @@ class DsjsDefaultSigning {
     }
 
     /***
+     * externalFocusedView gathers tha attributes for 
+     * displaying the signing ceremony externally 
+     * in dsjsExternal.html
+     */
+    externalFocusedView(recipientViewUrl) {
+        const config = {
+            usingChrome: this.useIframe,
+            rViewUrl: recipientViewUrl,
+            dFormat: 'default',
+            bbg: $(`#${this.modelButtonId}`).css('background-color'),
+            bcl: $(`#${this.modelButtonId} span`).css('color'),
+            btext: $(`#${this.modelButtonId} span`).text(),
+            bpos: $(`#${this.modelButtonPosition}`).val(),
+            clientId: this.clientId,
+        }
+        this.signing = false;
+        const url = `${window.location.origin}${window.location.pathname}${EXTERNAL_FRAMED_URL}`
+            + this.encodeAll(config);
+        this.loadingModal.hide();
+        this.messageModal({style: 'qr', title: "Signing Ceremony URL", url: url, usingChrome: this.useIframe});
+    }
+
+    /***
      * view shows an existing envelope
      * (that uses the same recipient)
      */
@@ -191,6 +218,20 @@ class DsjsDefaultSigning {
 
         this.loadingModal.delayedHide("Opening the view");
         await this.focusedView(recipientViewUrl);
+    }
+
+    encd(val) {
+        return encodeURIComponent(val).replace(/\%20/g, '+')
+    }
+
+    encodeAll(config) {
+        let qp = "";
+        Object.keys(config).forEach(key => {
+            qp += `&${this.encd(key)}=${this.encd(config[key])}`
+        })
+        // replace the first character with #
+        qp = qp.replace("&", "#"); // replaces the first one
+        return qp;
     }    
 }
 

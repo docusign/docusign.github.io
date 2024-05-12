@@ -15,6 +15,7 @@
  * public values
  */
 const END_MSG = `<p>The signed documents can be seen via your developer (demo) account</p>`;
+const EXTERNAL_FRAMED_URL = "dsjsExternal.html";
 
 /***
  * Public variables
@@ -90,14 +91,19 @@ class Click2Agree {
         }
 
         this.loadingModal.delayedHide("Opening the signing ceremony");
-        await this.focusedViewClickToAgree(recipientViewUrl);
+        if (this.outputStyle === "openUrl") {
+            await this.focusedView(recipientViewUrl);
+        } else {
+            this.externalFocusedView(recipientViewUrl);
+        }
+
     }
 
     /***
      * focusedViewClickToAgree, in the browser, calls the DocuSign.js library
      * to display the signing ceremony in an iframe
      */
-    async focusedViewClickToAgree(recipientViewUrl) {
+    async focusedView(recipientViewUrl) {
         const signingConfiguration = {
             url: recipientViewUrl,
             displayFormat: 'focused',
@@ -159,6 +165,30 @@ class Click2Agree {
     }
 
     /***
+     * externalFocusedView gathers tha attributes for 
+     * displaying the signing ceremony externally 
+     * in dsjsExternal.html
+     */
+    externalFocusedView(recipientViewUrl) {
+        const config = {
+            usingChrome: this.useIframe,
+            rViewUrl: recipientViewUrl,
+            dFormat: 'focused',
+            bbg: $(`#${this.modelButtonId}`).css('background-color'),
+            bcl: $(`#${this.modelButtonId} span`).css('color'),
+            //btext: $(`#${this.modelButtonId} span`).text(),
+            btext: "Do it!",
+            bpos: $(`#${this.modelButtonPosition}`).val(),
+            clientId: this.clientId,
+        }
+        this.signing = false;
+        const url = `${window.location.origin}${window.location.pathname}${EXTERNAL_FRAMED_URL}`
+            + this.encodeAll(config);
+        this.loadingModal.hide();
+        this.messageModal({style: 'qr', title: "Signing Ceremony URL", url: url, usingChrome: this.useIframe});
+    }
+
+    /***
      * view shows an existing envelope
      * (that uses the same recipient)
      */
@@ -181,6 +211,20 @@ class Click2Agree {
 
         this.loadingModal.delayedHide("Opening the view");
         await this.focusedViewClickToAgree(recipientViewUrl);
+    }
+    
+    encd(val) {
+        return encodeURIComponent(val).replace(/\%20/g, '+')
+    }
+
+    encodeAll(config) {
+        let qp = "";
+        Object.keys(config).forEach(key => {
+            qp += `&${this.encd(key)}=${this.encd(config[key])}`
+        })
+        // replace the first character with #
+        qp = qp.replace("&", "#"); // replaces the first one
+        return qp;
     }
 }
 export { Click2Agree };

@@ -62,7 +62,6 @@
             $("nav").remove();
             $(".p-3").removeClass("p-3");
             $("#signing-ceremony").removeClass("col-lg-10");
-
         } 
 
         // the following is from focusedViewSigning#focusedView
@@ -105,8 +104,7 @@
                     const msg = `<p>Event data: ${JSON.stringify(event)}</p>`;
                     message({style: 'text', title: "Signing Session Message", msg: msg});
                 } 
-                $(`#${this.signElId}`).addClass("hide");//.empty(); // Important! REMOVE the signing ceremony
-                $(`#${this.mainElId}`).removeClass("hide");
+                $(`#signing-ceremony`).empty(); // Important! REMOVE the signing ceremony
             });
             
             // Open the signing ceremony

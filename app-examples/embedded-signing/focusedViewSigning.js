@@ -239,7 +239,6 @@ class FocusedViewSigning {
         qp = qp.replace("&", "#"); // replaces the first one
         return qp;
     }
-
 }
 
 export { FocusedViewSigning };
