@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="css.css">
 </head>
 
-<body class="bg-light d-flex flex-column vh-100">
+<body class="hide bg-light d-flex flex-column vh-100">
         <nav class="navbar d-md-flex navbar navbar-expand-lg fixed-top bg-warning-subtle">
             <!-- https://getbootstrap.com/docs/5.3/components/navbar/ -->
             <div class="container-fluid">
@@ -63,6 +63,7 @@
             $(".p-3").removeClass("p-3");
             $("#signing-ceremony").removeClass("col-lg-10");
         } 
+        $("body").removeClass("hide");
 
         // the following is from focusedViewSigning#focusedView
         const signingConfiguration = {
