@@ -153,7 +153,7 @@ class ClassicSigning {
                 url = recipientViewUrl;
             }
             this.loadingModal.hide();
-            this.messageModal({style: 'qr', title: "Signing Ceremony URL", url: url});
+            this.messageModal({style: 'qr', title: "Signing Ceremony URL", url: url, usingChrome: this.useIframe});
         }
     }
     
@@ -227,7 +227,6 @@ class ClassicSigning {
     encd(val) {
         return encodeURIComponent(val).replace(/\%20/g, '+')
     }
-
 
     /***
      * returnUrlState -- returns a url to this page including

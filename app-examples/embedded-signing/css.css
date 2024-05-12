@@ -1,4 +1,4 @@
-body {
+body.bg-light {
   padding-top: 56px; /* Provide room for top NavBar */
   flex-direction: column;
 }
@@ -7,6 +7,7 @@ body {
 .display-inline {display: inline;}
 .w10 {width: 10em;}
 .w19 {width: 19em;}
+.vh-99 {height: 99vh;}
 .baseline {vertical-align: baseline;}
 .colorpicker {
   display: flex;

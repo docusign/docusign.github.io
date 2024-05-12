@@ -125,15 +125,22 @@ function toast (msg, durationSec = 5) {
  *   title
  *   msg -- can be html
  *   url
+ *   usingChrome -- 1 means signing ceremony includes app chrome. Not recommended for mobile.
  * qr mode uses a template
  */
-function messageModal({style, title, msg, url}) {
+function messageModal({style, title, msg, url, usingChrome}) {
     $("#messageModal .modal-title").text(title);
     if (style === "text") {
         $("#messageModal .modal-body").html(msg);
     } else if (style === "qr") {
+        const chrome = usingChrome ? 
+            `<p><small> Note: this will not be the best mobile experience because you’re including application “chrome” with the signing ceremony.
+            Use the <b>Settings</b> (top navigation) to turn off the iframe/chrome setting.</small></p>`
+            : "";
         const body = `<p>Open the URL to see the Signing Ceremony</p>`
             + `<p><a href='${url}' target='_blank'>url</a></p>`
+            + `<p>Sign on your mobile by opening the URL via the QR Code</p>`
+            + chrome
             + `<div>${qrcode(url)}</div>`;
         $("#messageModal .modal-body").html(body);
     }
@@ -145,12 +152,12 @@ function messageModal({style, title, msg, url}) {
 function qrcode (url) {
     const QRC = qrcodegen.QrCode;
     const qr0 = QRC.encodeText(url, QRC.Ecc.MEDIUM);
-    const svg = toSvgString({qr: qr0, border: 4});  // See qrcodegen-input-demo
+    const svg = toSvgString({qr: qr0});  // See qrcodegen-input-demo
     return svg
 }
 
 // https://github.com/nayuki/QR-Code-generator/blob/master/typescript-javascript/qrcodegen-input-demo.ts#L171C1-L189C1
-function toSvgString({qr, border, lightColor = "white", darkColor = "black"}){
+function toSvgString({qr, border = 0, lightColor = "white", darkColor = "black"}){
     let parts = [];
     for (let y = 0; y < qr.size; y++) {
         for (let x = 0; x < qr.size; x++) {

@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Docusign Embedded Signing Examples</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <link rel="stylesheet" href="css.css">
+</head>
+
+<body class="bg-light d-flex flex-column vh-100">
+        <nav class="navbar d-md-flex navbar navbar-expand-lg fixed-top bg-warning-subtle">
+            <!-- https://getbootstrap.com/docs/5.3/components/navbar/ -->
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">Docusign Embedded Signing Examples</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
+        </nav>
+
+        <div class="container-fluid d-flex flex-column flex-grow-1 p-3">
+            <div id="message"></div>
+            <div id="signing-ceremony" class="hide col-12 col-lg-10 flex-grow-1 mx-auto"></div>
+        </div>
+
+    <script src="https://js-d.docusign.com/bundle.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <script type="module">
+    import { processUrlHash } from "../library/utilities.js";
+
+    $(async function () {
+        /***
+         * config.
+         *    usingChrome: -- show extra chrome?
+         *    rViewUrl:
+         *    dFormat: 
+         *    bbg: 
+         *    bcl: 
+         *    btext: 
+         *    bpos: 
+         *    clientId: 
+         * 
+         */
+
+         const END_MSG = `<p>The signed documents can be seen via your developer (demo) account</p>` +
+            `<p>You can close this tab.</p>`;
+         const config = processUrlHash("usingChrome");
+
+        // if no chrome, then rejigger the dom
+        if (!config.usingChrome) {
+            $("body").removeClass(["bg-light", "vh-100"]).addClass("vh-99");
+            $("nav").remove();
+            $(".p-3").removeClass("p-3");
+            $("#signing-ceremony").removeClass("col-lg-10");
+
+        } 
+
+        // the following is from focusedViewSigning#focusedView
+        const signingConfiguration = {
+            url: config.rViewUrl,
+            displayFormat: config.dFormat,
+            style: {
+                /** High-level variables that mirror our existing branding APIs. Reusing the branding name here for familiarity. */
+                branding: {
+                    primaryButton: {
+                        /** Background color of primary button */
+                        backgroundColor: config.bbg,
+                        /** Text color of primary button */
+                        color: config.bcl,
+                    }
+                },
+                /** High-level components we allow specific overrides for */
+                signingNavigationButton: {
+                    finishText: config.btext, // default is Submit
+                    // 'bottom-left'|'bottom-center'|'bottom-right',  default: bottom-right
+                    position: config.bpos
+                }
+            }
+        }
+
+        try {
+            const docusign = await window.DocuSign.loadDocuSign(this.clientId);
+            const signing = docusign.signing(signingConfiguration);
+                
+            /** Event handlers **/
+            signing.on('ready', (event) => {console.log('UI is rendered')});
+            signing.on('sessionEnd', (event) => {
+                /** The event here denotes what caused the sessionEnd to trigger, such as signing_complete, ttl_expired etc../ */
+                console.log('sessionend', event);
+                // Event: { returnUrl: url, type: "sessionEnd", sessionEndType: "signing_complete"}
+                if (event.type === "sessionEnd") {
+                    const msg = `<p>Result: <b>${event.sessionEndType.replace("_", " ")}</b></p>${END_MSG}`;
+                    message({style: 'text', title: "Signing Session Ended", msg: msg});
+                } else {
+                    const msg = `<p>Event data: ${JSON.stringify(event)}</p>`;
+                    message({style: 'text', title: "Signing Session Message", msg: msg});
+                } 
+                $(`#${this.signElId}`).addClass("hide");//.empty(); // Important! REMOVE the signing ceremony
+                $(`#${this.mainElId}`).removeClass("hide");
+            });
+            
+            // Open the signing ceremony
+            $(`#signing-ceremony`).removeClass("hide");
+            signing.mount(`#signing-ceremony`);
+        } catch (error) {
+              // Any configuration or API limits will be caught here
+              console.log("### ERROR from docusign.js");
+              console.log(error);
+        }
+
+        function message ({style, title, msg}){
+            $(`#message`).html(`
+                <h3>${title}</h3>
+                <p>${msg}</p>    
+            `
+            )
+        }
+    })
+    </script>
+</body>
+
+</html>

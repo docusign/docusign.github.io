@@ -17,6 +17,7 @@
  */
 const ROLE = "signer" // the role name used by the example templates
 const END_MSG = `<p>The signed documents can be seen via your developer (demo) account</p>`;
+const EXTERNAL_FRAMED_URL = "dsjsExternal.html";
 
 /***
  * Public variables
@@ -104,13 +105,18 @@ class FocusedViewSigning {
         }
 
         this.loadingModal.delayedHide("Opening the signing ceremony");
-        await this.focusedView(recipientViewUrl);
-        // window.open(recipientViewUrl, "_blank");
+        if (this.outputStyle === "openUrl") {
+            await this.focusedView(recipientViewUrl);
+        } else {
+            this.externalFocusedView(recipientViewUrl);
+        }
     }
 
     /***
      * focusedView, in the browser, calls the DocuSign.js library
      * to display the signing ceremony in an iframe
+     * 
+     * Remember to also make changes in dsjsExternal.html
      */
     async focusedView(recipientViewUrl) {
         const signingConfiguration = {
@@ -165,8 +171,34 @@ class FocusedViewSigning {
             // Open the signing ceremony
             signing.mount(`#${this.signElId}`);
         } catch (error) {
-              // Any configuration or API limits will be caught here
+            // Any configuration or API limits will be caught here
+            console.log("### ERROR from docusign.js");
+            console.log(error);
+              
         }
+    }
+
+    /***
+     * externalFocusedView gathers tha attributes for 
+     * displaying the signing ceremony externally 
+     * in dsjsExternal.html
+     */
+    externalFocusedView(recipientViewUrl) {
+        const config = {
+            usingChrome: this.useIframe,
+            rViewUrl: recipientViewUrl,
+            dFormat: 'focused',
+            bbg: $(`#${this.modelButtonId}`).css('background-color'),
+            bcl: $(`#${this.modelButtonId} span`).css('color'),
+            btext: $(`#${this.modelButtonId} span`).text(),
+            bpos: $(`#${this.modelButtonPosition}`).val(),
+            clientId: this.clientId,
+        }
+        this.signing = false;
+        const url = `${window.location.origin}${window.location.pathname}${EXTERNAL_FRAMED_URL}`
+            + this.encodeAll(config);
+        this.loadingModal.hide();
+        this.messageModal({style: 'qr', title: "Signing Ceremony URL", url: url, usingChrome: this.useIframe});
     }
 
     /***
@@ -193,6 +225,21 @@ class FocusedViewSigning {
         this.loadingModal.delayedHide("Opening the view");
         await this.focusedView(recipientViewUrl);
     }
+
+    encd(val) {
+        return encodeURIComponent(val).replace(/\%20/g, '+')
+    }
+
+    encodeAll(config) {
+        let qp = "";
+        Object.keys(config).forEach(key => {
+            qp += `&${this.encd(key)}=${this.encd(config[key])}`
+        })
+        // replace the first character with #
+        qp = qp.replace("&", "#"); // replaces the first one
+        return qp;
+    }
+
 }
 
 export { FocusedViewSigning };
