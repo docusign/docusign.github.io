@@ -466,6 +466,8 @@ $(async function () {
     $("#classicSign").click(classicSign);
     $("#saveToUrl").click(saveToUrl);
     $(".env-view").click(view);
+    $(".info").click(e => {$(e.target).text($(e.target).text() === "Information" ? 
+        "Close Information" : "Information")});
     $('#myTab [data-bs-toggle="tab"]').on('show.bs.tab', e => {
         storageSet(MODE_STORAGE, $(e.target)[0].id)}); // save the mode 
     $('#settingsModal').on('hide.bs.modal', e => {

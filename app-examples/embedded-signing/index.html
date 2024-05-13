@@ -86,7 +86,7 @@
                 <div class="tab-pane fade show active" id="click2agree-tab-pane" role="tabpanel"
                     aria-labelledby="click2agree-tab" tabindex="0">
                     <h2 class="mt-4">Click To Agree
-                        <button class="btn btn-info btn-sm ms-4" type="button" data-bs-toggle="collapse"
+                        <button class="btn btn-info btn-sm ms-4 info" type="button" data-bs-toggle="collapse"
                             data-bs-target="#c2ainfo" aria-expanded="false"
                             aria-controls="collapseExample">Information</button>
                     </h2>
@@ -95,6 +95,11 @@
                             <p>Click to Agree provides an easy, productive user interface for the signer.</p>
                             <p>The signing ceremony fits within your website using
                                 unobtrusive framing. An optional modal ERSD can be included.</p>
+                            <p class="mb-0">Benefits of using Docusign.js:</p>
+                            <ul>
+                                <li>The Docusign.js library creates the iframe for you</li>
+                                <li>The events raise a DOM event to your JS app; the redirection page is not used</li>
+                            </ul>
                             <p class="mb-0"> The signing ceremony can include supplemental documents with
                                 <a hre="https://developers.docusign.com/docs/esign-rest-api/reference/envelopes/envelopes/create/#schema__envelopedefinition_documents_signermustacknowledge"
                                     target="_blank">different levels of signer acceptance</a>:
@@ -110,6 +115,13 @@
                         </div>
                     </div>
                     <form>
+                        <p>Signer name:
+                            <input id="signername" class="ms-2 me-5form-control display-inline w10" type="text"
+                                placeholder="Submit" aria-label="button text">
+                            Use a new signer name to trigger the
+                            <a href="https://support.docusign.com/s/document-item?language=en_US&rsc_301&bundleId=pik1583277475390&topicId=aqg1583277336549.html&_LANG=enus"
+                                target="_blank">ERSD agreement</a>.
+                        </p>
                         <div> <!-- Jira C2A-3474 -->
                             <span class="hide">Locale:
                                 <select id="locale" class="ms-2 form-select display-inline w10"
@@ -171,13 +183,6 @@
                                 </select>
                             </span> <!-- responsive not working for c2a -->
                         </div>
-                        <p>Signer name:
-                            <input id="signername" class="ms-2 me-5form-control display-inline w10" type="text"
-                                placeholder="Submit" aria-label="button text">
-                            Use a new signer name to trigger the
-                            <a href="https://support.docusign.com/s/document-item?language=en_US&rsc_301&bundleId=pik1583277475390&topicId=aqg1583277336549.html&_LANG=enus"
-                                target="_blank">ERSD agreement</a>.
-                        </p>
                         <p>
                             <label for="useErsd" class="form-label">Use ERSD?</label>
                             <input id="useErsd" class="form-check-input baseline me-3 ms-1" type="checkbox">
@@ -233,7 +238,7 @@
                 <div class="tab-pane fade" id="classic-tab-pane" role="tabpanel" aria-labelledby="classic-tab"
                     tabindex="0">
                     <h2 class="mt-4">Classic Signing Ceremony
-                        <button class="btn btn-info btn-sm ms-4" type="button" data-bs-toggle="collapse"
+                        <button class="btn btn-info btn-sm ms-4 info" type="button" data-bs-toggle="collapse"
                             data-bs-target="#classicinfo" aria-expanded="false"
                             aria-controls="collapseExample">Information</button>
                     </h2>
@@ -257,6 +262,13 @@
                     </div>
 
                     <form>
+                        <p>Signer name:
+                            <input id="signername3" class="ms-2 me-5form-control display-inline w10" type="text"
+                                placeholder="Submit" aria-label="button text">
+                            Use a new signer name to trigger the
+                            <a href="https://support.docusign.com/s/document-item?language=en_US&rsc_301&bundleId=pik1583277475390&topicId=aqg1583277336549.html&_LANG=enus"
+                                target="_blank">ERSD agreement</a>.
+                        </p>
                         <div>
                             Locale:
                             <select id="locale3" class="ms-2 form-select display-inline w10" aria-label="locale select">
@@ -340,13 +352,6 @@
                                 <option value="view_accept">View Accept</option>
                             </select>
                         </div>
-                        <p>Signer name:
-                            <input id="signername3" class="ms-2 me-5form-control display-inline w10" type="text"
-                                placeholder="Submit" aria-label="button text">
-                            Use a new signer name to trigger the
-                            <a href="https://support.docusign.com/s/document-item?language=en_US&rsc_301&bundleId=pik1583277475390&topicId=aqg1583277336549.html&_LANG=enus"
-                                target="_blank">ERSD agreement</a>.
-                        </p>
                         <a id="classicSign" class="btn btn-primary btn-lg mt-3" type="button" role="button">Sign</a>
                         <a class="env-view hide btn btn-secondary btn-lg ms-5 mt-3" type="button" role="button">View</a>
                         <p>Sign--creates a new agreement. View--view an existing agreement. </p>
@@ -355,7 +360,7 @@
                 <div class="tab-pane fade" id="focusedView-tab-pane" role="tabpanel" aria-labelledby="focusedView-tab"
                     tabindex="0">
                     <h2 class="mt-4">Focused View                        
-                        <button class="btn btn-info btn-sm ms-4" type="button" data-bs-toggle="collapse"
+                        <button class="btn btn-info btn-sm ms-4 info" type="button" data-bs-toggle="collapse"
                         data-bs-target="#fvinfo" aria-expanded="false"
                         aria-controls="collapseExample">Information</button>
                     </h2>
@@ -365,6 +370,13 @@
                                 within your
                                 website using
                                 unobtrusive framing.</p>
+                            <p class="mb-0">Benefits of using Docusign.js:</p>
+                            <ul>
+                                <li>You can use the Signing Ceremony's default button UX, or set the text and background
+                                    colors of the primary buttons</li>
+                                <li>The Docusign.js library creates the iframe for you</li>
+                                <li>The events raise a DOM event to your JS app; the redirection page is not used</li>
+                            </ul>
                             <p>This demo uploads a template to your account, and then uses it for the envelope.</p>
                             </div>
                     </div>
@@ -493,7 +505,7 @@
                 <div class="tab-pane fade" id="dsjsDefault-tab-pane" role="tabpanel" aria-labelledby="dsjsDefault-tab"
                     tabindex="0">
                     <h2 class="mt-4">Docusign.js Default View
-                        <button class="btn btn-info btn-sm ms-4" type="button" data-bs-toggle="collapse"
+                        <button class="btn btn-info btn-sm ms-4 info" type="button" data-bs-toggle="collapse"
                             data-bs-target="#dsjsdefaultinfo" aria-expanded="false"
                             aria-controls="collapseExample">Information</button>
                     </h2>
@@ -516,12 +528,19 @@
                                     colors of the
                                     primary buttons</li>
                                 <li>The Docusign.js library creates the iframe for you</li>
-                                <li>The events raises a DOM event to your JS app; the redirection page is not used</li>
+                                <li>The events raise a DOM event to your JS app; the redirection page is not used</li>
                             </ul>
                             <p>This demo uploads a template to your account, and then uses it for the envelope.</p>
                         </div>
                     </div>
                     <form>
+                        <p>Signer name:
+                            <input id="signername2" class="ms-2 me-5form-control display-inline w10" type="text"
+                                placeholder="Submit" aria-label="button text">
+                            Use a new signer name to trigger the
+                            <a href="https://support.docusign.com/s/document-item?language=en_US&rsc_301&bundleId=pik1583277475390&topicId=aqg1583277336549.html&_LANG=enus"
+                                target="_blank">ERSD agreement</a>.
+                        </p>
                         <div>
                             Locale:
                             <select id="locale2" class="ms-2 form-select display-inline w10" aria-label="locale select">
@@ -615,7 +634,7 @@
                             <button id="modelButton2"
                                 class="classicButton display-inline ms-2"><span>Finish</span></button>
                         </p>
-                        <div class="colorpicker">
+                        <p class="colorpicker">
                             <label>Background color:</label>
                             <input type="color" class="ms-2 me-5 form-control-color display-inline classicColor"
                                 id="backgroundColor2" data-modelbutton="modelButton2-background" value="#333333"
@@ -624,13 +643,6 @@
                             <input type="color" class="ms-2 form-control-color display-inline classicColor"
                                 id="textColor2" data-modelbutton="modelButton2-textcolor" value="#FFFFFF"
                                 title="Text color">
-                        </div>
-                        <p>Signer name:
-                            <input id="signername2" class="ms-2 me-5form-control display-inline w10" type="text"
-                                placeholder="Submit" aria-label="button text">
-                            Use a new signer name to trigger the
-                            <a href="https://support.docusign.com/s/document-item?language=en_US&rsc_301&bundleId=pik1583277475390&topicId=aqg1583277336549.html&_LANG=enus"
-                                target="_blank">ERSD agreement</a>.
                         </p>
                         <!--
               <h4 class="mt-3">The Signing Ceremony’s primary button UX can be modified by the developer</h4>
