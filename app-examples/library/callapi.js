@@ -438,6 +438,40 @@ class CallApi {
     }
 
     /*
+     * GET an image and return it as a dataUrl.
+     */
+    async getImageDataUrl(apiMethod) {
+        try {
+            let url = `${this.apiBaseUrl}${apiMethod}`;
+            let headersReq = {
+                Accept: `application/json`,
+                Authorization: `Bearer ${this.accessToken}`,
+                "Content-Type": "application/json",
+                "X-DocuSign-SDK": "CodePen v2",
+                Accept: `*/*`
+            }
+
+            let results = await fetch(url, {
+                mode: "cors",
+                headers: new Headers(headersReq)
+            });
+            if (results && results.ok) {
+                const image = await results.blob().then(this.blobToDataUrl);
+                return image;
+            } else {
+                this.errMsg = 
+                    `Problem while making API call. ` +
+                        `Error: ${results ? results.statusText : "no response"}`;
+                return false;
+            }
+        } catch (e) {
+            this.errMsg = 
+                `Problem while making API call. ` + `Error: ${e.toString()}.`;
+            return false;
+        }
+    }
+
+    /*
      * GET a document from a CORS source and return it as a string
      * with BASE64 encoding.
      */
@@ -503,6 +537,16 @@ class CallApi {
         return new Promise((resolve) => {
             reader.onloadend = () => {
                 resolve(reader.result.split(",")[1]);
+            };
+        });
+    }    
+
+    async blobToDataUrl(blob) {
+        const reader = new FileReader();
+        reader.readAsDataURL(blob);
+        return new Promise((resolve) => {
+            reader.onloadend = () => {
+                resolve(reader.result);
             };
         });
     }    

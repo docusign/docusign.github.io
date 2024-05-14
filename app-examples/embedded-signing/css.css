@@ -1,5 +1,9 @@
+
+.navbar {height: 63px; }
+.navbar div {height: 63px;}
+
 body.bg-light {
-  padding-top: 56px; /* Provide room for top NavBar */
+  padding-top: 63px; /* Provide room for top NavBar */
   flex-direction: column;
 }
 
@@ -13,6 +17,56 @@ body.bg-light {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+}
+
+div.collapse.show ul {
+    background-color: #fff3cd;
+    margin-bottom: 0 !important;
+    padding-left: 15px;
+}
+div.user-photo {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+img.user-photo {
+    width: 40px;
+    height: 40px;
+}
+
+img.brand-logo {
+    padding-top: 8px;
+    height: 48px;
+}
+
+span.user-initials {
+    -webkit-box-align: center;
+    align-items: center;
+    background-color: rgb(188, 187, 200);
+    border: none;
+    border-radius: 50%;
+    color: rgba(25, 24, 35, 0.9);
+    display: inline-flex;
+    flex-shrink: 0;
+    font-family: "DS Indigo", DSIndigo, "Neue Haas Grotesk", NeueHaasGrotesk, Helvetica, Arial, sans-serif;
+    font-weight: 600;
+    -webkit-box-pack: center;
+    justify-content: center;
+    line-height: 1.5;
+    overflow: hidden;
+    padding: 0px;
+    position: relative;
+    transition: box-shadow 0.2s ease 0s;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    vertical-align: middle;
+    word-break: keep-all;
+    font-size: 16px;
+    height: 40px;
+    width: 40px;
 }
 
 .modelButton {  /* from the Focus View signing ceremony */

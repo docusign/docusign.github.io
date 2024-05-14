@@ -263,6 +263,47 @@ class LoadingModal {
 }
 
 /***
+ * userPictureAccountBrand
+ * Add the user's picture and account info
+ */
+async function userPictureAccountBrand({userInfo, callApi}){
+    const pictureId = "user-picture";
+    const accountBrandId = "account-brand";
+    // user's picture
+    let apiMethod = `/accounts/${userInfo.defaultAccount}/users/${userInfo.userId}/profile/image`;
+    let results = await callApi.getImageDataUrl(apiMethod);
+    if (results) {
+        $(`#${pictureId}`).html(`<div class="user-photo"><img src="${results}" class="user-photo" /></div>`)
+    } else {
+        const firstI = userInfo.given_name ? userInfo.given_name.charAt(0) : userInfo.name.charAt(0);
+        const lastI = userInfo.family_name ? userInfo.family_name.charAt(0) : '';
+        $(`#${pictureId}`).html(`<span class="user-initials">${firstI}${lastI}</span>`);
+    }
+    // account brand image
+    apiMethod = `/accounts/${userInfo.defaultAccount}/brands?include_logos=true`;
+    results = await callApi.callApiJson({
+        apiMethod: apiMethod, httpMethod: "GET", req: null});
+    if (!results) {return} // EARLY return
+    // look for a logo
+    let logo;
+    const brands = results.brands;
+    for(let i = 0; i < brands.length; i++){
+        const brand = brands[i];
+        if((brand.isSendingDefault || brand.isSigningDefault) && brand.logos && brand.logos.primary) {
+            logo = brand.logos.primary;
+            break;
+        }
+    }
+    if (!logo) {return} // EARLY return
+    apiMethod = `/accounts/${userInfo.defaultAccount}${logo}`;
+    results = await callApi.getImageDataUrl(apiMethod);
+    if (results) {
+        $(`#${accountBrandId}`).html(`<img src="${results}" class="brand-logo me-3" />`)
+    }
+}
+
+
+/***
  * Manage the "on change" events for a button's colors and text
  * constructor args
  * buttonId -- the model button
@@ -391,4 +432,6 @@ function adjustRows() {
 /////////////////////
 export { msg, htmlMsg, adjustRows, errMsg, workingUpdate, usingHttps, LoadingModal,
     getStoredAccountId, setStoredAccountId, toast, switchToHttps, messageModal, 
-    processUrlHash, storageGet, storageSet, ButtonOnChange, settingsGet, settingsSet};
+    processUrlHash, storageGet, storageSet, ButtonOnChange, settingsGet, settingsSet,
+    userPictureAccountBrand
+};

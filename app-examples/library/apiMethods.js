@@ -16,6 +16,10 @@ const data =
 EnvelopeViews:createRecipient|esign-rest-api/reference/envelopes/envelopeviews/createrecipient/|post|^.*\/restapi\/v2.1\/accounts\/.*\/envelopes/.*\/views\/recipient$
 Templates:list|esign-rest-api/reference/templates/templates/list/|get|^.*\/restapi\/v2.1\/accounts\/.*\/templates$
 AccountServer:userInfo|https://developers.docusign.com/platform/auth/reference/user-info/|get|^.*\/oauth\/userinfo$
+Users:getProfileImage|esign-rest-api/reference/users/users/getprofileimage/|get|^.*\/restapi\/v2.1\/accounts\/.*\/users\/.*\/profile\/image$
+AccountBrands:getLogo|esign-rest-api/reference/accounts/accountbrands/getlogo/|get|^.*\/restapi\/v2.1\/accounts\/.*\/brands\/.*\/logos\/.*$
+AccountBrands:list|esign-rest-api/reference/accounts/accountbrands/list/|get|^.*\/restapi\/v2.1\/accounts\/.*\/brands$
+AccountBrands:list|esign-rest-api/reference/accounts/accountbrands/list/|get|^.*\/restapi\/v2.1\/accounts\/.*\/brands\?.*$
 Accounts:get|esign-rest-api/reference/accounts/accounts/get/|get|^.*\/restapi\/v2.1\/accounts\/.*$`; // Must be last!
 
 class ApiMethods {

@@ -28,7 +28,8 @@ import {
     storageSet,
     ButtonOnChange,
     settingsGet, 
-    settingsSet
+    settingsSet,
+    userPictureAccountBrand
 } from "../library/utilities.js" 
 
 const CLIENT_ID = "demo";
@@ -427,6 +428,7 @@ $(async function () {
                 logger: data.logger,
             });
             data.classicSigning.showResults();
+            await userPictureAccountBrand({userInfo: data.userInfo, callApi: data.callApi});
         } else {
             // Did not complete the login
             toast(data.userInfo.errMsg, 20);

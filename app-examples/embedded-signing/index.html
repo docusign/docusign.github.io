@@ -24,7 +24,8 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <button type="button" class="btn btn-link nav-link" aria-current="page" data-bs-toggle="modal" data-bs-target="#settingsModal"></a>Settings</a>
+                        <button type="button" class="btn btn-link nav-link" aria-current="page" data-bs-toggle="modal"
+                            data-bs-target="#settingsModal">Settings</button>
                     </li>
                     <li class="nav-item">
                         <a id="logger" class="nav-link" aria-current="page" href="#">Start Logging</a>
@@ -33,25 +34,29 @@
                         <a id="saveToUrl" class="nav-link" aria-current="page" href="#">Save to URL</a>
                     </li>
                     <!--
-              <li class="nav-item">
-                <a class="nav-link" aria-current="page" disabled href="#">Show Log</a>
-              </li>
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" disabled role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  Dropdown
-                </a>
-                <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="#">Action</a></li>
-                  <li><a class="dropdown-item" href="#">Another action</a></li>
-                  <li><hr class="dropdown-divider"></li>
-                  <li><a class="dropdown-item" href="#">Something else here</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" disabled role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            Dropdown
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">Action</a></li>
+                            <li><a class="dropdown-item" href="#">Another action</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="#">Something else here</a></li>
+                        </ul>
+                    </li> -->
                 </ul>
-              </li>
-            </ul>-->
-                    <!--
-            <form class="d-flex" role="search">
-              <button id="sign" class="btn btn-outline-success">Sign</button>
-            </form> -->
+
+                <ul class="navbar-nav mb-2 mb-lg-0">
+                    <li class="nav-item" id="account-brand"> 
+                    </li>
+                    <li class="nav-item"> <!-- 40 x 40 -->
+                        <button id="user-picture" type="button" class="btn btn-link nav-link"></button>
+                    </li>
+                </ul>
             </div>
         </div>
     </nav>
@@ -250,7 +255,8 @@
                             </p>
                             <p class="mb-0">Benefits of the classic signing ceremony:</p>
                             <ul>
-                                <li>It shows the envelope sender’s information, including their name, photo, their company
+                                <li>It shows the envelope sender’s information, including their name, photo, their
+                                    company
                                     (account name)
                                     and company logo (if set for the sender's account)
                                 </li>
@@ -359,10 +365,10 @@
                 </div>
                 <div class="tab-pane fade" id="focusedView-tab-pane" role="tabpanel" aria-labelledby="focusedView-tab"
                     tabindex="0">
-                    <h2 class="mt-4">Focused View                        
+                    <h2 class="mt-4">Focused View
                         <button class="btn btn-info btn-sm ms-4 info" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#fvinfo" aria-expanded="false"
-                        aria-controls="collapseExample">Information</button>
+                            data-bs-target="#fvinfo" aria-expanded="false"
+                            aria-controls="collapseExample">Information</button>
                     </h2>
                     <div class="collapse" id="fvinfo">
                         <div class="card card-body mb-3">
@@ -378,7 +384,7 @@
                                 <li>The events raise a DOM event to your JS app; the redirection page is not used</li>
                             </ul>
                             <p>This demo uploads a template to your account, and then uses it for the envelope.</p>
-                            </div>
+                        </div>
                     </div>
 
                     <form>
@@ -516,7 +522,8 @@
                                 library.</p>
                             <p class="mb-0">Benefits of this view:</p>
                             <ul>
-                                <li>It shows the envelope sender’s information, including their name, photo, their company
+                                <li>It shows the envelope sender’s information, including their name, photo, their
+                                    company
                                     (account name)
                                     and company logo (if set for the sender's account)
                                 </li>
