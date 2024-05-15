@@ -1,7 +1,6 @@
 
 .navbar {height: 63px; }
 .navbar div {height: 63px;}
-
 body.bg-light {
   padding-top: 63px; /* Provide room for top NavBar */
   flex-direction: column;
@@ -11,6 +10,7 @@ body.bg-light {
 .display-inline {display: inline;}
 .w10 {width: 10em;}
 .w19 {width: 19em;}
+.pt8 {padding-top: 8px;}
 .vh-99 {height: 99vh;}
 .baseline {vertical-align: baseline;}
 .colorpicker {
@@ -39,6 +39,11 @@ img.user-photo {
 img.brand-logo {
     padding-top: 8px;
     height: 48px;
+}
+
+li#account-info span {
+    font-weight: 400;
+    color: rgba(0, 0, 0, 0.65);
 }
 
 span.user-initials {

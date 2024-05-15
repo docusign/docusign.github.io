@@ -269,6 +269,7 @@ class LoadingModal {
 async function userPictureAccountBrand({userInfo, callApi}){
     const pictureId = "user-picture";
     const accountBrandId = "account-brand";
+    const accountInfo = "account-info";
     // user's picture
     let apiMethod = `/accounts/${userInfo.defaultAccount}/users/${userInfo.userId}/profile/image`;
     let results = await callApi.getImageDataUrl(apiMethod);
@@ -279,6 +280,16 @@ async function userPictureAccountBrand({userInfo, callApi}){
         const lastI = userInfo.family_name ? userInfo.family_name.charAt(0) : '';
         $(`#${pictureId}`).html(`<span class="user-initials">${firstI}${lastI}</span>`);
     }
+
+    // Account name and id
+    let text;
+    if (userInfo.accounts[userInfo.defaultAccountIndex].accountExternalId) {
+        text = `Account #${userInfo.accounts[userInfo.defaultAccountIndex].accountExternalId}<br/>${userInfo.defaultAccountName}`;
+    } else {
+        text = userInfo.defaultAccountName;
+    }
+    $(`#${accountInfo}`).html(`<div class="me-4 pt8">${text}</div>`); 
+
     // account brand image
     apiMethod = `/accounts/${userInfo.defaultAccount}/brands?include_logos=true`;
     results = await callApi.callApiJson({
@@ -287,13 +298,15 @@ async function userPictureAccountBrand({userInfo, callApi}){
     // look for a logo
     let logo;
     const brands = results.brands;
-    for(let i = 0; i < brands.length; i++){
-        const brand = brands[i];
-        if((brand.isSendingDefault || brand.isSigningDefault) && brand.logos && brand.logos.primary) {
-            logo = brand.logos.primary;
-            break;
+    if (brands) {
+        for(let i = 0; i < brands.length; i++){
+            const brand = brands[i];
+            if((brand.isSendingDefault || brand.isSigningDefault) && brand.logos && brand.logos.primary) {
+                logo = brand.logos.primary;
+                break;
         }
     }
+}
     if (!logo) {return} // EARLY return
     apiMethod = `/accounts/${userInfo.defaultAccount}${logo}`;
     results = await callApi.getImageDataUrl(apiMethod);
