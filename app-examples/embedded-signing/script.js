@@ -431,8 +431,13 @@ $(async function () {
             await userPictureAccountBrand({userInfo: data.userInfo, callApi: data.callApi});
         } else {
             // Did not complete the login
-            toast(data.userInfo.errMsg, 20);
-            data.logger.post('Startup Error', data.userInfo.errMsg)
+            if (data.userInfo.corsErr) {
+                messageModal({style: "text", title: "CORS Error", 
+                    msg: data.userInfo.errMsg})
+            } else {
+                toast(data.userInfo.errMsg, 20);
+                data.logger.post('Startup Error', data.userInfo.errMsg)
+            }
         }
         return ok;
     }

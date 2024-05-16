@@ -235,6 +235,7 @@ class UserInfo {
         // public variables
         this.working = false;
         this.errMsg = null;
+        this.corsErr = null; // Cors error with the account
         this.name = null;
         this.userId = null;
         this.email = null;
@@ -248,6 +249,8 @@ class UserInfo {
     // returns true for success, false for a problem (see .errMsg)
     async getUserInfo() {
         this.working = true;
+        this.errMsg = null;
+        this.corsErr = false;
         if (this.workingUpdateF) {
             this.workingUpdateF(this.working);
         }
@@ -300,10 +303,11 @@ class UserInfo {
         this.defaultAccountName = this.accounts[this.defaultAccountIndex].accountName;
         this.defaultBaseUrl = this.accounts[this.defaultAccountIndex].accountBaseUrl;
         if (this.accounts[this.defaultAccountIndex].corsError) {
+            this.corsErr = true;
             this.errMsg =
-            `Problem while completing login. Check the CORS configuration for account ` +
-            `${this.defaultAccountName} (${this.defaultAccount}) ` +
-            `Error: ${this.accounts[this.defaultAccountIndex].corsError}`;
+            `<p>Problem while completing login. Check the CORS configuration for account ` +
+            `${this.defaultAccountName} (${this.defaultAccount})</p><p>` +
+            `Error: ${this.accounts[this.defaultAccountIndex].corsError}</p>`;
             this.working = false;
             if (this.workingUpdateF) {
                 this.workingUpdateF(this.working);
