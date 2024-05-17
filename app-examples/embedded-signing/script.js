@@ -29,7 +29,8 @@ import {
     ButtonOnChange,
     settingsGet, 
     settingsSet,
-    userPictureAccountBrand
+    userPictureAccountBrand,
+    checkAccountSettings
 } from "../library/utilities.js" 
 
 const CLIENT_ID = "demo";
@@ -40,6 +41,7 @@ const CLASSIC_RESULT = 'classicResult'; // store the classic non-iframe signing 
 $(async function () {
     let oAuthClientID;
     let accountId;
+    let loginModal = new bootstrap.Modal('#modalLogin'); // for managing the loginModal
     let configuration = {
         mode: "click2agree-tab", 
         supp1include: false, 
@@ -83,8 +85,6 @@ $(async function () {
         document3: "default",
         outputStyle: "openUrl",
         useIframe: true,
-
-
     }
     const formCheckboxes = {
         supp1include: true, 
@@ -358,78 +358,7 @@ $(async function () {
             onlyCheckDefaultAccount: true,
         });
         const ok = await data.userInfo.getUserInfo();
-        if (ok) {
-            accountId = data.userInfo.defaultAccount;
-            data.logger.post('Account Information', `Account ID: ${accountId}, Name: ${data.userInfo.defaultAccountName}`);
-            data.callApi = new CallApi({
-                accessToken: data.implicitGrant.accessToken,
-                apiBaseUrl: data.userInfo.defaultBaseUrl
-            });
-            data.checkTemplates = new CheckTemplates({
-                callApi: data.callApi, 
-                accountId: accountId
-            });    
-            data.envelopes = new Envelopes({
-                showMsg: toast,
-                messageModal: messageModal,
-                loadingModal: data.loadingModal,
-                clientId: oAuthClientID,
-                accountId: accountId,
-                callApi: data.callApi,
-                logger: data.logger,
-            })
-            data.click2agree = new Click2Agree({
-                showMsg: toast,
-                messageModal: messageModal,
-                loadingModal: data.loadingModal,
-                clientId: oAuthClientID,
-                accountId: accountId,
-                callApi: data.callApi,
-                mainElId: "main",
-                signElId: "signing-ceremony",
-                envelopes: data.envelopes,
-                logger: data.logger,
-            });
-            data.focusedViewSigning = new FocusedViewSigning({
-                showMsg: toast,
-                messageModal: messageModal,
-                loadingModal: data.loadingModal,
-                clientId: oAuthClientID,
-                accountId: accountId,
-                callApi: data.callApi,
-                mainElId: "main",
-                signElId: "signing-ceremony",
-                envelopes: data.envelopes,
-                logger: data.logger,
-            });
-            data.dsjsDefaultSigning = new DsjsDefaultSigning({
-                showMsg: toast,
-                messageModal: messageModal,
-                loadingModal: data.loadingModal,
-                clientId: oAuthClientID,
-                accountId: accountId,
-                callApi: data.callApi,
-                mainElId: "main",
-                signElId: "signing-ceremony",
-                envelopes: data.envelopes,
-                logger: data.logger,
-            });
-            data.classicSigning = new ClassicSigning({
-                showMsg: toast,
-                messageModal: messageModal,
-                loadingModal: data.loadingModal,
-                clientId: oAuthClientID,
-                accountId: accountId,
-                callApi: data.callApi,
-                mainElId: "main",
-                signElId: "signing-ceremony",
-                envelopes: data.envelopes,
-                CLASSIC_RESULT: CLASSIC_RESULT,
-                logger: data.logger,
-            });
-            data.classicSigning.showResults();
-            await userPictureAccountBrand({userInfo: data.userInfo, callApi: data.callApi});
-        } else {
+        if (!ok) {
             // Did not complete the login
             if (data.userInfo.corsErr) {
                 messageModal({style: "text", title: "CORS Error", 
@@ -438,8 +367,86 @@ $(async function () {
                 toast(data.userInfo.errMsg, 20);
                 data.logger.post('Startup Error', data.userInfo.errMsg)
             }
+            return false; // EARLY return
         }
-        return ok;
+
+        accountId = data.userInfo.defaultAccount;
+        data.logger.post('Account Information', `Account ID: ${accountId}, Name: ${data.userInfo.defaultAccountName}`);
+        data.callApi = new CallApi({
+            accessToken: data.implicitGrant.accessToken,
+            apiBaseUrl: data.userInfo.defaultBaseUrl
+        });
+        data.loadingModal.show("Checking the account settings");
+        if (!await checkAccountSettings({userInfo: data.userInfo, callApi: data.callApi})) {
+            data.logger.post('Account setting error', 'The account does not have a required setting');
+            return false; // EARLY RETURN
+        } 
+        data.checkTemplates = new CheckTemplates({
+            callApi: data.callApi, 
+            accountId: accountId
+        });    
+        data.envelopes = new Envelopes({
+            showMsg: toast,
+            messageModal: messageModal,
+            loadingModal: data.loadingModal,
+            clientId: oAuthClientID,
+            accountId: accountId,
+            callApi: data.callApi,
+            logger: data.logger,
+        })
+        data.click2agree = new Click2Agree({
+            showMsg: toast,
+            messageModal: messageModal,
+            loadingModal: data.loadingModal,
+            clientId: oAuthClientID,
+            accountId: accountId,
+            callApi: data.callApi,
+            mainElId: "main",
+            signElId: "signing-ceremony",
+            envelopes: data.envelopes,
+            logger: data.logger,
+        });
+        data.focusedViewSigning = new FocusedViewSigning({
+            showMsg: toast,
+            messageModal: messageModal,
+            loadingModal: data.loadingModal,
+            clientId: oAuthClientID,
+            accountId: accountId,
+            callApi: data.callApi,
+            mainElId: "main",
+            signElId: "signing-ceremony",
+            envelopes: data.envelopes,
+            logger: data.logger,
+        });
+        data.dsjsDefaultSigning = new DsjsDefaultSigning({
+            showMsg: toast,
+            messageModal: messageModal,
+            loadingModal: data.loadingModal,
+            clientId: oAuthClientID,
+            accountId: accountId,
+            callApi: data.callApi,
+            mainElId: "main",
+            signElId: "signing-ceremony",
+            envelopes: data.envelopes,
+            logger: data.logger,
+        });
+        data.classicSigning = new ClassicSigning({
+            showMsg: toast,
+            messageModal: messageModal,
+            loadingModal: data.loadingModal,
+            clientId: oAuthClientID,
+            accountId: accountId,
+            callApi: data.callApi,
+            mainElId: "main",
+            signElId: "signing-ceremony",
+            envelopes: data.envelopes,
+            CLASSIC_RESULT: CLASSIC_RESULT,
+            logger: data.logger,
+        });
+        data.loadingModal.show("Retrieving your photo and the account's logo")
+        await userPictureAccountBrand({userInfo: data.userInfo, callApi: data.callApi});
+        data.classicSigning.showResults();
+        return true;
     }
 
     /***
@@ -501,7 +508,6 @@ $(async function () {
     });
     // If we're not logged in, then ask to start the login flow.
     if (!data.implicitGrant.checkToken()) {
-        const loginModal = new bootstrap.Modal('#modalLogin');
         loginModal.show();
     } else {
         // logged in
@@ -546,7 +552,6 @@ $(async function () {
         } else {
             // couldn't login
             data.loadingModal.hide();
-            const loginModal = new bootstrap.Modal('#modalLogin');
             loginModal.show();            
         }
     }

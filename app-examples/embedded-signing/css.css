@@ -19,7 +19,7 @@ body.bg-light {
   gap: 0.5rem;
 }
 
-div.collapse.show ul {
+div.navbar-collapse.collapse.show ul {
     background-color: #fff3cd;
     margin-bottom: 0 !important;
     padding-left: 15px;

@@ -315,6 +315,24 @@ async function userPictureAccountBrand({userInfo, callApi}){
     }
 }
 
+/***
+ * checkAccountSettings -- check that the account can do embedded signing
+ * @returns ok
+ */
+async function checkAccountSettings({userInfo, callApi}) {
+    // get account settings
+    const apiMethod = `/accounts/${userInfo.defaultAccount}/settings`;
+    const results = await callApi.callApiJson({
+        apiMethod: apiMethod, httpMethod: "GET", req: null});
+    if (!results) {return true} // EARLY return
+    const inSessionEnabled = results.inSessionEnabled === 'true';
+    if (!inSessionEnabled) {
+        messageModal({style: "text", title: "Account Setting Error", 
+        msg: `<p>The account requires the "inSessionEnabled" setting.</p>` + 
+        `<p>Switch your default account to a new Developer Account or contact Docusign Customer Support.</p>`})
+    }
+    return inSessionEnabled;
+}
 
 /***
  * Manage the "on change" events for a button's colors and text
@@ -446,5 +464,5 @@ function adjustRows() {
 export { msg, htmlMsg, adjustRows, errMsg, workingUpdate, usingHttps, LoadingModal,
     getStoredAccountId, setStoredAccountId, toast, switchToHttps, messageModal, 
     processUrlHash, storageGet, storageSet, ButtonOnChange, settingsGet, settingsSet,
-    userPictureAccountBrand
+    userPictureAccountBrand, checkAccountSettings
 };
