@@ -172,9 +172,10 @@ class FocusedViewSigning {
             signing.mount(`#${this.signElId}`);
         } catch (error) {
             // Any configuration or API limits will be caught here
-            console.log("### ERROR from docusign.js");
-            console.log(error);
-              
+            this.messageModal({style: 'text', title: "Error during Signing Ceremony", msg: error});
+            this.logger.post("Error during Signing Ceremony", error);
+            console.log ("### Error calling docusign.js");
+            console.log (error);              
         }
     }
 

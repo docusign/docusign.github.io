@@ -112,9 +112,10 @@
             $(`#signing-ceremony`).removeClass("hide");
             signing.mount(`#signing-ceremony`);
         } catch (error) {
-              // Any configuration or API limits will be caught here
-              console.log("### ERROR from docusign.js");
-              console.log(error);
+            // Any configuration or API limits will be caught here
+            message({style: 'text', title: "Error during Signing Ceremony", msg: error});
+            console.log ("### Error calling docusign.js");
+            console.log (error);
         }
 
         function message ({style, title, msg}){

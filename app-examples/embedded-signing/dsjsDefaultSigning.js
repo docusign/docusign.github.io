@@ -168,7 +168,11 @@ class DsjsDefaultSigning {
             // Open the signing ceremony
             signing.mount(`#${this.signElId}`);
         } catch (error) {
-              // Any configuration or API limits will be caught here
+            // Any configuration or API limits will be caught here
+            this.messageModal({style: 'text', title: "Error during Signing Ceremony", msg: error});
+            this.logger.post("Error during Signing Ceremony", error);
+            console.log ("### Error calling docusign.js");
+            console.log (error);
         }
     }
 

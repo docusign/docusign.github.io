@@ -92,7 +92,7 @@ class Click2Agree {
 
         this.loadingModal.delayedHide("Opening the signing ceremony");
         if (this.outputStyle === "openUrl") {
-            await this.focusedView(recipientViewUrl);
+            await this.focusedViewClickToAgree(recipientViewUrl);
         } else {
             this.externalFocusedView(recipientViewUrl);
         }
@@ -103,7 +103,7 @@ class Click2Agree {
      * focusedViewClickToAgree, in the browser, calls the DocuSign.js library
      * to display the signing ceremony in an iframe
      */
-    async focusedView(recipientViewUrl) {
+    async focusedViewClickToAgree(recipientViewUrl) {
         const signingConfiguration = {
             url: recipientViewUrl,
             displayFormat: 'focused',
@@ -117,7 +117,6 @@ class Click2Agree {
                         color: $(`#${this.modelButtonId} span`).css('color'),
                     }
                 },
-                /** High-level components we allow specific overrides for */
                 /**
                  * signingNavigationButton object is NOT used when the view is Click to Agree
                  * 
@@ -143,12 +142,12 @@ class Click2Agree {
                 this.signing = false;
                 if (event.type === "sessionEnd") {
                     const msg = `<p>Result: <b>${event.sessionEndType.replace("_", " ")}</b></p>${END_MSG}`;
-                    this.messageModal({style: 'text', title: "Signing Session Ended", msg: msg});
-                    this.logger.post("Signing session ended", msg);
+                    this.messageModal({style: 'text', title: "Agreement Session Ended", msg: msg});
+                    this.logger.post("Agreement session ended", msg);
                 } else {
                     const msg = `<p>Event data: ${JSON.stringify(event)}</p>`;
-                    this.messageModal({style: 'text', title: "Signing Session Message", msg: msg});
-                    this.logger.post("Signing session ended", msg);                    
+                    this.messageModal({style: 'text', title: "Agreement Session Message", msg: msg});
+                    this.logger.post("Agreement session ended", msg);                    
                 } 
                 $(`#${this.signElId}`).addClass("hide").empty(); // Important! REMOVE the signing ceremony
                 $(`#${this.mainElId}`).removeClass("hide");
@@ -160,7 +159,11 @@ class Click2Agree {
             // Open the signing ceremony            
             signing.mount(`#${this.signElId}`);
         } catch (error) {
-              // Any configuration or API limits will be caught here
+            // Any configuration or API limits will be caught here
+            this.messageModal({style: 'text', title: "Error during Agreement Ceremony", msg: error});
+            this.logger.post("Error during Agreement Ceremony", error);
+            console.log ("### Error calling docusign.js");
+            console.log (error);
         }
     }
 
