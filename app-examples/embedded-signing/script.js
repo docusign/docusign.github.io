@@ -278,11 +278,12 @@ $(async function () {
     function checkToken() {
         const tokenOk = data.implicitGrant.checkToken();
         if (!tokenOk) {
-            messageModal("Your Login Session Has Expired", 
+            this.messageModal({style: 'text', title: "Your Login Session Has Expired", 
+            msg: 
             `<p>Your 8 hour login session has expired.</p>
             <p>Recommendation: use <b>Save to URL</b>
             (top navigation) to save your work, then reload
-            this page from the URL and login again.</p>`)
+            this page from the URL and login again.</p>`});
         }
         return tokenOk
     }
@@ -526,8 +527,9 @@ $(async function () {
                 data.loadingModal.delayedHide(result.msg)
             } else {
                 data.loadingModal.hide();
-                messageModal("Templates issue", `<p>Problem while loading example templates
-                to your eSignature account:</p><p>${result.msg}</p>`)
+                this.messageModal({style: 'text', title: "Templates issue", msg: 
+                    `<p>Problem while loading example templates
+                    to your eSignature account:</p><p>${result.msg}</p>`});
             }
             $(`#signername` ).val(data.userInfo.name);
             $(`#signername1`).val(data.userInfo.name);
