@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+  <!-- // Copyright © 2022 DocuSign, Inc.
+       // License: MIT Open Source https://opensource.org/licenses/MIT 
+  -->
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="description"
+      content="DocuSign response page"
+    />
+    <title>Docusign Response Handler</title>
+  </head>
+  <body>
+    <p>Please wait.</p>
+    <h1 id="out"></h1>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script>
+        $(async function () {
+            $("#out").text(window.Android.toString("Howdy!"))
+        })
+    </script>
+  </body>
+</html>
