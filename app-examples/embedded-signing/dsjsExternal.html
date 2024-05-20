@@ -97,6 +97,9 @@
             signing.on('sessionEnd', (event) => {
                 /** The event here denotes what caused the sessionEnd to trigger, such as signing_complete, ttl_expired etc../ */
                 console.log('sessionend', event);
+                if (Android && Android.postMessage) {
+                    Android.postMessage(`SessionEnd=${event.sessionEndType}`)
+                }       
                 // Event: { returnUrl: url, type: "sessionEnd", sessionEndType: "signing_complete"}
                 if (event.type === "sessionEnd") {
                     const msg = `<p>Result: <b>${event.sessionEndType.replace("_", " ")}</b></p>${END_MSG}`;

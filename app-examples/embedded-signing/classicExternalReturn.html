@@ -29,12 +29,15 @@
     import { processUrlHash } from "../library/utilities.js";
 
     $(async function () {
-        debugger;
-        const config = processUrlHash("event");
-        Object.keys(config).forEach(item => {
-            const msg = `<p><b>${item} = ${config[item]}</b></p>`;
-            $(`#main`).append(msg);
-        })
+        if (Android && Android.postMessage) {
+            Android.postMessage(window.location.hash || window.location.search)
+        } else {
+            const config = processUrlHash("event");
+            Object.keys(config).forEach(item => {
+                const msg = `<p><b>${item} = ${config[item]}</b></p>`;
+                $(`#main`).append(msg);
+            })
+        }
     })
     </script>
 </body>
