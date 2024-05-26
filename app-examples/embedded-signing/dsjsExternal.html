@@ -96,8 +96,19 @@
             signing.on('ready', (event) => {console.log('UI is rendered')});
             signing.on('sessionEnd', (event) => {
                 /** The event here denotes what caused the sessionEnd to trigger, such as signing_complete, ttl_expired etc../ */
+
+                // is "Android" defined by a webview? 
+                let android;
+                try {
+                     android = Androic;
+                } catch (e) {
+                    if (e instanceof ReferenceError) {
+                        android = undefined;
+                    }
+                }
+
                 console.log('sessionend', event);
-                if (Android && Android.postMessage) {
+                if (android && Android && Android.postMessage) {
                     Android.postMessage(`SessionEnd=${event.sessionEndType}`)
                 }       
                 // Event: { returnUrl: url, type: "sessionEnd", sessionEndType: "signing_complete"}
