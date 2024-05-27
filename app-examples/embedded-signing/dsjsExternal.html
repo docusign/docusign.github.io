@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="css.css">
 </head>
 
-<body class="hide bg-light d-flex flex-column vh-100">
+<body class="bg-light d-flex flex-column vh-100" style="display:none;">
         <nav class="navbar d-md-flex navbar navbar-expand-lg fixed-top bg-warning-subtle">
             <!-- https://getbootstrap.com/docs/5.3/components/navbar/ -->
             <div class="container-fluid">
@@ -63,7 +63,7 @@
             $(".p-3").removeClass("p-3");
             $("#signing-ceremony").removeClass("col-lg-10");
         } 
-        $("body").removeClass("hide");
+        $("body").removeClass("hide").css('display', '');
 
         // the following is from focusedViewSigning#focusedView
         const signingConfiguration = {
@@ -97,24 +97,24 @@
             signing.on('sessionEnd', (event) => {
                 /** The event here denotes what caused the sessionEnd to trigger, such as signing_complete, ttl_expired etc../ */
 
-                // is "Android" defined by a webview? 
-                let android;
+                // is "WebView" defined by a webview? 
+                let webView;
                 try {
-                     android = Android;
+                     webView = WebView;
                 } catch (e) {
                     if (e instanceof ReferenceError) {
-                        android = undefined;
+                        webView = undefined;
                     }
                 }
 
                 console.log('sessionend', event);
-                if (android && Android && Android.postMessage) {
-                    Android.postMessage(`SessionEnd=${event.sessionEndType}`)
+                if (webView && WebView && WebView.postMsg) {
+                    WebView.postMsg(`SessionEnd=${event.sessionEndType}`)
                 }       
                 // Event: { returnUrl: url, type: "sessionEnd", sessionEndType: "signing_complete"}
                 if (event.type === "sessionEnd") {
-                    const msg = `<p>Android: ${!!android}, ${!!Android.postMessage}; 
-                        ${Object.keys(Android)};
+                    const msg = `<p>WebView: ${!!webView}, ${!!WebView.postMessage}; 
+                        ${Object.keys(WebView)};
                         Result: <b>${event.sessionEndType.replace("_", " ")}</b></p>${END_MSG}`;
                     message({style: 'text', title: "Signing Session Ended", msg: msg});
                 } else {
