@@ -278,7 +278,7 @@ $(async function () {
     function checkToken() {
         const tokenOk = data.implicitGrant.checkToken();
         if (!tokenOk) {
-            this.messageModal({style: 'text', title: "Your Login Session Has Expired", 
+            messageModal({style: 'text', title: "Your Login Session Has Expired", 
             msg: 
             `<p>Your 8 hour login session has expired.</p>
             <p>Recommendation: use <b>Save to URL</b>
