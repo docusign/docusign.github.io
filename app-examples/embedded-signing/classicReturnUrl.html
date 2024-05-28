@@ -20,8 +20,19 @@
         href: window.location.href || '',
         search: window.location.search || '',
       }
-      if (Android && Android.postMessage) {
-        Android.postMessage(window.location.hash || window.location.search)
+    
+      // is "WebView" defined by a webview? 
+      let webView;
+      try {
+            webView = WebView;
+      } catch (e) {
+        if (e instanceof ReferenceError) {
+            webView = undefined;
+        }
+      }
+
+      if (webView && WebView && WebView.postMsg) {
+        WebView.postMsg(`SessionEnd=${event.sessionEndType}`)       
       } else if (window.parent && window.parent.opener) {
         window.parent.opener.postMessage(msg, '*'); // iframed case
       } else if (window.opener) {

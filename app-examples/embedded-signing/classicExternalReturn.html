@@ -29,8 +29,18 @@
     import { processUrlHash } from "../library/utilities.js";
 
     $(async function () {
-        if (Android && Android.postMessage) {
-            Android.postMessage(window.location.hash || window.location.search)
+      // is "WebView" defined by a webview? 
+      let webView;
+      try {
+            webView = WebView;
+      } catch (e) {
+        if (e instanceof ReferenceError) {
+            webView = undefined;
+        }
+      }
+
+      if (webView && WebView && WebView.postMsg) {
+        WebView.postMsg(`SessionEnd=${event.sessionEndType}`)       
         } else {
             const config = processUrlHash("event");
             Object.keys(config).forEach(item => {
