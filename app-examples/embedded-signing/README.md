@@ -40,7 +40,8 @@ next step.
 1. Close the form
 
 ### Testing payments
-Currently, payments tabs are only supported by the Classic Embedded Signing UX.
+Currently, payments tabs are supported by the Classic Embedded Signing UX
+and by Docusign.js with Default View.
 
 1. In the test application, select the **Classic Embedded Signing** tab. 
 1. Choose the *Payment example* Document.
