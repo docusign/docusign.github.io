@@ -12,7 +12,7 @@
 </head>
 
 <body class="bg-light d-flex flex-column vh-100" style="display:none;">
-        <nav class="navbar d-md-flex navbar navbar-expand-lg fixed-top bg-warning-subtle">
+        <nav class="navbar d-md-flex navbar navbar-expand-lg fixed-top bg-warning-subtle" style="display:none;">
             <!-- https://getbootstrap.com/docs/5.3/components/navbar/ -->
             <div class="container-fluid">
                 <a class="navbar-brand" href="#">Docusign Embedded Signing Examples</a>
@@ -57,7 +57,9 @@
          const config = processUrlHash("usingChrome");
 
         // if no chrome, then rejigger the dom
-        if (!config.usingChrome) {
+        if (config.usingChrome) {
+            $("nav").css('display', '');
+        } else {
             $("body").removeClass(["bg-light", "vh-100"]).addClass("vh-99");
             $("nav").remove();
             $(".p-3").removeClass("p-3");
