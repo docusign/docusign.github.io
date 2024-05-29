@@ -16,7 +16,7 @@
  */
 const CLIENT_USER_ID = 1000;
 // See https://developers.docusign.com/docs/esign-rest-api/reference/envelopes/envelopeviews/createrecipient/#schema__recipientviewrequest_frameancestors
-const FRAME_ANCESTORS = ["http://localhost", "https://docusign.github.io", "https://apps-d.docusign.com"]; 
+const FRAME_ANCESTORS = ["http://localhost", "https://docusign.github.io", "https://apps-d.docusign.com"];
 const MESSAGE_ORIGINS = ["https://apps-d.docusign.com"];
 const RETURN_URL = `https://docusign.github.io/app-examples/embedded-signing/classicReturnUrl.html`;
 const ROLE = "signer" // the role name used by the example templates
@@ -25,6 +25,7 @@ const SUPP_DOCS_URL = "../../examples/docs/";
 const SUPP_DOC_NAMES = ["Terms and Conditions 1.pdf", "Terms and Conditions 2.pdf"];
 const SIMPLE_HTML = "simple_with_image.html.txt";
 const HTML_RESPONSIVE = "htmlSmartSections.html.txt"
+const PAYMENT_DOC = "payment_order_form.docx"
 
 /***
  * instance variables
@@ -79,12 +80,14 @@ class Envelopes {
                     Contact DocuSign customer service to change your account's configuration.
                     Tell them you have the ONESIGNALLSIGN_NOT_SATISFIED error when you are creating a Click To Agree envelope.</p>
                     <p><small>Error message: ${this.callApi.errMsg}</small></p>`;
-                this.messageModal({style: 'text', title: "Create Envelope Problem: Operation Canceled", msg: msg});
-                this.logger.post("Create Envelope Problem: Operation Canceled", msg);                    
+                this.messageModal({ style: 'text', title: "Create Envelope Problem: Operation Canceled", msg: msg });
+                this.logger.post("Create Envelope Problem: Operation Canceled", msg);
                 return false
             }
-            this.messageModal({style: 'text', title: "Create Envelope Problem: Operation Canceled", msg: 
-            `<p>Error message: ${this.callApi.errMsg}</p>`});
+            this.messageModal({
+                style: 'text', title: "Create Envelope Problem: Operation Canceled", msg:
+                    `<p>Error message: ${this.callApi.errMsg}</p>`
+            });
             this.logger.post("Create Envelope Problem: Operation Canceled", `<p>Error message: ${this.callApi.errMsg}</p>`);
             return false
         }
@@ -107,30 +110,30 @@ class Envelopes {
             status: "sent",
             compositeTemplates: [
                 {
-                compositeTemplateId: "1",
-                serverTemplates: [
-                    {
-                    sequence: "1",
-                    templateId: this.templateId
-                    }
-                ],
-                inlineTemplates: [
-                    {
-                    sequence: "1",
-                    recipients: {
-                        signers: [
-                            { // fill in the role info, including the clientUserId
-                            clientUserId: this.clientUserId,
-                            email: this.email,
-                            name: this.name,
-                            roleName: this.role,
-                            recipientId: "1",
+                    compositeTemplateId: "1",
+                    serverTemplates: [
+                        {
+                            sequence: "1",
+                            templateId: this.templateId
+                        }
+                    ],
+                    inlineTemplates: [
+                        {
+                            sequence: "1",
+                            recipients: {
+                                signers: [
+                                    { // fill in the role info, including the clientUserId
+                                        clientUserId: this.clientUserId,
+                                        email: this.email,
+                                        name: this.name,
+                                        roleName: this.role,
+                                        recipientId: "1",
+                                    }
+                                ]
                             }
-                        ]
-                    }
+                        }
+                    ]
                 }
-                ]
-            }
             ]
         }
         this.request = req;
@@ -153,27 +156,152 @@ class Envelopes {
             recipients: {
                 signers: [
                     {
-                    clientUserId: this.clientUserId,
-                    email: this.email,
-                    name: this.name,
-                    recipientId: "1",
-                    tabs: {
-                        signHereTabs: [
-                          {
-                            xPosition: "70",
-                            yPosition: "28",
-                            pageNumber: "1",
-                            documentId: "1"
-                          }
-                        ]            
+                        clientUserId: this.clientUserId,
+                        email: this.email,
+                        name: this.name,
+                        recipientId: "1",
+                        tabs: {
+                            signHereTabs: [
+                                {
+                                    xPosition: "70",
+                                    yPosition: "28",
+                                    pageNumber: "1",
+                                    documentId: "1"
+                                }
+                            ]
+                        }
                     }
-                }
                 ]
             },
             documents: [
                 {
                     name: "Example document",
                     fileExtension: "pdf",
+                    documentId: "1",
+                    documentBase64: docB64,
+                }
+            ]
+        }
+        this.request = req;
+        return req
+    }
+
+    /***
+     * Payment example
+     * Normally, you'd use a template. But for this example, we need to update the 
+     * Payment Gateway ID, so we'll build the envelope object from scratch.
+     */
+    async createPaymentRequest() {
+        const docB64 = await this.callApi.getDocB64(SUPP_DOCS_URL + PAYMENT_DOC);
+        if (!docB64) {
+            this.showMsg(this.callApi.errMsg); // Error!
+            return
+        }
+        const req = {
+            useDisclosure: true,
+            emailSubject: "Please pay and sign the order form",
+            status: "sent",
+            recipients: {
+                signers: [
+                    {
+                        clientUserId: this.clientUserId,
+                        email: this.email,
+                        name: this.name,
+                        recipientId: "1",
+                        tabs: {
+                            signHereTabs: [
+                                {
+                                    anchorString: "/sig1/",
+                                    anchorXOffset: "10",
+                                    anchorYOffset: "0",
+                                    documentId: "1"
+                                }
+                            ],
+                            numberTabs: [
+                                {
+                                    value: "10.00",
+                                    width: 78,
+                                    required: "true",
+                                    locked: "true",
+                                    tabLabel: "apples",
+                                    documentId: "1",
+                                    anchorString: "/apples/",
+                                    anchorXOffset: "0",
+                                    anchorYOffset: "-8",
+                                    bold: "true",
+                                    font: "Calibri",
+                                    fontSize: "Size12",
+                                },
+                                {
+                                    value: "15.00",
+                                    width: 78,
+                                    required: "true",
+                                    locked: "true",
+                                    tabLabel: "oranges",
+                                    documentId: "1",
+                                    anchorString: "/oranges/",
+                                    anchorXOffset: "0",
+                                    anchorYOffset: "-8",
+                                    bold: "true",
+                                    font: "Calibri",
+                                    fontSize: "Size12",
+                                }
+                            ],
+                            formulaTabs: [
+                                {
+                                    required: "true",
+                                    formula: "([apples] + [oranges])",
+                                    roundDecimalPlaces: "2",
+                                    tabLabel: "total",
+                                    documentId: "1",
+                                    anchorString: "/total/",
+                                    anchorXOffset: "25",
+                                    anchorYOffset: "-6",
+                                    bold: "true",
+                                    font: "Calibri",
+                                    fontSize: "Size12",
+                                },
+                                {
+                                    required: "true",
+                                    formula: "[total] * 100",
+                                    roundDecimalPlaces: "2",
+                                    paymentDetails: {
+                                        lineItems: [
+                                            {
+                                                name: "Apples",
+                                                description: "Apples: 10 pack",
+                                                itemCode: "Apples10",
+                                                amountReference: "apples"
+                                            },
+                                            {
+                                                name: "Oranges",
+                                                description: "Oranges: 10 pack",
+                                                itemCode: "Oranges10",
+                                                amountReference: "oranges"
+                                            }
+                                        ],
+                                        currencyCode: "USD",
+                                        gatewayAccountId: this.gatewayId,
+                                        gatewayName: "Stripe",
+                                        gatewayDisplayName: "Stripe",                                  
+                                    },
+                                    hidden: "true",
+                                    tabLabel: "Payment1",
+                                    documentId: "1",
+                                    pageNumber: "1",
+                                    xPosition: "0",
+                                    yPosition: "0",
+
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            documents: [
+                {
+                    name: "Order Form",
+                    fileExtension: "docx",
                     documentId: "1",
                     documentBase64: docB64,
                 }
@@ -220,21 +348,21 @@ class Envelopes {
                             ],
                             fullNameTabs: [
                                 {
-                                  anchorString: "/name1/",
-                                  anchorYOffset: "-5",
-                                  anchorUnits: "pixels",
-                                  bold: "true",
-                                  font: "Arial",
-                                  fontSize: "Size12"
+                                    anchorString: "/name1/",
+                                    anchorYOffset: "-5",
+                                    anchorUnits: "pixels",
+                                    bold: "true",
+                                    font: "Arial",
+                                    fontSize: "Size12"
                                 }
                             ],
-                              emailAddressTabs: [
+                            emailAddressTabs: [
                                 {
-                                  anchorString: "/email1/",
-                                  anchorUnits: "pixels",
-                                  font: "Arial",
-                                  fontSize: "Size12",
-                                  anchorYOffset: "-5"
+                                    anchorString: "/email1/",
+                                    anchorUnits: "pixels",
+                                    font: "Arial",
+                                    fontSize: "Size12",
+                                    anchorYOffset: "-5"
                                 }
                             ]
                         }
@@ -245,7 +373,7 @@ class Envelopes {
         this.request = req;
         return req
     }
-    
+
     /***
      * Responsive HTML with smart sections
      */
@@ -257,82 +385,82 @@ class Envelopes {
         }
 
         const req = {
-        emailSubject: "Business Credit Card Approval",
-        status: "sent",
-        recipients: {
-        signers: [
-            {
-            email: this.email,
-            name: this.name,
-            clientUserId: this.clientUserId,
-            recipientId: "1",
-            tabs: {
-                signHereTabs: [
-                {
-                    tabLabel: "clientSignature"
-                }
-                ],
-                dateSignedTabs: [
-                {
-                    tabLabel: "clientDateSigned",
-                    font: "Arial",
-                    fontSize: "Size12"
-                }
-                ],
-                textTabs: [
-                {
-                    tabLabel: "Approver",
-                    value: "Samantha Approver",
-                    locked: "true",
-                    font: "Arial",
-                    fontSize: "Size12",
-                    maxLength: "4000",
-                    height: "11",
-                    width: "100"
-                },
-                {
-                    tabLabel: "BusinessName",
-                    value: "ACME Widgets",
-                    locked: "true",
-                    font: "Arial",
-                    fontSize: "Size12",
-                    maxLength: "4000",
-                    height: "11",
-                    width: "60"
-                }
-                ]
-            }
-            }
-        ]
-        },
-        documents: [
-        {
-            name: "Business Credit Card Approval.html",
-            documentId: "1",
-            htmlDefinition: {
-                source: doc,
-                displayAnchors: [
+            emailSubject: "Business Credit Card Approval",
+            status: "sent",
+            recipients: {
+                signers: [
                     {
-                    caseSensitive: true,
-                    startAnchor: "responsive_table_start",
-                    endAnchor: "responsive_table_end",
-                    removeEndAnchor: true,
-                    removeStartAnchor: true,
-                    displaySettings: {
-                        cellStyle: "text-align:left;border:solid 0px #000;margin:0px;padding:0px;",
-                        display: "responsive_table_single_column",
-                        tableStyle: "margin-bottom: 20px;width:100%;max-width:816px;margin-left:auto;margin-right:auto;"
+                        email: this.email,
+                        name: this.name,
+                        clientUserId: this.clientUserId,
+                        recipientId: "1",
+                        tabs: {
+                            signHereTabs: [
+                                {
+                                    tabLabel: "clientSignature"
+                                }
+                            ],
+                            dateSignedTabs: [
+                                {
+                                    tabLabel: "clientDateSigned",
+                                    font: "Arial",
+                                    fontSize: "Size12"
+                                }
+                            ],
+                            textTabs: [
+                                {
+                                    tabLabel: "Approver",
+                                    value: "Samantha Approver",
+                                    locked: "true",
+                                    font: "Arial",
+                                    fontSize: "Size12",
+                                    maxLength: "4000",
+                                    height: "11",
+                                    width: "100"
+                                },
+                                {
+                                    tabLabel: "BusinessName",
+                                    value: "ACME Widgets",
+                                    locked: "true",
+                                    font: "Arial",
+                                    fontSize: "Size12",
+                                    maxLength: "4000",
+                                    height: "11",
+                                    width: "60"
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            documents: [
+                {
+                    name: "Business Credit Card Approval.html",
+                    documentId: "1",
+                    htmlDefinition: {
+                        source: doc,
+                        displayAnchors: [
+                            {
+                                caseSensitive: true,
+                                startAnchor: "responsive_table_start",
+                                endAnchor: "responsive_table_end",
+                                removeEndAnchor: true,
+                                removeStartAnchor: true,
+                                displaySettings: {
+                                    cellStyle: "text-align:left;border:solid 0px #000;margin:0px;padding:0px;",
+                                    display: "responsive_table_single_column",
+                                    tableStyle: "margin-bottom: 20px;width:100%;max-width:816px;margin-left:auto;margin-right:auto;"
+                                }
+                            }
+                        ]
                     }
                 }
             ]
-            }
         }
-        ]
+        this.request = req;
+        return req
     }
-    this.request = req;
-    return req
-    }
-    
+
     /***
      * No tabs envelope request. Perfect for a click to agree envelope
      */
@@ -349,11 +477,11 @@ class Envelopes {
             recipients: {
                 signers: [
                     {
-                    clientUserId: this.clientUserId,
-                    email: this.email,
-                    name: this.name,
-                    recipientId: "1",
-                }
+                        clientUserId: this.clientUserId,
+                        email: this.email,
+                        name: this.name,
+                        recipientId: "1",
+                    }
                 ]
             },
             documents: [
@@ -367,7 +495,7 @@ class Envelopes {
         }
         this.request = req;
         return req
-    }    
+    }
 
     /***
      * updateRequest munges the request 
@@ -376,10 +504,10 @@ class Envelopes {
      * 3. sets useDisclosure
      *    https://developers.docusign.com/docs/esign-rest-api/reference/envelopes/envelopes/create/#schema__envelopedefinition_usedisclosure
      */
-    async updateRequest(supplemental){
+    async updateRequest(supplemental) {
         await this.addSupplementalDocuments(supplemental);
         this.setResponsiveMode();
-        if (this.ersd === true || this.ersd === false) {this.request.useDisclosure = this.ersd}
+        if (this.ersd === true || this.ersd === false) { this.request.useDisclosure = this.ersd }
         // if null, don't add the attribute     
     }
 
@@ -391,8 +519,8 @@ class Envelopes {
      *      {include: bool, signerMustAcknowledge: string}];
      *  ]
      */
-    async addSupplementalDocuments(supplemental){
-        const compositeTemplates =  !!this.request.compositeTemplates;
+    async addSupplementalDocuments(supplemental) {
+        const compositeTemplates = !!this.request.compositeTemplates;
         const docIdStart = compositeTemplates ? 1 : this.request.documents.length + 10;
         const compIdStart = compositeTemplates ? this.request.compositeTemplates.length + 10 : 0;
 
@@ -407,17 +535,17 @@ class Envelopes {
                     name: SUPP_DOC_NAMES[i],
                     display: "modal",
                     fileExtension: "pdf",
-                    documentId: `${i+docIdStart}`,
+                    documentId: `${i + docIdStart}`,
                     signerMustAcknowledge: supplemental[i].signerMustAcknowledge,
                     documentBase64: sB64
                 }
                 if (compositeTemplates) {
                     this.request.compositeTemplates.push({
-                        compositeTemplateId: `${i+compIdStart}`,
+                        compositeTemplateId: `${i + compIdStart}`,
                         document: suppDoc,
-                        inlineTemplates: [{sequence: "1"}]
+                        inlineTemplates: [{ sequence: "1" }]
                     })
-                } else {this.request.documents.push(suppDoc)}
+                } else { this.request.documents.push(suppDoc) }
             }
         }
     }
@@ -429,19 +557,19 @@ class Envelopes {
      * https://developers.docusign.com/docs/esign-rest-api/reference/envelopes/envelopes/create/#schema__envelopedefinition_compositetemplates_document_htmldefinition_source 
      */
     setResponsiveMode() {
-        const compositeTemplates =  this.request.compositeTemplates;
-        if (!this.responsive) {return} // EARLY RETURN
+        const compositeTemplates = this.request.compositeTemplates;
+        if (!this.responsive) { return } // EARLY RETURN
         if (compositeTemplates) {
-            for (let i=0; i< compositeTemplates.length; i++) {
+            for (let i = 0; i < compositeTemplates.length; i++) {
                 if (compositeTemplates[i].document && !compositeTemplates[i].document.htmlDefinition) {
-                    compositeTemplates[i].document.htmlDefinition = {source: "document"}
+                    compositeTemplates[i].document.htmlDefinition = { source: "document" }
                 }
             }
         } else {
             const documents = this.request.documents;
-            for (let i=0; i< documents.length; i++) {
+            for (let i = 0; i < documents.length; i++) {
                 if (!documents[i].htmlDefinition) {
-                    documents[i].htmlDefinition = {source: "document"}
+                    documents[i].htmlDefinition = { source: "document" }
                 }
             }
         }
@@ -455,7 +583,7 @@ class Envelopes {
      *    focused view.
      *    https://developers.docusign.com/docs/esign-rest-api/reference/envelopes/envelopeviews/createrecipient/
      */
-    async recipientView(returnUrl = RETURN_URL){
+    async recipientView(returnUrl = RETURN_URL) {
         this.returnUrl = returnUrl;
         const request = {
             authenticationMethod: "None",
@@ -471,8 +599,8 @@ class Envelopes {
             httpMethod: "POST",
             req: request
         });
-        const url = results ? results.url  : false;
-        if (!url) {return false}
+        const url = results ? results.url : false;
+        if (!url) { return false }
         const locale = this.locale !== "default" ? `&locale=${this.locale}` : "";
         return url + locale;
     }

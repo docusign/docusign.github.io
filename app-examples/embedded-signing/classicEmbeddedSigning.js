@@ -57,8 +57,9 @@ class ClassicSigning {
             default: {responsive: false, request: this.envelopes.createTemplateRequest.bind(this.envelopes)},
             htmlRegResp: {responsive: true, request: this.envelopes.createHtmlRegRequest.bind(this.envelopes)},
             htmlResponsive: {responsive: false, request: this.envelopes.createHtmlResponsiveRequest.bind(this.envelopes)},
-            docxResponsive: {responsive: true, request: this.envelopes.createTemplateRequest.bind(this.envelopes)},
-            pdfResponsive: {responsive: true, request: this.envelopes.createTemplateRequest.bind(this.envelopes)},
+            docxResponsive: {responsive: false, request: this.envelopes.createTemplateRequest.bind(this.envelopes)},
+            pdfResponsive: {responsive: false, request: this.envelopes.createTemplateRequest.bind(this.envelopes)},
+            payment: {responsive: false, request: this.envelopes.createPaymentRequest.bind(this.envelopes)},
         }
     }
 
@@ -83,6 +84,7 @@ class ClassicSigning {
         this.document = args.document;
         this.outputStyle = args.outputStyle; // openUrl, showUrl
         this.useIframe = args.useIframe;
+        this.gatewayId = args.gatewayId;
 
         this.useDisclosure = true; // why demo with this off?
 
@@ -90,6 +92,13 @@ class ClassicSigning {
         //   {include: true, signerMustAcknowledge: "accept"}];
         // no_interaction, view, accept, view_accept
         // https://developers.docusign.com/docs/esign-rest-api/reference/envelopes/envelopes/create/#schema__envelopedefinition_documents_signermustacknowledge
+
+        if (this.document === "payment" && !this.gatewayId) {
+            this.messageModal({style: 'text', title: "Problem: Enable Payments",
+                msg: `Problem: the Payment example is only available if you configure a 
+                payment gateway using the Settings link (top navigation).`});
+            return
+        }
 
         this.signing = true;
         this.loadingModal.show("Creating the envelope");
@@ -100,6 +109,7 @@ class ClassicSigning {
         this.envelopes.useDisclosure = this.useDisclosure; 
         this.envelopes.locale = this.locale; 
         this.envelopes.responsive = this.documentChoice[this.document].responsive;
+        this.envelopes.gatewayId = this.gatewayId;
         await this.documentChoice[this.document].request();
         // add supplemental docs
         await this.envelopes.updateRequest(this.supplemental)

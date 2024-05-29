@@ -85,6 +85,7 @@ $(async function () {
         document3: "default",
         outputStyle: "openUrl",
         useIframe: true,
+        gatewayId: "",
     }
     const formCheckboxes = {
         supp1include: true, 
@@ -131,6 +132,7 @@ $(async function () {
     let signClickToAgree = async function signClickToAgreeF (e) {
         e.preventDefault();
         formToConfiguration();
+        storageSet(CONFIG_STORAGE, configuration);
         if (!checkToken()){return}
         data.logger.post("Click to Agree");
         const supplemental = [
@@ -156,6 +158,7 @@ $(async function () {
     let signFocusView = async function signFocusViewF (e) {
         e.preventDefault();
         formToConfiguration();
+        storageSet(CONFIG_STORAGE, configuration);
         if (!checkToken()){return}
         data.logger.post("Focus View");
         const supplemental = [
@@ -172,6 +175,7 @@ $(async function () {
             document: configuration.document1,
             outputStyle: configuration.outputStyle,
             useIframe: configuration.useIframe,
+            gatewayId: configuration.gatewayId,
             });
     }.bind(this)
 
@@ -181,6 +185,7 @@ $(async function () {
     let dsjsDefault = async function dsjsDefaultF (e) {
         e.preventDefault();
         formToConfiguration();
+        storageSet(CONFIG_STORAGE, configuration);
         if (!checkToken()){return}
         data.logger.post("docusign.js Default View");
         const supplemental = [
@@ -196,6 +201,7 @@ $(async function () {
             document: configuration.document2,
             outputStyle: configuration.outputStyle,
             useIframe: configuration.useIframe,
+            gatewayId: configuration.gatewayId,
             });
     }.bind(this)
 
@@ -205,6 +211,7 @@ $(async function () {
     let classicSign = async function classicSignF (e) {
         e.preventDefault();
         formToConfiguration();
+        storageSet(CONFIG_STORAGE, configuration);
         if (!checkToken()){return}
         data.logger.post("Classic View");
         const supplemental = [
@@ -219,6 +226,7 @@ $(async function () {
             document: configuration.document3,
             outputStyle: configuration.outputStyle,
             useIframe: configuration.useIframe,
+            gatewayId: configuration.gatewayId,
             });
     }.bind(this)
 
@@ -228,6 +236,7 @@ $(async function () {
      */
     let view = async function viewF (e) {
         formToConfiguration();
+        storageSet(CONFIG_STORAGE, configuration);
         const sectionName = $(e.target).closest(".tab-pane").attr("id");
         if (sectionName === 'focusedView-tab-pane') {
             await data.focusedViewSigning.view()
@@ -444,7 +453,7 @@ $(async function () {
             CLASSIC_RESULT: CLASSIC_RESULT,
             logger: data.logger,
         });
-        data.loadingModal.show("Retrieving your photo and the account's logo")
+        data.loadingModal.show("Retrieving your photo and the account’s logo")
         await userPictureAccountBrand({userInfo: data.userInfo, callApi: data.callApi});
         data.classicSigning.showResults();
         return true;
@@ -491,10 +500,20 @@ $(async function () {
     window.addEventListener("message", envelopeCreated);
     $("#useSigningCeremonyDefaultUx").change(e => {
         $(`.classicColor`).attr("disabled", 
-        $("#useSigningCeremonyDefaultUx").prop('checked'))});   
+        $("#useSigningCeremonyDefaultUx").prop('checked'))});
+     
+    $('#settingsForm').on('keyup keypress', e => { //https://stackoverflow.com/a/11235672/64904
+        if (e.which === 13) { // ignore cr
+            e.preventDefault();
+            return false;
+        }
+    });
+       
 
     // Starting up...
     switchToHttps();
+    // (We need to store config info because we will reload the page as 
+    // part of logging in.)
     // Does the hash include a config item? Then save it.
     const config = processUrlHash("supp1signerMustAcknowledge");
     if (config) {storageSet(CONFIG_STORAGE, config)}
