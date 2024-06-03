@@ -124,6 +124,13 @@ $(async function () {
             templateId: null,
             docChoice: "pdfResponsive",
         },
+        {
+            url:  "https://docusign.github.io/examples/templates/Approve_Decline",
+            name: "DevCenter example: Approve Decline",
+            description: "",
+            templateId: null,
+            docChoice: "approveDecline",
+        },
     ];
 
     /***
@@ -165,7 +172,7 @@ $(async function () {
             {include: configuration.supp11include, signerMustAcknowledge: configuration.supp11signerMustAcknowledge},
             {include: configuration.supp12include, signerMustAcknowledge: configuration.supp12signerMustAcknowledge}];
         await data.focusedViewSigning.sign({
-            templateId: templates[0].templateId,
+            templateId: getTemplateId(configuration.document1),
             supplemental: supplemental,
             name: configuration.signername1,
             email: data.userInfo.email,

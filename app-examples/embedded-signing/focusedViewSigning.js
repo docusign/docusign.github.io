@@ -44,6 +44,7 @@ class FocusedViewSigning {
             htmlRegResp: {responsive: true, request: this.envelopes.createHtmlRegRequest.bind(this.envelopes)},
             htmlResponsive: {responsive: false, request: this.envelopes.createHtmlResponsiveRequest.bind(this.envelopes)},
             payment: {responsive: false, request: this.envelopes.createPaymentRequest.bind(this.envelopes)},
+            approveDecline: {responsive: false, request: this.envelopes.createTemplateRequest.bind(this.envelopes)},
         }
     }
 

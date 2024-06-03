@@ -50,6 +50,7 @@ class DsjsDefaultSigning {
             docxResponsive: {responsive: false, request: this.envelopes.createTemplateRequest.bind(this.envelopes)},
             pdfResponsive: {responsive: false, request: this.envelopes.createTemplateRequest.bind(this.envelopes)},
             payment: {responsive: false, request: this.envelopes.createPaymentRequest.bind(this.envelopes)},
+            approveDecline: {responsive: false, request: this.envelopes.createTemplateRequest.bind(this.envelopes)},
         }
     }
 
