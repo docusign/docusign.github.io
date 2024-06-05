@@ -124,6 +124,11 @@
                                     during signing,
                                     but is not required to view the document.</li>
                                 <li><b>View Accept</b> The recipient is required to view and accept the document.</li>
+                                <li><b>Read Accept</b> The recipient is required to view the entire document and then accept it.</li>                                
+                            </ul>
+                            <h3>Known Issues</h3>
+                            <ul>
+                                <li>C2A-3503 Supplemental documents with Read Accept mode cause the agreement ceremony to hang.</li>
                             </ul>
                         </div>
                     </div>
@@ -212,6 +217,7 @@
                                 <option value="view">View</option>
                                 <option value="accept">Accept</option>
                                 <option value="view_accept">View Accept</option>
+                                <option value="read_accept">Read Accept</option>
                             </select>
 
                             <label for="supp2include" class="form-label ms-3">#2?</label>
@@ -223,6 +229,7 @@
                                 <option value="view">View</option>
                                 <option value="accept">Accept</option>
                                 <option value="view_accept">View Accept</option>
+                                <option value="read_accept">Read Accept</option>
                             </select>
                         </div>
 
@@ -273,6 +280,19 @@
                                 <li>Many Docusign signer authentication features can be used</li>
                             </ul>
                             <p>This demo uploads a template to your account, and then uses it for the envelope.</p>
+                            <p class="mb-0"> The signing ceremony can include supplemental documents with
+                                <a hre="https://developers.docusign.com/docs/esign-rest-api/reference/envelopes/envelopes/create/#schema__envelopedefinition_documents_signermustacknowledge"
+                                    target="_blank">different levels of signer acceptance</a>:
+                            </p>
+                            <ul>
+                                <li><b>No Interaction</b> No recipient action is required.</li>
+                                <li><b>View</b> The recipient is required to view the document.</li>
+                                <li><b>Accept</b> The recipient is required to accept the document by selecting accept
+                                    during signing,
+                                    but is not required to view the document.</li>
+                                <li><b>View Accept</b> The recipient is required to view and accept the document.</li>
+                                <li><b>Read Accept</b> The recipient is required to view the entire document and then accept it.</li>                                
+                            </ul>
                         </div>
                     </div>
 
@@ -356,6 +376,7 @@
                                 <option value="view">View</option>
                                 <option value="accept">Accept</option>
                                 <option value="view_accept">View Accept</option>
+                                <option value="read_accept">Read Accept</option>
                             </select>
 
                             <label for="supp32include" class="form-label ms-3">#2?</label>
@@ -367,6 +388,7 @@
                                 <option value="view">View</option>
                                 <option value="accept">Accept</option>
                                 <option value="view_accept">View Accept</option>
+                                <option value="read_accept">Read Accept</option>
                             </select>
                         </div>
                         <a id="classicSign" class="btn btn-primary btn-lg mt-3" type="button" role="button">Sign</a>
@@ -395,6 +417,23 @@
                                 <li>The events raise a DOM event to your JS app; the redirection page is not used</li>
                             </ul>
                             <p>This demo uploads a template to your account, and then uses it for the envelope.</p>
+                            <p class="mb-0"> The signing ceremony can include supplemental documents with
+                                <a hre="https://developers.docusign.com/docs/esign-rest-api/reference/envelopes/envelopes/create/#schema__envelopedefinition_documents_signermustacknowledge"
+                                    target="_blank">different levels of signer acceptance</a>:
+                            </p>
+                            <ul>
+                                <li><b>No Interaction</b> No recipient action is required.</li>
+                                <li><b>View</b> The recipient is required to view the document.</li>
+                                <li><b>Accept</b> The recipient is required to accept the document by selecting accept
+                                    during signing,
+                                    but is not required to view the document.</li>
+                                <li><b>View Accept</b> The recipient is required to view and accept the document.</li>
+                                <li><b>Read Accept</b> The recipient is required to view the entire document and then accept it.</li>                                
+                            </ul>
+                            <h3>Known Issues</h3>
+                            <ul>
+                                <li>C2A-3503 Supplemental documents with Read Accept mode cause the signing ceremony to hang.</li>
+                            </ul>
                         </div>
                     </div>
 
@@ -476,6 +515,7 @@
                                 <option value="view">View</option>
                                 <option value="accept">Accept</option>
                                 <option value="view_accept">View Accept</option>
+                                <option value="read_accept">Read Accept</option>
                             </select>
 
                             <label for="supp12include" class="form-label ms-3">#2?</label>
@@ -487,6 +527,7 @@
                                 <option value="view">View</option>
                                 <option value="accept">Accept</option>
                                 <option value="view_accept">View Accept</option>
+                                <option value="read_accept">Read Accept</option>
                             </select>
                         </div>
                         <h4 class="mt-3">The Signing Ceremony’s primary button UX can be modified by the developer</h4>
@@ -551,6 +592,19 @@
                                 <li>The events raise a DOM event to your JS app; the redirection page is not used</li>
                             </ul>
                             <p>This demo uploads a template to your account, and then uses it for the envelope.</p>
+                            <p class="mb-0"> The signing ceremony can include supplemental documents with
+                                <a hre="https://developers.docusign.com/docs/esign-rest-api/reference/envelopes/envelopes/create/#schema__envelopedefinition_documents_signermustacknowledge"
+                                    target="_blank">different levels of signer acceptance</a>:
+                            </p>
+                            <ul>
+                                <li><b>No Interaction</b> No recipient action is required.</li>
+                                <li><b>View</b> The recipient is required to view the document.</li>
+                                <li><b>Accept</b> The recipient is required to accept the document by selecting accept
+                                    during signing,
+                                    but is not required to view the document.</li>
+                                <li><b>View Accept</b> The recipient is required to view and accept the document.</li>
+                                <li><b>Read Accept</b> The recipient is required to view the entire document and then accept it.</li>                                
+                            </ul>
                         </div>
                     </div>
                     <form>
@@ -633,6 +687,7 @@
                                 <option value="view">View</option>
                                 <option value="accept">Accept</option>
                                 <option value="view_accept">View Accept</option>
+                                <option value="read_accept">Read Accept</option>
                             </select>
 
                             <label for="supp22include" class="form-label ms-3">#2?</label>
@@ -644,6 +699,7 @@
                                 <option value="view">View</option>
                                 <option value="accept">Accept</option>
                                 <option value="view_accept">View Accept</option>
+                                <option value="read_accept">Read Accept</option>
                             </select>
                         </div>
                         <h4 class="mt-3">The Signing Ceremony’s primary button UX can be modified by the developer</h4>

@@ -62,7 +62,7 @@ class Envelopes {
     async sendEnvelope() {
         this.envelopeId = false;
         const results = await this.callApi.callApiJson({
-            apiMethod: `/accounts/${this.accountId}/envelopes`,
+            apiMethod: `/accounts/${this.accountId}/envelopes?merge_roles_on_draft=true`,
             httpMethod: "POST",
             req: this.request
         });
@@ -518,34 +518,125 @@ class Envelopes {
      *      {include: bool, signerMustAcknowledge: string},
      *      {include: bool, signerMustAcknowledge: string}];
      *  ]
+     * 
+     * If the signerMustAcknowledge === "read_accept" then 
+     * we need to add the appropriate approveTabs/viewTabs 
+     * to force a reading of the entire supplemental doc
      */
     async addSupplementalDocuments(supplemental) {
         const compositeTemplates = !!this.request.compositeTemplates;
         const docIdStart = compositeTemplates ? 1 : this.request.documents.length + 10;
         const compIdStart = compositeTemplates ? this.request.compositeTemplates.length + 10 : 0;
+        if (!compositeTemplates) {
+            if (!this.request.recipients.signers[0].hasOwnProperty('tabs')) {
+                this.request.recipients.signers[0].tabs = {};    
+            }
+            this.request.recipients.signers[0].tabs.approveTabs = [];
+            this.request.recipients.signers[0].tabs.viewTabs = [];
+        }
 
         for (let i = 0; i < supplemental.length; i++) {
             if (supplemental[i] && supplemental[i].include) {
                 const sB64 = await this.callApi.getDocB64(SUPP_DOCS_URL + SUPP_DOC_NAMES[i]);
+                const readAccept = supplemental[i].signerMustAcknowledge === "read_accept";
                 if (!sB64) {
                     this.showMsg(this.callApi.errMsg); // Error!
                     return
                 }
+                const documentId = `${i + docIdStart}`;
                 const suppDoc = {
                     name: SUPP_DOC_NAMES[i],
                     display: "modal",
                     fileExtension: "pdf",
-                    documentId: `${i + docIdStart}`,
+                    documentId: documentId,
                     signerMustAcknowledge: supplemental[i].signerMustAcknowledge,
                     documentBase64: sB64
                 }
+                if (readAccept) {
+                    suppDoc.signerMustAcknowledge = "view";
+                }
+
                 if (compositeTemplates) {
+                    let inlineTempl = { sequence: "1" };
+                    if (readAccept) {
+                        // add the approveTab and viewTab
+                        inlineTempl.recipients = 
+                            {
+                            signers: [
+                                { 
+                                    clientUserId: this.clientUserId,
+                                    email: this.email,
+                                    name: this.name,
+                                    roleName: this.role,
+                                    recipientId: "1",
+                                    tabs: {
+                                        approveTabs: [
+                                            {
+                                                "buttonText": "Approve",
+                                                "documentId": documentId,
+                                                "recipientId": "1",
+                                                "pageNumber": "1",
+                                                "xPosition": "0",
+                                                "yPosition": "0",
+                                                "width": "60",
+                                                "height": "19",
+                                            }
+                                        ],
+                                        viewTabs: [
+                                            {
+                                                "buttonText": "View",
+                                                "required": "true",
+                                                "requiredRead": "true",
+                                                "documentId": documentId,
+                                                "recipientId": "1",
+                                                "pageNumber": "1",
+                                                "xPosition": "0",
+                                                "yPosition": "0",
+                                                "tabType": "view"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+
                     this.request.compositeTemplates.push({
                         compositeTemplateId: `${i + compIdStart}`,
                         document: suppDoc,
-                        inlineTemplates: [{ sequence: "1" }]
+                        inlineTemplates: [inlineTempl]
                     })
-                } else { this.request.documents.push(suppDoc) }
+                } else {
+                    this.request.documents.push(suppDoc);
+                    if (readAccept) {
+                        // add the approveTab and viewTab
+                        this.request.recipients.signers[0].tabs.approveTabs.push(
+                            {
+                                "buttonText": "Approve",
+                                "documentId": documentId,
+                                "recipientId": "1",
+                                "pageNumber": "1",
+                                "xPosition": "0",
+                                "yPosition": "0",
+                                "width": "60",
+                                "height": "19",
+                            }
+                        );
+                        this.request.recipients.signers[0].tabs.viewTabs.push(
+                            {
+                                "buttonText": "View",
+                                "required": "true",
+                                "requiredRead": "true",
+                                "documentId": documentId,
+                                "recipientId": "1",
+                                "pageNumber": "1",
+                                "xPosition": "0",
+                                "yPosition": "0",
+                                "tabType": "view"
+                            }
+                        )
+                    }
+                }
             }
         }
     }
@@ -561,14 +652,15 @@ class Envelopes {
         if (!this.responsive) { return } // EARLY RETURN
         if (compositeTemplates) {
             for (let i = 0; i < compositeTemplates.length; i++) {
-                if (compositeTemplates[i].document && !compositeTemplates[i].document.htmlDefinition) {
+                if (compositeTemplates[i].document && !compositeTemplates[i].document.htmlDefinition &&
+                    compositeTemplates[i].document.fileExtension === "html") {
                     compositeTemplates[i].document.htmlDefinition = { source: "document" }
                 }
             }
         } else {
             const documents = this.request.documents;
             for (let i = 0; i < documents.length; i++) {
-                if (!documents[i].htmlDefinition) {
+                if (!documents[i].htmlDefinition && documents[i].fileExtension === "html") {
                     documents[i].htmlDefinition = { source: "document" }
                 }
             }
