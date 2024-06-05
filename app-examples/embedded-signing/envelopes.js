@@ -484,14 +484,16 @@ class Envelopes {
                     }
                 ]
             },
-            documents: [
+            documents: []
+            /** 
                 {
                     name: "Example document",
                     fileExtension: "pdf",
                     documentId: "1",
                     documentBase64: docB64,
                 }
-            ]
+            ] 
+            */
         }
         this.request = req;
         return req
