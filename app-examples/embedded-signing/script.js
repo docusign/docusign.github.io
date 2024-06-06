@@ -115,14 +115,14 @@ $(async function () {
             name: "DevCenter example: docx responsive",
             description: "",
             templateId: null,
-            docChoice: "docxResponsive",
+            docChoice: "docxDoc",
         },
         {
             url:  "https://docusign.github.io/examples/templates/PDF_responsive",
             name: "DevCenter example: PDF responsive",
             description: "",
             templateId: null,
-            docChoice: "pdfResponsive",
+            docChoice: "pdfDoc",
         },
         {
             url:  "https://docusign.github.io/examples/templates/Approve_Decline",

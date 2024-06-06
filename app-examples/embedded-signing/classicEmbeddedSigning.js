@@ -57,8 +57,8 @@ class ClassicSigning {
             default: {responsive: false, request: this.envelopes.createTemplateRequest.bind(this.envelopes)},
             htmlRegResp: {responsive: true, request: this.envelopes.createHtmlRegRequest.bind(this.envelopes)},
             htmlResponsive: {responsive: false, request: this.envelopes.createHtmlResponsiveRequest.bind(this.envelopes)},
-            docxResponsive: {responsive: false, request: this.envelopes.createTemplateRequest.bind(this.envelopes)},
-            pdfResponsive: {responsive: false, request: this.envelopes.createTemplateRequest.bind(this.envelopes)},
+            docxDoc: {responsive: false, request: this.envelopes.createTemplateRequest.bind(this.envelopes)},
+            pdfDoc: {responsive: false, request: this.envelopes.createTemplateRequest.bind(this.envelopes)},
             payment: {responsive: false, request: this.envelopes.createPaymentRequest.bind(this.envelopes)},
             approveDecline: {responsive: false, request: this.envelopes.createTemplateRequest.bind(this.envelopes)},
         }
