@@ -37,7 +37,9 @@ class Logger {
     }
 
     stopLogging() {
-        window.fetch = this.trueFetch;
+        if (this.trueFetch) {
+            window.fetch = this.trueFetch;
+        }
         this.logging = false;
         $(NAV_ITEM_ID).text("Start Logging");
         storageSet(LOGGER_SAVED_STATUS, {openLogger: false});
