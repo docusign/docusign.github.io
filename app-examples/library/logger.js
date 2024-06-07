@@ -142,7 +142,7 @@ class Logger {
     }
 
     openLoggingWindow() {
-        if (this.window) {return}; // EARLY return
+        if (this.window && this.window.closed === false) {return}; // EARLY return
         const screenHeight = screen.height;
         const screenWidth = screen.width;
         const height = Math.min(900, screenHeight);
