@@ -110,7 +110,10 @@ class Logger {
      * h is the headline, p is the message. Either can be set to null;
      */
     post (h, p=null) {
-        if (!this.window) {return} // EARLY return
+        if (!this.window || this.window.closed) {
+            this.stopLogging();
+            return; // EARLY return 
+        } 
         this.window.postMessage ({source: "logger", op: "post", h: h, p:p})
     }
 
@@ -118,7 +121,10 @@ class Logger {
      * post a log entry to the logger. 
      */
     postLog (log) {
-        if (!this.window) {return} // EARLY return
+        if (!this.window || this.window.closed) {
+            this.stopLogging();
+            return; // EARLY return 
+        } 
         this.window.postMessage ({source: "logger", op: "postLog", log: log})
     }
 
