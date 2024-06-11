@@ -473,8 +473,8 @@ $(async function () {
     async function checkTemplates() {
         templates = await data.checkTemplates.check(templates);
         const emptyOk = data.checkTemplates.msg === ''
-        const ok = data.checkTemplates.msg || emptyOk;
         const okMsg = emptyOk ? "Done." : data.checkTemplates.msg;
+        const ok = !data.checkTemplates.errMsg;
         return {ok: ok, msg: ok ? okMsg : data.checkTemplates.errMsg}
     }
 
@@ -553,9 +553,11 @@ $(async function () {
                 data.loadingModal.delayedHide(result.msg)
             } else {
                 data.loadingModal.hide();
-                this.messageModal({style: 'text', title: "Templates issue", msg: 
+                messageModal({style: 'text', title: "Templates issue", msg: 
                     `<p>Problem while loading example templates
                     to your eSignature account:</p><p>${result.msg}</p>`});
+                            // couldn't login
+                loginModal.show();
             }
             $(`#signername` ).val(data.userInfo.name);
             $(`#signername1`).val(data.userInfo.name);

@@ -66,7 +66,6 @@ class CheckTemplates {
             }
         }
         if (!ok) {
-            this.errMsg += `Could not upload template ${templates[i].name}: ${this.callApi.errMsg}`;
             return this.templates;
         }
         return this.templates;
@@ -117,8 +116,12 @@ class CheckTemplates {
             req: templateDefinition
         });
         if (!results) {
-            this.errMsg += 
-                `Could not upload template «${template.name}» to your account. `;
+            if (this.callApi.errMsg.indexOf("USER_LACKS_PERMISSIONS") > 0) {
+                this.errMsg = `USER_LACKS_PERMISSIONS! Use a different demo account` 
+            } else {
+                this.errMsg += 
+                `Could not upload template «${template.name}» to your account. ${this.callApi.errMsg}`;
+            }
             return false;
         }
 
