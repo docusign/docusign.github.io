@@ -259,7 +259,7 @@ $(function () {
         workingUpdate(true);
         updateQp();
         const needsEnv = {
-            "Correct": true, "Recipient Preview": true, "Recipient Manual Review": true}
+            "Recipient Preview": true, "Recipient Manual Review": true}
         if (needsEnv[action] && !envelope) {
             toast("Problem: create an envelope")
         } else {
@@ -415,7 +415,8 @@ $(function () {
         const signer = {
             name: data.userInfo.name,
             email: data.userInfo.email,
-            clientUserId: 1000
+            clientUserId: 1000,
+            draft: true
         };
         if (useCurl) {
             envelopeId = "000-ENVELOPE-ID-000"
@@ -431,15 +432,35 @@ $(function () {
         }
     }
 
+    async function embeddedCorrect() {
+        const signer = {
+            name: data.userInfo.name,
+            email: data.userInfo.email,
+            draft: false
+        };
+        if (useCurl) {
+            envelopeId = "000-ENVELOPE-ID-000"
+        } else {
+            envelopeId = await createEnvelope(signer);
+        }
+        if (envelopeId) {
+            msg(`Envelope ${envelopeId} created.`);
+            await embeddedCorrectView({
+                envelopeId: envelopeId,
+                signer: signer
+            });
+        }
+    }
+
     /*
      *  Create an envelope, either a blank or from a template
      *  on the DocuSign platform
      */
-    async function createEnvelope({ name, email, clientUserId }) {
+    async function createEnvelope({ name, email, clientUserId, draft }) {
         const req = blankET ? {
-            status: "created"
+            status: draft ? "created" : "sent"
         } : {
-            status: "created",
+            status: draft ? "created" : "sent",
             compositeTemplates: [
                 {
                     compositeTemplateId: "1",
@@ -561,6 +582,46 @@ $(function () {
             htmlMsg ("<h3>Debugging mode</h3><p>1. Open a new tab (incognito window best) and an inspector window<br />2. Load one of these URLs:</p>");
             htmlMsg (`<p><a href="${resultsUrl}">Embedded Sender View</a></p>
             <p><a href="${iframeitUrl}?label=Embedded+Sender+View&url=${encodeURIComponent(resultsUrl)}">Embedded Sender View in an iFrame</a></p>`);
+        }
+        return true;
+    }
+
+    /*
+     * Create an embedded correct view, open a new tab with it
+     */
+    async function embeddedCorrectView({ envelopeId, signer }) {
+        const req = makeEmbeddedViewRequest("envelope");
+        const apiMethod = `/accounts/${accountId}/envelopes/${envelopeId}/views/correct`;
+
+        // Make the API call
+        const httpMethod = "POST";
+        const results = await data.callApi.callApiJson({
+            apiMethod: apiMethod,
+            httpMethod: httpMethod,
+            req: req
+        });
+        if (results === false) {
+            return false;
+        }
+        const resultsUrl = results.url
+        msg(`Correct view URL: ${resultsUrl}`);
+        if (openEmbeddedView) {
+            if (SHOW_IN_IFRAME) {
+                embeddedViewWindow = window.open(
+                    `${iframeitUrl}?label=Embedded+Correct+View&url=${encodeURIComponent(resultsUrl)}`, "_blank");
+            } else {
+                embeddedViewWindow = window.open(resultsUrl, "_blank")
+            }
+            if(!embeddedViewWindow || embeddedViewWindow.closed || 
+            typeof embeddedViewWindow.closed=='undefined') {
+                // popup blocked
+                alert ("Please enable the popup window");
+            }
+            embeddedViewWindow.focus();
+        } else {
+            htmlMsg ("<h3>Debugging mode</h3><p>1. Open a new tab (incognito window best) and an inspector window<br />2. Load one of these URLs:</p>");
+            htmlMsg (`<p><a href="${resultsUrl}">Embedded Correct View</a></p>
+            <p><a href="${iframeitUrl}?label=Embedded+Correct+View&url=${encodeURIComponent(resultsUrl)}">Embedded Correct View in an iFrame</a></p>`);
         }
         return true;
     }

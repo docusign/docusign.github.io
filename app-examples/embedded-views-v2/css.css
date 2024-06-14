@@ -99,7 +99,7 @@ pre {
     cursor: default;
 }
 .accountModal-body {padding: 0;}
-#action {width: 10em;}
+#action {width: 12em;}
 
 form {margin-top:2em;}
 .mb-3 select, .mb-3 select, .mb-5 select, .mb-5 select {display: inline; width: 14em; margin-left: 2em;}
