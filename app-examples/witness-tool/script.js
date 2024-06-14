@@ -1,4 +1,4 @@
-// Copyright © 2022 DocuSign, Inc.
+// Copyright © 2022 Docusign, Inc.
 // License: MIT Open Source https://opensource.org/licenses/MIT
 import {
     CallApi,
@@ -21,7 +21,7 @@ $(function () {
 
     // Example settings
     // listStatusChanges query parameter values.
-    // Based on DocuSign application's Sent folder query
+    // Based on Docusign application's Sent folder query
     const qp_count = 40;
     const qp_from_date_days_ago = 60; // how many days back?
     const now = new Date();

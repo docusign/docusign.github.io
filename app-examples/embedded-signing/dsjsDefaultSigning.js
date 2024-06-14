@@ -1,4 +1,4 @@
-// Copyright © 2024 DocuSign, Inc.
+// Copyright © 2024 Docusign, Inc.
 // License: MIT Open Source https://opensource.org/licenses/MIT
 
 /*
@@ -58,7 +58,7 @@ class DsjsDefaultSigning {
      * sign function will 
      * 1. Send envelope
      * 2. Create recipient view
-     * 3. Use the DocuSign.js library to open the focused view
+     * 3. Use the Docusign.js library to open the focused view
      * 
      * In the usual client/server app, steps 1 and 2 would be done on the server.
      * Then the recipientView URL (response from step 2) is returned to the client.
@@ -127,13 +127,13 @@ class DsjsDefaultSigning {
     }
 
     /***
-     * focusedView, in the browser, calls the DocuSign.js library
+     * focusedView, in the browser, calls the Docusign.js library
      * to display the signing ceremony in an iframe
      */
     async focusedView(recipientViewUrl) {
         const signingConfiguration = {
             url: recipientViewUrl,
-            displayFormat: 'default', // Uses DocuSign Classic Signing ceremony
+            displayFormat: 'default', // Uses Docusign Classic Signing ceremony
             style: {
                 /** High-level variables that mirror our existing branding APIs. Reusing the branding name here for familiarity. */
                 branding: {

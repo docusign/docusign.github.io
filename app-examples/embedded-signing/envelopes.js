@@ -1,4 +1,4 @@
-// Copyright © 2024 DocuSign, Inc.
+// Copyright © 2024 Docusign, Inc.
 // License: MIT Open Source https://opensource.org/licenses/MIT
 
 /*
@@ -77,7 +77,7 @@ class Envelopes {
                 //    "message":"Freeform signing is not allowed for your account because it conflicts with other settings, please place signing tabs for each signer."}'
                 const msg = `<p>This account, ${this.accountId}, is not configured for Click To Agree envelopes.
                     Instead, it is configured for the Document Visibility feature.
-                    Contact DocuSign customer service to change your account's configuration.
+                    Contact Docusign customer service to change your account's configuration.
                     Tell them you have the ONESIGNALLSIGN_NOT_SATISFIED error when you are creating a Click To Agree envelope.</p>
                     <p><small>Error message: ${this.callApi.errMsg}</small></p>`;
                 this.messageModal({ style: 'text', title: "Create Envelope Problem: Operation Canceled", msg: msg });

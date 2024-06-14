@@ -1,4 +1,4 @@
-// Copyright © 2024 DocuSign, Inc.
+// Copyright © 2024 Docusign, Inc.
 // License: MIT Open Source https://opensource.org/licenses/MIT
 //
 // Test embedded views v2  
@@ -454,7 +454,7 @@ $(function () {
 
     /*
      *  Create an envelope, either a blank or from a template
-     *  on the DocuSign platform
+     *  on the Docusign platform
      */
     async function createEnvelope({ name, email, clientUserId, draft }) {
         const req = blankET ? {

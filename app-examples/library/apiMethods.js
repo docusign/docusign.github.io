@@ -1,11 +1,11 @@
 /**
- * Copyright (c) 2024 - DocuSign, Inc. (https://www.docusign.com)
+ * Copyright (c) 2024 - Docusign, Inc. (https://www.docusign.com)
  * License: The MIT License. See the LICENSE file.
  */
 
 /**
  * File: apiMethods.js
- * Provides translation between the DocuSign API urls 
+ * Provides translation between the Docusign API urls 
  * and the API's name used in the Developer Center documentation
  */
 

@@ -1,4 +1,4 @@
-// Copyright © 2022 DocuSign, Inc.
+// Copyright © 2022 Docusign, Inc.
 // License: MIT Open Source https://opensource.org/licenses/MIT
 // Set basic variables
 const oAuthServiceProviderProd = "https://account.docusign.com"; // prod
@@ -29,7 +29,7 @@ const logLevel = 0; // 0 is terse; 9 is verbose
  * Constructor
  *   args -- an object containing attributes:
  *   workingUpdateF -- function called when working state changes
- *   platform === "stage", "demo", or "prod" -- selects the DocuSign platform
+ *   platform === "stage", "demo", or "prod" -- selects the Docusign platform
  *
  * public values
  *   .oAuthClientID

@@ -1,4 +1,4 @@
-// Copyright © 2024 DocuSign, Inc.
+// Copyright © 2024 Docusign, Inc.
 // License: MIT Open Source https://opensource.org/licenses/MIT
 // Set basic variables
 const oAuthServiceProviderProd = "https://account.docusign.com"; // prod

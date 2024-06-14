@@ -1,4 +1,4 @@
-// Copyright © 2022 DocuSign, Inc.
+// Copyright © 2022 Docusign, Inc.
 // License: MIT Open Source https://opensource.org/licenses/MIT
 
 import {
@@ -211,7 +211,7 @@ $(function () {
 
     /*
      *  Create the envelope from a template
-     *  on the DocuSign platform
+     *  on the Docusign platform
      */
     async function createEnvelope({ name, email, clientUserId }) {
         const req = {

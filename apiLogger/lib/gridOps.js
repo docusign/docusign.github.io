@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2023 - DocuSign, Inc. (https://www.docusign.com)
+ * Copyright (c) 2023 - Docusign, Inc. (https://www.docusign.com)
  * License: The MIT License. See the LICENSE file.
  */
 

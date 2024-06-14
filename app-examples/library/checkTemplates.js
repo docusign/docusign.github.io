@@ -1,4 +1,4 @@
-// Copyright © 2022 DocuSign, Inc.
+// Copyright © 2022 Docusign, Inc.
 // License: MIT Open Source https://opensource.org/licenses/MIT
 
 // Example template settings

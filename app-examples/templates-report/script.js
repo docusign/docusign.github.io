@@ -1,4 +1,4 @@
-// Copyright © 2023 DocuSign, Inc.
+// Copyright © 2023 Docusign, Inc.
 // License: MIT Open Source https://opensource.org/licenses/MIT
 
 import {
@@ -39,7 +39,7 @@ $(function () {
             "folderName": "Templates",
             "autoMatch": "true",
             "favoritedByMe": "false",
-            "emailSubject": "Complete with DocuSign: Data from hidden conditional fields.pdf",
+            "emailSubject": "Complete with Docusign: Data from hidden conditional fields.pdf",
             ownerUserName
             ownerUserId
             ownerEmail  // from the owner obj--
