@@ -181,7 +181,7 @@ class ClassicSigning {
         if (items[0] !== "event") {return}
         const event = items[1]; // "signing_complete" or something else
 
-        const msg = `<p>Result: <b>${event.replace("_", " ")}</b></p>${END_MSG}`;
+        const msg = `<p>Result: <b>${event.replace("_", " ")}</b><br/>Msg 103</p>${END_MSG}`;
         this.messageModal({style: 'text', title: "Signing Session Ended", msg: msg});
         this.logger.post("Signing session ended", msg);
         
@@ -199,7 +199,7 @@ class ClassicSigning {
 
         if (!results || !results.event) {return}
         this.messageModal({style: 'text', title: "Signing Session Ended", msg: 
-            `<p>Result: <b>${results.event.replace("_", " ")}</b></p>
+            `<p>Result: <b>${results.event.replace("_", " ")}</b><br/>Msg 104</p>
             ${END_MSG_NO_IFRAME}`});
         if (!results.envelopeId) {return}
         this.envelopes.name = results.name;

@@ -172,7 +172,7 @@ class FocusedViewSigning {
                 } else {
                     const msg = `<p>Event data: ${JSON.stringify(event)}<br/>Msg 102</p>`;
                     this.messageModal({style: 'text', title: "Signing Session Message", msg: msg});
-                    this.logger.post("Signing session ended", msg);
+                    this.logger.post("Signing Session Message", msg);
                 } 
                 $(`#${this.signElId}`).addClass("hide");//.empty(); // Important! REMOVE the signing ceremony
                 $(`#${this.mainElId}`).removeClass("hide");

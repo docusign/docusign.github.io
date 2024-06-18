@@ -115,10 +115,10 @@
                 }       
                 // Event: { returnUrl: url, type: "sessionEnd", sessionEndType: "signing_complete"}
                 if (event.type === "sessionEnd") {
-                    const msg = `<p>Result: <b>${event.sessionEndType.replace("_", " ")}</b></p>${END_MSG}`;
+                    const msg = `<p>Result: <b>${event.sessionEndType.replace("_", " ")}</b><br/>Msg 107</p>${END_MSG}`;
                     message({style: 'text', title: "Signing Session Ended", msg: msg});
                 } else {
-                    const msg = `<p>Event data: ${JSON.stringify(event)}</p>`;
+                    const msg = `<p>Event data: ${JSON.stringify(event)}<br/>Msg 108</p>`;
                     message({style: 'text', title: "Signing Session Message", msg: msg});
                 } 
                 $(`#signing-ceremony`).empty(); // Important! REMOVE the signing ceremony
