@@ -33,13 +33,14 @@ import {
     checkAccountSettings
 } from "../library/utilities.js" 
 
-const CLIENT_ID = "demo";
 const CONFIG_STORAGE = "embeddedSigningConfiguration";
 const MODE_STORAGE = "embeddedSigningMode";
 const CLASSIC_RESULT = 'classicResult'; // store the classic non-iframe signing result
+const STAGE_QP = 'stage'; // if ?stage=1 then use stage
 
 $(async function () {
     let oAuthClientID;
+    let platform = "demo";
     let accountId;
     let loginModal = new bootstrap.Modal('#modalLogin'); // for managing the loginModal
     let configuration = {
@@ -111,15 +112,15 @@ $(async function () {
             docChoice: "default",
         },
         {
-            url:  "https://docusign.github.io/examples/templates/docx_responsive",
-            name: "DevCenter example: docx responsive",
+            url:  "https://docusign.github.io/examples/templates/docx_Credit_Card",
+            name: "DevCenter example: docx Credit Card",
             description: "",
             templateId: null,
             docChoice: "docxDoc",
         },
         {
-            url:  "https://docusign.github.io/examples/templates/PDF_responsive",
-            name: "DevCenter example: PDF responsive",
+            url:  "https://docusign.github.io/examples/templates/PDF_Credit_Card",
+            name: "DevCenter example: PDF Credit Card",
             description: "",
             templateId: null,
             docChoice: "pdfDoc",
@@ -371,6 +372,7 @@ $(async function () {
     async function completeLogin() {
         oAuthClientID = data.implicitGrant.oAuthClientID;
         data.userInfo = new UserInfo({
+            platform: platform,
             accessToken: data.implicitGrant.accessToken,
             onlyCheckDefaultAccount: true,
         });
@@ -410,6 +412,7 @@ $(async function () {
             accountId: accountId,
             callApi: data.callApi,
             logger: data.logger,
+            platform: platform,
         })
         data.click2agree = new Click2Agree({
             showMsg: toast,
@@ -526,11 +529,26 @@ $(async function () {
     if (config) {storageSet(CONFIG_STORAGE, config)}
     const classicResults = processUrlHash("classicResults");
     if (classicResults) {storageSet(CLASSIC_RESULT, classicResults)}
+    let useStage = storageGet(STAGE_QP, false);
+    const stageResults = processUrlHash(STAGE_QP);
+    useStage = stageResults ? stageResults.stage === '1' : useStage;
+    storageSet(STAGE_QP, useStage)
+    if (useStage) {
+        // Use stage, not demo!
+        platform = 'stage';
+        $(`#modalLogin .modal-title`).text(`Stage Login`);
+        $(`#modalLogin .btn-primary`).text(`Stage Login`);
+        $(`#modalLogin .modal-body`).html(`
+            <p style='color:purple;'>Stage login</p>
+            <p>You must be on the VPN or an office network</p>
+            <p><a href='${location.origin}${location.pathname}?${STAGE_QP}=0'>Reset to Demo login</a></p>`)
+    }
+
     // The Implicit grant constructor looks at hash data to see if we're 
     // now receiving the OAuth response
     data.implicitGrant = new ImplicitGrant({
         oAuthReturnUrl: `${location.origin}${location.pathname}`,
-        clientId: CLIENT_ID,
+        clientId: platform,
         showMsg: toast
     });
     // If we're not logged in, then ask to start the login flow.

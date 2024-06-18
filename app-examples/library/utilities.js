@@ -74,8 +74,8 @@ function setStoredAccountId(accountId) {
     } catch {};
 }
 
-function storageGet(name) {
-    let response = null;
+function storageGet(name, dflt=null) {
+    let response = dflt;
     try {
         response = JSON.parse(localStorage.getItem(name));
     } catch {};

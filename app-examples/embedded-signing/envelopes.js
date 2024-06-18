@@ -11,18 +11,22 @@
  *   callApi -- instance of CallApi
  *   mainElId -- the id of the element that will be hidden when showing the view
  *   signElId -- the id of the element where the signing ceremony will be shown
+ *   platform -- 'demo' | 'stage'
  *   
  * public values
  */
 const CLIENT_USER_ID = 1000;
 // See https://developers.docusign.com/docs/esign-rest-api/reference/envelopes/envelopeviews/createrecipient/#schema__recipientviewrequest_frameancestors
-const FRAME_ANCESTORS = ["http://localhost", "https://docusign.github.io", "https://apps-d.docusign.com"];
-const MESSAGE_ORIGINS = ["https://apps-d.docusign.com"];
+const FRAME_ANCESTORS = ["http://localhost", "https://docusign.github.io", "https://apps-d.docusign.com", 
+    "https://apps-s.docusign.com", "https://stage.docusign.net"];
+const MESSAGE_ORIGINS_DEMO = ["https://apps-d.docusign.com"];
+const MESSAGE_ORIGINS_STAGE = ["https://apps-s.docusign.com"];
 const RETURN_URL = `https://docusign.github.io/app-examples/embedded-signing/classicReturnUrl.html`;
 const ROLE = "signer" // the role name used by the example templates
 const STATIC_DOC_URL = "Web site Access Agreement.pdf";
 const SUPP_DOCS_URL = "../../examples/docs/";
-const SUPP_DOC_NAMES = ["Terms and Conditions 1.pdf", "Terms and Conditions 2.pdf"];
+const SUPP_FILE_NAMES = ["Terms and Conditions 1.pdf", "Terms and Conditions 2.html.txt"];
+const SUPP_DOC_NAMES = [{name: "Terms and Conditions 1.pdf", ext: "pdf"}, {name: "Terms and Conditions 2.html", ext: "html"}];
 const SIMPLE_HTML = "simple_with_image.html.txt";
 const HTML_RESPONSIVE = "htmlSmartSections.html.txt"
 const PAYMENT_DOC = "payment_order_form.docx"
@@ -46,6 +50,7 @@ class Envelopes {
         this.accountId = args.accountId;
         this.callApi = args.callApi;
         this.logger = args.logger;
+        this.platform = args.platform;
         this.clientUserId = CLIENT_USER_ID;
         this.role = ROLE;
         this.useDisclosure = true;
@@ -537,7 +542,7 @@ class Envelopes {
 
         for (let i = 0; i < supplemental.length; i++) {
             if (supplemental[i] && supplemental[i].include) {
-                const sB64 = await this.callApi.getDocB64(SUPP_DOCS_URL + SUPP_DOC_NAMES[i]);
+                const sB64 = await this.callApi.getDocB64(SUPP_DOCS_URL + SUPP_FILE_NAMES[i]);
                 const readAccept = supplemental[i].signerMustAcknowledge === "read_accept";
                 if (!sB64) {
                     this.showMsg(this.callApi.errMsg); // Error!
@@ -545,9 +550,9 @@ class Envelopes {
                 }
                 const documentId = `${i + docIdStart}`;
                 const suppDoc = {
-                    name: SUPP_DOC_NAMES[i],
+                    name: SUPP_DOC_NAMES[i].name,
                     display: "modal",
-                    fileExtension: "pdf",
+                    fileExtension: SUPP_DOC_NAMES[i].ext,
                     documentId: documentId,
                     signerMustAcknowledge: supplemental[i].signerMustAcknowledge,
                     documentBase64: sB64
@@ -682,7 +687,7 @@ class Envelopes {
             clientUserId: this.clientUserId,
             email: this.email,
             frameAncestors: FRAME_ANCESTORS,
-            messageOrigins: MESSAGE_ORIGINS,
+            messageOrigins: this.platform === 'demo' ? MESSAGE_ORIGINS_DEMO : MESSAGE_ORIGINS_STAGE,
             returnUrl: this.returnUrl,
             userName: this.name,
         }
