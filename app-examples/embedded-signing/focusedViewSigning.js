@@ -166,11 +166,11 @@ class FocusedViewSigning {
                 // Event: { returnUrl: url, type: "sessionEnd", sessionEndType: "signing_complete"}
                 this.signing = false;
                 if (event.type === "sessionEnd") {
-                    const msg = `<p>Result: <b>${event.sessionEndType.replace("_", " ")}</b></p>${END_MSG}`;
+                    const msg = `<p>Result: <b>${event.sessionEndType.replace("_", " ")}</b><br/>Msg 101</p>${END_MSG}`;
                     this.messageModal({style: 'text', title: "Signing Session Ended", msg: msg});
                     this.logger.post("Signing session ended", msg);
                 } else {
-                    const msg = `<p>Event data: ${JSON.stringify(event)}</p>`;
+                    const msg = `<p>Event data: ${JSON.stringify(event)}<br/>Msg 102</p>`;
                     this.messageModal({style: 'text', title: "Signing Session Message", msg: msg});
                     this.logger.post("Signing session ended", msg);
                 } 
