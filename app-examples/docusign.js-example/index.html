@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Docusign.js Example</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        body.bg-light {
+            padding-top: 63px; /* Provide room for top NavBar */
+            flex-direction: column;
+        }
+        .hide {display: none;}
+    </style>
+</head>
+
+<body class="bg-light d-flex flex-column vh-100">
+    <nav class="navbar d-md-flex navbar navbar-expand-lg fixed-top bg-warning-subtle">
+        <!-- https://getbootstrap.com/docs/5.3/components/navbar/ -->
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Docusign.js Example</a>
+        </div>
+    </nav>
+
+    <div class="container-fluid d-flex flex-column flex-grow-1 p-3">
+        <div id="signing-ceremony" class="hide col-12 col-lg-10 flex-grow-1 mx-auto"></div>
+        <div id="main" class="col-12 col-lg-10 flex-grow-1 mx-auto">
+        <p>This is a test page for docusign.js. Open the inspector (Developer Tools) and then reload the page.</p>
+        <p><a href="https://github.com/docusign/docusign.github.io/tree/master/app-examples/docusign.js-example/README.md" target="_blank">
+            More information.</a></p>
+    </div>
+
+    <script src="https://js-d.docusign.com/bundle.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+    <script type="module">
+        // Minimal docusign.js example for signing
+        // Setting the type to "module" enables us to use the await keyword at the top level.
+        //
+        // Via the debugger, set the signingUrl to the response from the create recipient view API call
+        // Set the clientId to your application's Integration Key
+        let signingUrl;
+        let clientId;
+        debugger 
+
+        const signingConfiguration = {
+            url: signingUrl,
+            displayFormat: 'focused',
+            style: {
+                branding: {
+                    primaryButton: {
+                        /** Background color of primary button */
+                        backgroundColor: "magenta",
+                        /** Text color of primary button */
+                        color: "white",
+                    }
+                },
+                signingNavigationButton: {
+                    finishText: "Agreed!", // default is Submit
+                    // 'bottom-left'|'bottom-center'|'bottom-right',  default: bottom-right
+                    position: "bottom-center"
+                }
+            }
+        }
+
+        try {
+            const docusign = await window.DocuSign.loadDocuSign(clientId);
+            const signing = docusign.signing(signingConfiguration);
+                
+            /** Event handlers **/
+            signing.on('ready', (event) => {console.log('UI is rendered')});
+            signing.on('sessionEnd', (event) => {console.log('sessionend', event)}); 
+
+            // Open the signing ceremony
+            $(`#main`).addClass("hide");
+            $(`#signing-ceremony`).removeClass("hide");
+            signing.mount(`#signing-ceremony`);
+        } catch (error) {
+            // Any configuration or API limits will be caught here
+            console.log ("### Error calling docusign.js");
+            console.log (error);              
+        }
+    </script>
+</body>
+
+</html>
