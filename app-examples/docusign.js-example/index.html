@@ -46,6 +46,8 @@
         let signingUrl;
         let clientId;
         debugger 
+        // exit if the debugger was not used to set the signingUrl. This enables the instructions to be shown
+        if (!signingUrl) {throw new Error()}
 
         const signingConfiguration = {
             url: signingUrl,
