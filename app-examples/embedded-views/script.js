@@ -209,11 +209,56 @@ $(function () {
         }
     }
 
+    async function embeddedCorrect() {
+        const signer = {
+            name: data.userInfo.name,
+            email: data.userInfo.email,
+            clientUserId: 1000
+        };
+        let req = createEnvelopeObj(signer);
+        req.status = "sent";
+        envelopeId = await sendEnvelope(req);
+        if (envelopeId) {
+            msg(`Envelope ${envelopeId} created.`);
+        } else {
+            msg(`Envelope create FAILED.`);
+            return
+        }
+        // Make the Embedded Correct API call
+        req = {
+            returnUrl: dsReturnUrl
+        };
+        const apiMethod = `/accounts/${accountId}/envelopes/${envelopeId}/views/correct`;
+        const httpMethod = "POST";
+        const results = await data.callApi.callApiJson({
+            apiMethod: apiMethod,
+            httpMethod: httpMethod,
+            req: req
+        });
+        if (results === false) {
+            msg(`Create Correct View FAILED.`);
+            return false;
+        }
+        const resultsUrl = results.url;
+        msg(`Displaying sender view: ${resultsUrl}`); 
+        // no iframe: embeddedViewWindow = window.open(senderUrl, "_blank");
+        embeddedViewWindow = window.open(
+            `${iframeitUrl}?label=Embedded+Correct+View&url=${encodeURIComponent(resultsUrl)}`, "_blank");
+        
+        if(!embeddedViewWindow || embeddedViewWindow.closed || 
+            typeof embeddedViewWindow.closed=='undefined') {
+            // popup blocked
+            alert ("Please enable the popup window");
+        }
+        embeddedViewWindow.focus();
+        return true;
+    }
+
     /*
-     *  Create the envelope from a template
+     *  Create the envelope object from a template
      *  on the Docusign platform
      */
-    async function createEnvelope({ name, email, clientUserId }) {
+    function createEnvelopeObj({ name, email, clientUserId }) {
         const req = {
             status: "created",
             compositeTemplates: [
@@ -257,7 +302,18 @@ $(function () {
                 }
             ]
         };
+        return req
+    }
 
+    /***
+     * send draft env from template
+     */
+    async function createEnvelope({ name, email, clientUserId }) {
+        const req = createEnvelopeObj({ name, email, clientUserId });
+        return await sendEnvelope(req)
+    }
+    
+    async function sendEnvelope(req) {
         // Make the create envelope API call
         msg(`Creating envelope...`);
         const apiMethod = `/accounts/${accountId}/envelopes`;
