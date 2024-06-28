@@ -99,7 +99,7 @@
             signing.on('sessionEnd', (event) => {
                 /** The event here denotes what caused the sessionEnd to trigger, such as signing_complete, ttl_expired etc../ */
 
-                // is "WebView" defined by a webview? 
+                // is "WebView" defined by an Android webview? 
                 let webView;
                 try {
                      webView = WebView;
@@ -109,7 +109,14 @@
                     }
                 }
 
-                console.log('sessionend', event);
+                // is iOS bridge available?
+                const iOS = window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.myHandler;
+                if (iOS) {
+                    console.log('Posting message to iOS: sessionEnd');
+                    iOS.postMsg(`SessionEnd=${event.sessionEndType}`);
+                }
+
+                console.log('sessionEnd', event);
                 if (webView && WebView && WebView.postMsg) {
                     WebView.postMsg(`SessionEnd=${event.sessionEndType}`)
                 }       

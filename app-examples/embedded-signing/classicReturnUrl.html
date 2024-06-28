@@ -31,7 +31,11 @@
         }
       }
 
-      if (webView && WebView && WebView.postMsg) {
+      let iOS;
+      iOS = window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.myHandler;
+      if (iOS) {
+       iOS.postMsg(`SessionEnd=${event.sessionEndType}`)
+      } else if (webView && WebView && WebView.postMsg) {
         WebView.postMsg(`SessionEnd=${event.sessionEndType}`)       
       } else if (window.parent && window.parent.opener) {
         window.parent.opener.postMessage(msg, '*'); // iframed case
