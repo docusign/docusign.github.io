@@ -113,6 +113,7 @@
                 const iOS = window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.myHandler;
                 if (iOS) {
                     console.log('Posting message to iOS: sessionEnd');
+                    debugger;
                     window.webkit.messageHandlers.myHandler.postMsg(`SessionEnd=${event.sessionEndType}`);
                 }
 
