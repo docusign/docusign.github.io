@@ -21,7 +21,7 @@
         search: window.location.search || '',
       }
     
-      // is "WebView" defined by a webview? 
+      // is "WebView" defined by an Android webview? 
       let webView;
       try {
             webView = WebView;
@@ -31,11 +31,14 @@
         }
       }
 
-      let iOS;
-      iOS = window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.myHandler;
+      // is iOS bridge available?
+      const iOS = window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.myHandler;
       if (iOS) {
-       iOS.postMsg(`SessionEnd=${event.sessionEndType}`)
-      } else if (webView && WebView && WebView.postMsg) {
+          console.log('Posting message to iOS: sessionEnd');
+          await window.webkit.messageHandlers.myHandler.postMessage(`SessionEnd=${event.sessionEndType}`);
+      }
+
+      if (webView && WebView && WebView.postMsg) {
         WebView.postMsg(`SessionEnd=${event.sessionEndType}`)       
       } else if (window.parent && window.parent.opener) {
         window.parent.opener.postMessage(msg, '*'); // iframed case

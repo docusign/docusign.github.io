@@ -29,7 +29,7 @@
     import { processUrlHash } from "../library/utilities.js";
 
     $(async function () {
-      // is "WebView" defined by a webview? 
+      // is "WebView" defined by an Android webview? 
       let webView;
       try {
             webView = WebView;
@@ -37,6 +37,13 @@
         if (e instanceof ReferenceError) {
             webView = undefined;
         }
+      }
+      
+      // is iOS bridge available?
+      const iOS = window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.myHandler;
+      if (iOS) {
+          console.log('Posting message to iOS: sessionEnd');
+          await window.webkit.messageHandlers.myHandler.postMessage(`SessionEnd=${event.sessionEndType}`);
       }
 
       if (webView && WebView && WebView.postMsg) {
