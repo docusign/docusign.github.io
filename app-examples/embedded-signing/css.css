@@ -2,8 +2,11 @@
 .navbar {height: 63px; }
 .navbar div {height: 63px;}
 body.bg-light {
-  padding-top: 63px; /* Provide room for top NavBar */
   flex-direction: column;
+}
+
+#topcontainer {
+    margin-top: 63px !important; /* Provide room for top NavBar */
 }
 
 .hide {display: none;}
