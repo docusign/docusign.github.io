@@ -854,12 +854,12 @@ $(function () {
         , showEditDocuments: {top: -220, left: 230}
         , showEditDocumentVisibility: {top: 1760, left: 830}
         , showEditPages: {top: 1760, left: 830}
-        , showMatchingTemplatesPrompt: {top: -200, left: 750} 
         , paletteSections: {top: 1275, left: 250}
         , paletteDefault: {top: 1275, left: 203}
     }
     const senderUxHide = {  // Hide future settings
           showAdvancedOptions: true
+        , showMatchingTemplatesPrompt: true 
         , showEditMessage: true
         , showBulkSend: true
         , showSaveAsDocumentCustomField: true
