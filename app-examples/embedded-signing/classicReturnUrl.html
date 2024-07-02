@@ -34,10 +34,11 @@
       // is iOS bridge available?
       const iOS = window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.myHandler;
       if (iOS) {
-          console.log('Posting message to iOS: sessionEnd');
-          await window.webkit.messageHandlers.myHandler.postMessage(`SessionEnd=${event.sessionEndType}`);
+          try {
+              console.log('Posting message to iOS: sessionEnd');
+              await window.webkit.messageHandlers.myHandler.postMessage(`SessionEnd=${event.sessionEndType}`);
+          } catch (e) {
       }
-
       if (webView && WebView && WebView.postMsg) {
         WebView.postMsg(`SessionEnd=${event.sessionEndType}`)       
       } else if (window.parent && window.parent.opener) {
