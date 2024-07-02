@@ -49,6 +49,7 @@ class ClassicSigning {
         this.signElId = args.signElId;
         this.classicResult = args.CLASSIC_RESULT; // storage location
         this.logger = args.logger;
+        this.padding = args.padding;
         this.role = ROLE;
         this.signing = false; 
 
@@ -148,7 +149,10 @@ class ClassicSigning {
                 $(`#${this.mainElId}`).addClass("hide");
                 $(`#${this.signElId}`).removeClass("hide").html(`
                     <iframe src="${recipientViewUrl}" frameborder="0" 
-                        style="height:100%;width:100%" height="100%" width="100%"></iframe>`);
+                        style="height:height=${window.innerHeight - this.padding}px};
+                        width:100%" 
+                        height=${window.innerHeight - this.padding}px}
+                        width="100%"></iframe>`);
             } else {
                 // no iframe! Redirect the entire tab
                 this.signing = false;

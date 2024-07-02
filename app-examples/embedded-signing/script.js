@@ -30,13 +30,15 @@ import {
     settingsGet, 
     settingsSet,
     userPictureAccountBrand,
-    checkAccountSettings
+    checkAccountSettings,
+    monitorSigningHeight,
 } from "../library/utilities.js" 
 
 const CONFIG_STORAGE = "embeddedSigningConfiguration";
 const MODE_STORAGE = "embeddedSigningMode";
 const CLASSIC_RESULT = 'classicResult'; // store the classic non-iframe signing result
 const STAGE_QP = 'stage'; // if ?stage=1 then use stage
+const PADDING = 70; // padding-top for the signing ceremony.
 
 $(async function () {
     let oAuthClientID;
@@ -156,7 +158,6 @@ $(async function () {
             document: configuration.document,
             outputStyle: configuration.outputStyle,
             useIframe: configuration.useIframe,
-    
         })
     }.bind(this)
 
@@ -425,6 +426,7 @@ $(async function () {
             signElId: "signing-ceremony",
             envelopes: data.envelopes,
             logger: data.logger,
+            padding: PADDING,
         });
         data.focusedViewSigning = new FocusedViewSigning({
             showMsg: toast,
@@ -437,6 +439,7 @@ $(async function () {
             signElId: "signing-ceremony",
             envelopes: data.envelopes,
             logger: data.logger,
+            padding: PADDING,
         });
         data.dsjsDefaultSigning = new DsjsDefaultSigning({
             showMsg: toast,
@@ -449,6 +452,7 @@ $(async function () {
             signElId: "signing-ceremony",
             envelopes: data.envelopes,
             logger: data.logger,
+            padding: PADDING,
         });
         data.classicSigning = new ClassicSigning({
             showMsg: toast,
@@ -462,6 +466,7 @@ $(async function () {
             envelopes: data.envelopes,
             CLASSIC_RESULT: CLASSIC_RESULT,
             logger: data.logger,
+            padding: PADDING,
         });
         data.loadingModal.show("Retrieving your photo and the account’s logo")
         await userPictureAccountBrand({userInfo: data.userInfo, callApi: data.callApi});
@@ -493,6 +498,7 @@ $(async function () {
     };
 
     // Register event handlers
+    monitorSigningHeight({signingId: "signing-ceremony", padding: 70})
     $("#modalLogin button").click(login);
     $("#signClickToAgree").click(signClickToAgree);
     $("#signFocusView").click(signFocusView);

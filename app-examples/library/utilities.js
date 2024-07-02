@@ -6,6 +6,18 @@ const DSexampleAccountId = "DSCodePenAccountId";
 const EMBEDDED_SIGNING_SETTINGS_STORAGE = "embeddedSigningSettings";
 const EMBEDDED_SIGNING_SETTINGS = ["outputStyle", "useIframe"]; // names of the settings
 
+// Monitor screen size changes and adjust the signing div
+function monitorSigningHeight({signingId, padding}) {
+    const fixHeight = function fixHeightF(evnt) {
+        const data = evnt.data;
+        const padding = data.padding;
+        const windowHeight = window.innerHeight;
+        $(`#${data.signingId} > iframe`).css('height', `${windowHeight - padding}px`)
+    }
+    $(window).on('resize', {signingId: signingId, padding: padding}, fixHeight);
+}
+
+
 // Busy indicator
 const workingUpdate = function workingUpdateF(working) {
     if (working) {
@@ -464,5 +476,5 @@ function adjustRows() {
 export { msg, htmlMsg, adjustRows, errMsg, workingUpdate, usingHttps, LoadingModal,
     getStoredAccountId, setStoredAccountId, toast, switchToHttps, messageModal, 
     processUrlHash, storageGet, storageSet, ButtonOnChange, settingsGet, settingsSet,
-    userPictureAccountBrand, checkAccountSettings
+    userPictureAccountBrand, checkAccountSettings, monitorSigningHeight
 };

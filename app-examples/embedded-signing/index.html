@@ -11,8 +11,8 @@
     <link rel="stylesheet" href="css.css">
 </head>
 
-<body class="bg-light d-flex flex-column vh-100">
-    <nav class="navbar d-md-flex navbar navbar-expand-lg fixed-top bg-warning-subtle">
+<body class="bg-light">
+    <nav class="navbar navbar-expand-lg bg-warning-subtle">
         <!-- https://getbootstrap.com/docs/5.3/components/navbar/ -->
         <div class="container-fluid">
             <a class="navbar-brand" href="#">Embedded Signing Examples</a>
@@ -68,9 +68,8 @@
         </div>
     </nav>
 
-    <div id="topcontainer" class="container-fluid d-flex flex-column flex-grow-1 p-3">
-        <div id="signing-ceremony" class="hide col-12 col-lg-10 flex-grow-1 mx-auto"></div>
-        <div id="main" class="container">
+        <div id="signing-ceremony" class="hide"></div>
+        <div id="main" class="container pt8">
             <ul class="nav nav-tabs nav-fill" id="myTab" role="tablist">
                 <li class="nav-item" role="presentation">
                     <button class="nav-link active" id="click2agree-tab" data-bs-toggle="tab"
@@ -757,7 +756,6 @@
                 </div>
             </div>
         </div>
-    </div>
 
     <!-- LOGIN MODAL -->
     <div id="modalLogin" class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">

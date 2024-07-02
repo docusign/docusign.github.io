@@ -34,6 +34,7 @@ class Click2Agree {
         this.mainElId = args.mainElId;
         this.signElId = args.signElId;
         this.logger = args.logger;
+        this.padding = args.padding;
         this.signing = false; 
     }
 
@@ -134,7 +135,11 @@ class Click2Agree {
             const signing = docusign.signing(signingConfiguration);
                 
             /** Event handlers **/
-            signing.on('ready', (event) => {console.log('UI is rendered')});
+            signing.on('ready', (event) => {
+                $(`#${this.signElId} > iframe`).css('height', `${window.innerHeight - this.padding}px`);
+                window.scroll(0, 0); // for iOS
+                console.log('UI is rendered');
+            });
             signing.on('sessionEnd', (event) => {
                 /** The event here denotes what caused the sessionEnd to trigger, such as signing_complete, ttl_expired etc../ */
                 console.log('sessionend', event);

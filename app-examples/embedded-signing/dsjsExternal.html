@@ -11,11 +11,11 @@
     <link rel="stylesheet" href="css.css">
 </head>
 
-<body class="bg-light d-flex flex-column vh-100" style="display:none;">
-        <nav class="navbar d-md-flex navbar navbar-expand-lg fixed-top bg-warning-subtle" style="display:none;">
+<body class="bg-light" style="display:none;">
+        <nav class="navbar navbar-expand-lg bg-warning-subtle" style="display:none;">
             <!-- https://getbootstrap.com/docs/5.3/components/navbar/ -->
             <div class="container-fluid">
-                <a class="navbar-brand" href="#">Docusign Embedded Signing Examples</a>
+                <a class="navbar-brand" href="#">Embedded Signing Examples</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
                     aria-label="Toggle navigation">
@@ -24,10 +24,8 @@
             </div>
         </nav>
 
-        <div class="container-fluid d-flex flex-column flex-grow-1 p-3">
-            <div id="message"></div>
-            <div id="signing-ceremony" class="hide col-12 col-lg-10 flex-grow-1 mx-auto"></div>
-        </div>
+        <div id="message" class="hide" style="margin:2em;"></div>
+        <div id="signing-ceremony" class="hide"></div>
 
     <script src="https://js-d.docusign.com/bundle.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
@@ -52,18 +50,22 @@
          * 
          */
 
-         const END_MSG = `<p>The signed documents can be seen via your developer (demo) account</p>` +
+        const END_MSG = `<p>The signed documents can be seen via your developer (demo) account</p>` +
             `<p>You can close this tab.</p>`;
-         const config = processUrlHash("usingChrome");
+        const config = processUrlHash("usingChrome");
+        const padding = config.usingChrome?70:0;
+
+        const fixHeight = function fixHeightF(evnt) {
+            const windowHeight = window.innerHeight;
+            $(`#signing-ceremony > iframe`).css('height', `${windowHeight - padding}px`)
+        }
+        $(window).on('resize', {}, fixHeight);
 
         // if no chrome, then rejigger the dom
         if (config.usingChrome) {
             $("nav").css('display', '');
         } else {
-            $("body").removeClass(["bg-light", "vh-100"]).addClass("vh-99");
             $("nav").remove();
-            $(".p-3").removeClass("p-3");
-            $("#signing-ceremony").removeClass("col-lg-10");
         } 
         $("body").removeClass("hide").css('display', '');
 
@@ -95,7 +97,12 @@
             const signing = docusign.signing(signingConfiguration);
                 
             /** Event handlers **/
-            signing.on('ready', (event) => {console.log('UI is rendered')});
+            signing.on('ready', (event) => {
+                $(`#signing-ceremony > iframe`)
+                    .css('height', `${window.innerHeight - (padding)}px`);
+                window.scroll(0, 0); // for iOS
+                console.log('UI is rendered')
+            });
             signing.on('sessionEnd', async (event) => {
                 /** The event here denotes what caused the sessionEnd to trigger, such as signing_complete, ttl_expired etc../ */
 
@@ -128,7 +135,6 @@
                     const msg = `<p>Event data: ${JSON.stringify(event)}<br/>Msg 108</p>`;
                     message({style: 'text', title: "Signing Session Message", msg: msg});
                 } 
-                $(`#signing-ceremony`).empty(); // Important! REMOVE the signing ceremony
             });
             
             // Open the signing ceremony
@@ -142,7 +148,7 @@
         }
 
         function message ({style, title, msg}){
-            $(`#message`).html(`
+            $(`#message`).removeClass("hide").html(`
                 <h3>${title}</h3>
                 <p>${msg}</p>    
             `

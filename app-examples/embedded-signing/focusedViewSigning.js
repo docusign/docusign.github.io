@@ -39,6 +39,7 @@ class FocusedViewSigning {
         this.role = ROLE;
         this.signing = false; 
         this.document = args.document;
+        this.padding = args.padding;
         this.documentChoice = { // response means generic "document" responsive
             default: {responsive: false, request: this.envelopes.createTemplateRequest.bind(this.envelopes)},
             htmlRegResp: {responsive: true, request: this.envelopes.createHtmlRegRequest.bind(this.envelopes)},
@@ -159,7 +160,11 @@ class FocusedViewSigning {
             const signing = docusign.signing(signingConfiguration);
                 
             /** Event handlers **/
-            signing.on('ready', (event) => {console.log('UI is rendered')});
+            signing.on('ready', (event) => {
+                $(`#${this.signElId} > iframe`).css('height', `${window.innerHeight - this.padding}px`);
+                window.scroll(0, 0); // for iOS
+                console.log('UI is rendered');
+            });
             signing.on('sessionEnd', (event) => {
                 /** The event here denotes what caused the sessionEnd to trigger, such as signing_complete, ttl_expired etc../ */
                 console.log('sessionend', event);
