@@ -14,7 +14,7 @@
   <body>
     <p>Please wait.</p>
     <noscript>You need to enable JavaScript to run this app.</noscript>
-    <script>
+    <script type="module">
       const msg = {source: 'dsResponse', 
         hash: window.location.hash || '',
         href: window.location.href || '',
@@ -34,10 +34,8 @@
       // is iOS bridge available?
       const iOS = window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.myHandler;
       if (iOS) {
-          try {
-              console.log('Posting message to iOS: sessionEnd');
-              await window.webkit.messageHandlers.myHandler.postMessage(`SessionEnd=${event.sessionEndType}`);
-          } catch (e) {
+            console.log('Posting message to iOS: sessionEnd');
+            await window.webkit.messageHandlers.myHandler.postMessage(`SessionEnd=${event.sessionEndType}`);
       }
       if (webView && WebView && WebView.postMsg) {
         WebView.postMsg(`SessionEnd=${event.sessionEndType}`)       
