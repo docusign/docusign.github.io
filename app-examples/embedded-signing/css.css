@@ -151,6 +151,8 @@ span.user-initials {
 
 }
 
+.iti-flag {background-image: url("https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/img/flags.png");}
+
 /* https://projects.lukehaas.me/css-loaders/ */
 .loader {
     font-size: 10px;

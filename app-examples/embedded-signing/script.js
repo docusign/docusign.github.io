@@ -32,6 +32,7 @@ import {
     userPictureAccountBrand,
     checkAccountSettings,
     monitorSigningHeight,
+    getPhoneNumber,
 } from "../library/utilities.js" 
 
 const CONFIG_STORAGE = "embeddedSigningConfiguration";
@@ -89,6 +90,10 @@ $(async function () {
         outputStyle: "openUrl",
         useIframe: true,
         gatewayId: "",
+        authStyle: "none",
+        idvConfigId: "",
+        smsNational: "",
+        smsCc: "",
     }
     const formCheckboxes = {
         supp1include: true, 
@@ -185,6 +190,10 @@ $(async function () {
             outputStyle: configuration.outputStyle,
             useIframe: configuration.useIframe,
             gatewayId: configuration.gatewayId,
+            authStyle: configuration.authStyle,
+            idvConfigId: configuration.idvConfigId,    
+            smsNational: configuration.smsNational,
+            smsCc: configuration.smsCc,
             });
     }.bind(this)
 
@@ -211,6 +220,10 @@ $(async function () {
             outputStyle: configuration.outputStyle,
             useIframe: configuration.useIframe,
             gatewayId: configuration.gatewayId,
+            authStyle: configuration.authStyle,
+            idvConfigId: configuration.idvConfigId,    
+            smsNational: configuration.smsNational,
+            smsCc: configuration.smsCc,
             });
     }.bind(this)
 
@@ -236,6 +249,10 @@ $(async function () {
             outputStyle: configuration.outputStyle,
             useIframe: configuration.useIframe,
             gatewayId: configuration.gatewayId,
+            authStyle: configuration.authStyle,
+            idvConfigId: configuration.idvConfigId,    
+            smsNational: configuration.smsNational,
+            smsCc: configuration.smsCc,
             });
     }.bind(this)
 
@@ -316,6 +333,9 @@ $(async function () {
             configuration[property] = formCheckboxes[property] ? $(`#${property}`).prop('checked') : $(`#${property}`).val();
         }
         configuration.mode = $(`button.nav-link.active`)[0].id;
+        const resp = getPhoneNumber(data.iti);
+        configuration.smsNational = resp.smsNational;
+        configuration.smsCc = resp.smsCc;
     }
     function setFormFromConfiguration() {
         for (const property in configuration) {
@@ -328,6 +348,9 @@ $(async function () {
             if (configuration.useSigningCeremonyDefaultUx) {
                 $(`.classicColor`).attr("disabled", true);
             }
+        }
+        if (configuration.smsCc) {
+            data.iti.setNumber("+" + configuration.smsCc + configuration.smsNational);
         }
         new bootstrap.Tab(`#${configuration.mode}`).show()
     }
@@ -564,6 +587,11 @@ $(async function () {
         // logged in
         data.loadingModal.show("Completing Login Process")
         if (await completeLogin()) {
+            const smsEl = document.querySelector("#sms");
+            data.iti = intlTelInput(smsEl, {
+                utilsScript:
+                    "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.min.js"
+            });    
             const mode = storageGet(MODE_STORAGE); // restore mode
             if (mode) {configuration.mode = mode};
             settingsGet(configuration);

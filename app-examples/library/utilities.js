@@ -4,7 +4,7 @@
 // Local storage account key
 const DSexampleAccountId = "DSCodePenAccountId";
 const EMBEDDED_SIGNING_SETTINGS_STORAGE = "embeddedSigningSettings";
-const EMBEDDED_SIGNING_SETTINGS = ["outputStyle", "useIframe"]; // names of the settings
+const EMBEDDED_SIGNING_SETTINGS = ["outputStyle", "useIframe", "authStyle", "idvConfigId", "smsNational", "smsCc"]; // names of the settings
 
 // Monitor screen size changes and adjust the signing div
 function monitorSigningHeight({signingId, padding}) {
@@ -115,6 +115,22 @@ function settingsSet(configuration) {
         settings[item] = configuration [item];
     });
     storageSet(EMBEDDED_SIGNING_SETTINGS_STORAGE, settings); // save the settings 
+}
+
+function getPhoneNumber(iti) {
+    let phoneNumber;
+    let resp = {smsNational: null, smsCc: null};
+    const rawTel = iti.getNumber() || "";
+    try {
+        phoneNumber = libphonenumber.parsePhoneNumber(rawTel);
+    } catch (error) {
+        phoneNumber = null;
+    }
+    if (phoneNumber) {
+        resp.smsNational = phoneNumber.nationalNumber;
+        resp.smsCc = phoneNumber.countryCallingCode;
+    }
+    return resp;
 }
 
 function toast (msg, durationSec = 5) {
@@ -476,5 +492,5 @@ function adjustRows() {
 export { msg, htmlMsg, adjustRows, errMsg, workingUpdate, usingHttps, LoadingModal,
     getStoredAccountId, setStoredAccountId, toast, switchToHttps, messageModal, 
     processUrlHash, storageGet, storageSet, ButtonOnChange, settingsGet, settingsSet,
-    userPictureAccountBrand, checkAccountSettings, monitorSigningHeight
+    userPictureAccountBrand, checkAccountSettings, monitorSigningHeight, getPhoneNumber
 };

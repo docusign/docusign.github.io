@@ -28,8 +28,9 @@ const SUPP_DOCS_URL = "../../examples/docs/";
 const SUPP_FILE_NAMES = ["Terms and Conditions 1.pdf", "Terms and Conditions 2.html.txt"];
 const SUPP_DOC_NAMES = [{name: "Terms and Conditions 1.pdf", ext: "pdf"}, {name: "Terms and Conditions 2.html", ext: "html"}];
 const SIMPLE_HTML = "simple_with_image.html.txt";
-const HTML_RESPONSIVE = "htmlSmartSections.html.txt"
-const PAYMENT_DOC = "payment_order_form.docx"
+const HTML_RESPONSIVE = "htmlSmartSections.html.txt";
+const PAYMENT_DOC = "payment_order_form.docx";
+const DEFAULT_PHONE_AUTH_ID = "c368e411-1592-4001-a3df-dca94ac539ae"; 
 
 /***
  * instance variables
@@ -508,12 +509,14 @@ class Envelopes {
      * 2. Sets responsive bit
      * 3. sets useDisclosure
      *    https://developers.docusign.com/docs/esign-rest-api/reference/envelopes/envelopes/create/#schema__envelopedefinition_usedisclosure
+     * 4. Adds IDV
      */
     async updateRequest(supplemental) {
         await this.addSupplementalDocuments(supplemental);
         this.setResponsiveMode();
         if (this.ersd === true || this.ersd === false) { this.request.useDisclosure = this.ersd }
-        // if null, don't add the attribute     
+        // if null, don't add the attribute
+        this.setIDV();     
     }
 
     /***
@@ -668,6 +671,47 @@ class Envelopes {
                 if (!documents[i].htmlDefinition && documents[i].fileExtension === "html") {
                     documents[i].htmlDefinition = { source: "document" }
                 }
+            }
+        }
+    }
+
+    setIDV() {
+        let idvConfigId = null;
+        if (this.authStyle === "none") {return}
+        if (this.authStyle === "defaultPhone") {
+            idvConfigId = DEFAULT_PHONE_AUTH_ID
+        } else if (this.authStyle === "custom") {
+            idvConfigId = this.idvConfigId;
+        }
+        const compositeTemplates = !!this.request.compositeTemplates;
+        if (compositeTemplates) {
+            if (!this.request.compositeTemplates[0].inlineTemplates[0] || 
+                !this.request.compositeTemplates[0].inlineTemplates[0].recipients.signers[0].name) {
+                    console.log ("Couldn't find composite template signer!");
+                    return
+                }
+            this.request.compositeTemplates[0].inlineTemplates[0].recipients.signers[0].identityVerification = {
+                inputOptions: [{
+                    name: "phone_number_list",
+                    valueType: "PhoneNumberList",
+                    phoneNumberList: [
+                        {countryCode: this.smsCc,
+                            number: this.smsNational}
+                    ]
+                }],
+                workflowId: idvConfigId
+            }
+        } else {
+            this.request.recipients.signers[0].identityVerification = {
+                inputOptions: [{
+                    name: "phone_number_list",
+                    valueType: "PhoneNumberList",
+                    phoneNumberList: [
+                        {countryCode: this.smsCc,
+                         number: this.smsNational}
+                    ]
+                }],
+                workflowId: idvConfigId
             }
         }
     }

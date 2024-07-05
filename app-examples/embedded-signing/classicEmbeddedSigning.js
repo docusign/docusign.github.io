@@ -87,6 +87,11 @@ class ClassicSigning {
         this.outputStyle = args.outputStyle; // openUrl, showUrl
         this.useIframe = args.useIframe;
         this.gatewayId = args.gatewayId;
+        this.authStyle = args.authStyle;
+        this.idvConfigId = args.idvConfigId;
+        this.smsNational = args.smsNational;
+        this.smsCc = args.smsCc;
+
 
         this.useDisclosure = true; // why demo with this off?
 
@@ -105,6 +110,10 @@ class ClassicSigning {
         this.signing = true;
         this.loadingModal.show("Creating the envelope");
 
+        this.envelopes.authStyle = this.authStyle;
+        this.envelopes.idvConfigId = this.idvConfigId;    
+        this.envelopes.smsNational = this.smsNational;
+        this.envelopes.smsCc = this.smsCc;
         this.envelopes.name = this.name;
         this.envelopes.email = this.email;
         this.envelopes.templateId = this.templateId;
