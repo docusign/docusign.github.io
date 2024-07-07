@@ -12,8 +12,52 @@ benefits (see below) of docusign.js.
 * **Classic Embedded Signing** is the most powerful Docusign signing ceremony. It can be used with all 
 types of Docusign signatures (SES, AES, QES), and with all types of Docusign IDV authentication options.
 
+## Limitations
+Each of the four tabs for the signing examples includes an **Information** button. Use the 
+Information button to see the known limitations, if any, for that style of signing. 
+
+## Top Navigation Bar Items
+* **Settings** -- see the Settings section below.
+* **Start Logging** -- opens the logging window. The logging window includes the API calls used by the tool. 
+Click on an API Call to expand it and to see the API request and response.
+* **Save to URL** -- saves the current configuration of the tool to a URL. 
+* **README** -- displays this file.
+
+## Settings
+Click the **Settings** item in the top navigation bar to open the Settings Modal.
+
+### Account
+Use this setting to change the account that will be used.
+
+### Output
+By default, the tool opens the signing or agreement ceremony by replacing the tool's UI with the Docusign session.
+
+Instead of the tool opening the ceremony, you can choose to have the URL displayed for you to then open it. 
+If you choose to have the URL displayed, remember that you must use it within 5 minutes. 
+
+**Use an iframe & GUI chrome?** This field only applies if the **URL** output option is selected.
+If this option is checked, then an iframe with minimal GUI chrome (just the top navigation bar)
+is used. If the option is not checked, then a 100% iframe is used for the first three example 
+categories since the Docusign JS library always creates an iframe.
+
+### Authentication
+Select **Default Phone/SMS Authentication** and enter a phone number to enable this option.
+
+### Payment Gateway
+As discussed below, enter your Payment Gateway ID if your document includes a Payment tab.
+
 ## Docusign.js
-tbd
+The [Docusign.js library](https://developers.docusign.com/docs/esign-rest-api/esign101/concepts/embedding/docusign-js-embedded-reference/)
+is used with first three example categories listed above. 
+
+Docusign.js and [Classic Embedded Signing](https://developers.docusign.com/docs/esign-rest-api/reference/envelopes/envelopeviews/createrecipient/) 
+differ in how they return control to your application:
+* Classic Embedded Signing: the browser is redirected to your application. The **event** query parameter contains the status.
+* Docusign.js: the library raises a DOM event to your application.
+
+iframes: Docusign.js always creates an iframe in the DOM for the signing ceremony. The library deletes the iframe after the signing session has completed.
+
+While the Classic Embedded Signing ceremony can be used with an iframe, management of the iframe is the developer's responsibility.
 
 ## Payment tabs
 Testing the different signing ceremonies with a 
