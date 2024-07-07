@@ -294,12 +294,12 @@ class LoadingModal {
  * userPictureAccountBrand
  * Add the user's picture and account info
  */
-async function userPictureAccountBrand({userInfo, callApi}){
+async function userPictureAccountBrand({accountId, userInfo, callApi}){
     const pictureId = "user-picture";
     const accountBrandId = "account-brand";
     const accountInfo = "account-info";
     // user's picture
-    let apiMethod = `/accounts/${userInfo.defaultAccount}/users/${userInfo.userId}/profile/image`;
+    let apiMethod = `/accounts/${accountId}/users/${userInfo.userId}/profile/image`;
     let results = await callApi.getImageDataUrl(apiMethod);
     if (results) {
         $(`#${pictureId}`).html(`<div class="user-photo"><img src="${results}" class="user-photo" /></div>`)
@@ -311,15 +311,17 @@ async function userPictureAccountBrand({userInfo, callApi}){
 
     // Account name and id
     let text;
-    if (userInfo.accounts[userInfo.defaultAccountIndex].accountExternalId) {
-        text = `Account #${userInfo.accounts[userInfo.defaultAccountIndex].accountExternalId}<br/>${userInfo.defaultAccountName}`;
+    const accountsEntry = userInfo.accountsEntry(accountId);
+    if (accountsEntry) {
+        text = `Account #${accountsEntry.accountExternalId}<br/>${accountsEntry.accountName}`;
     } else {
-        text = userInfo.defaultAccountName;
+        text = "??";
     }
     $(`#${accountInfo}`).html(`<div class="me-4 pt8">${text}</div>`); 
 
     // account brand image
-    apiMethod = `/accounts/${userInfo.defaultAccount}/brands?include_logos=true`;
+    $(`#${accountBrandId}`).empty();
+    apiMethod = `/accounts/${accountId}/brands?include_logos=true`;
     results = await callApi.callApiJson({
         apiMethod: apiMethod, httpMethod: "GET", req: null});
     if (!results) {return} // EARLY return
@@ -336,7 +338,7 @@ async function userPictureAccountBrand({userInfo, callApi}){
     }
 }
     if (!logo) {return} // EARLY return
-    apiMethod = `/accounts/${userInfo.defaultAccount}${logo}`;
+    apiMethod = `/accounts/${accountId}${logo}`;
     results = await callApi.getImageDataUrl(apiMethod);
     if (results) {
         $(`#${accountBrandId}`).html(`<img src="${results}" class="brand-logo me-3" />`)
@@ -347,9 +349,9 @@ async function userPictureAccountBrand({userInfo, callApi}){
  * checkAccountSettings -- check that the account can do embedded signing
  * @returns ok
  */
-async function checkAccountSettings({userInfo, callApi}) {
+async function checkAccountSettings({accountId, userInfo, callApi}) {
     // get account settings
-    const apiMethod = `/accounts/${userInfo.defaultAccount}/settings`;
+    const apiMethod = `/accounts/${accountId}/settings`;
     const results = await callApi.callApiJson({
         apiMethod: apiMethod, httpMethod: "GET", req: null});
     if (!results) {return true} // EARLY return

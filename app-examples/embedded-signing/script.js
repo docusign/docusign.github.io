@@ -94,6 +94,7 @@ $(async function () {
         idvConfigId: "",
         smsNational: "",
         smsCc: "",
+        accountRequest: "default",
     }
     const formCheckboxes = {
         supp1include: true, 
@@ -412,15 +413,41 @@ $(async function () {
             }
             return false; // EARLY return
         }
+        data.userInfo.addAccountOptions("accountRequest");
+        return await setAccount()
+    }
 
-        accountId = data.userInfo.defaultAccount;
+    /***
+     * setAccount
+     */
+    async function setAccount(){
+        if (configuration.accountRequest === "default") {
+            accountId = data.userInfo.defaultAccount;
+        } else {
+            // look for the account
+            const accountEntry = data.userInfo.accounts.find(a => a.accountId === configuration.accountRequest);
+            if (accountEntry) {
+                accountId = accountEntry.accountId;
+                await data.userInfo.checkAccount(accountEntry);
+                if (accountEntry.corsError) {
+                    messageModal({style: "text", title: "CORS Error", 
+                        msg: accountEntry.corsError + " Using default account ID"});
+                    accountId = data.userInfo.defaultAccount;  
+                }
+            } else {
+                messageModal({style: "text", title: "No Account Access", 
+                    msg: `You don't have access to account ID ${configuration.accountRequest}. Using default account ID`});
+                accountId = data.userInfo.defaultAccount
+            }
+        }
+
         data.logger.post('Account Information', `Account ID: ${accountId}, Name: ${data.userInfo.defaultAccountName}`);
         data.callApi = new CallApi({
             accessToken: data.implicitGrant.accessToken,
             apiBaseUrl: data.userInfo.defaultBaseUrl
         });
         data.loadingModal.show("Checking the account settings");
-        if (!await checkAccountSettings({userInfo: data.userInfo, callApi: data.callApi})) {
+        if (!await checkAccountSettings({accountId: accountId, userInfo: data.userInfo, callApi: data.callApi})) {
             data.logger.post('Account setting error', 'The account does not have a required setting');
             return false; // EARLY RETURN
         } 
@@ -492,8 +519,20 @@ $(async function () {
             padding: PADDING,
         });
         data.loadingModal.show("Retrieving your photo and the account’s logo")
-        await userPictureAccountBrand({userInfo: data.userInfo, callApi: data.callApi});
+        await userPictureAccountBrand({accountId: accountId, userInfo: data.userInfo, callApi: data.callApi});
         data.classicSigning.showResults();
+        data.loadingModal.show("Checking templates")
+        const result = await checkTemplates(templates);
+        if (result.ok) {
+            data.loadingModal.delayedHide(result.msg)
+        } else {
+            data.loadingModal.hide();
+            messageModal({style: 'text', title: "Templates issue", msg: 
+                `<p>Problem while loading example templates
+                to your eSignature account:</p><p>${result.msg}</p>`});
+                        // couldn't login
+            loginModal.show();
+        }
         return true;
     }
 
@@ -534,7 +573,11 @@ $(async function () {
     $('#myTab [data-bs-toggle="tab"]').on('show.bs.tab', e => {
         storageSet(MODE_STORAGE, $(e.target)[0].id)}); // save the mode 
     $('#settingsModal').on('hide.bs.modal', e => {
-        formToConfiguration(); settingsSet(configuration)});
+        const oldAccountRequest = configuration.accountRequest;
+        formToConfiguration();
+        settingsSet(configuration);
+        if (oldAccountRequest !== configuration.accountRequest) {setAccount()}
+    });
     window.addEventListener("beforeunload", beforeUnloadHandler);
     window.addEventListener("message", envelopeCreated);
     $("#useSigningCeremonyDefaultUx").change(e => {
@@ -599,18 +642,6 @@ $(async function () {
             storageSet(CONFIG_STORAGE, false); // reset
             if (config) {configuration = config}; // overwrite from QP
             setFormFromConfiguration();
-            data.loadingModal.show("Logged in. Checking templates")
-            const result = await checkTemplates(templates);
-            if (result.ok) {
-                data.loadingModal.delayedHide(result.msg)
-            } else {
-                data.loadingModal.hide();
-                messageModal({style: 'text', title: "Templates issue", msg: 
-                    `<p>Problem while loading example templates
-                    to your eSignature account:</p><p>${result.msg}</p>`});
-                            // couldn't login
-                loginModal.show();
-            }
             $(`#signername` ).val(data.userInfo.name);
             $(`#signername1`).val(data.userInfo.name);
             $(`#signername2`).val(data.userInfo.name);

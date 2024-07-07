@@ -331,26 +331,31 @@ class UserInfo {
      */
     async fetchExternalAccountIds() {
         for (const account of this.accounts) {
-            if (this.onlyCheckDefaultAccount && !account.accountIsDefault) {continue}
-            try {
-                const url = `${account.accountBaseUrl}/accounts/${account.accountId}`;
-                const response = await fetch(url,
-                        {mode: 'cors',
-                        method: 'GET',
-                        headers: new Headers({
-                            Authorization: `Bearer ${this.accessToken}`,
-                            Accept: `application/json`,
-                            "X-DocuSign-SDK": "CodePen"}) 
-                        });
-                const data = response && await response.json();
-                if (response.ok) {
-                    account.accountExternalId = data.externalAccountId
-                } else {
-                    account.corsError = `${data.errorCode}; ${data.message}`
-                }
-            } catch (e) {
-                account.corsError = e instanceof TypeError
+            // if (this.onlyCheckDefaultAccount && !account.accountIsDefault) {continue}
+            // We need all account info to populate the change account options
+            await this.checkAccount(account);
+        }
+    }
+
+    async checkAccount (account) {
+        try {
+            const url = `${account.accountBaseUrl}/accounts/${account.accountId}`;
+            const response = await fetch(url,
+                    {mode: 'cors',
+                    method: 'GET',
+                    headers: new Headers({
+                        Authorization: `Bearer ${this.accessToken}`,
+                        Accept: `application/json`,
+                        "X-DocuSign-SDK": "CodePen"}) 
+                    });
+            const data = response && await response.json();
+            if (response.ok) {
+                account.accountExternalId = data.externalAccountId
+            } else {
+                account.corsError = `${data.errorCode}; ${data.message}`
             }
+        } catch (e) {
+            account.corsError = e instanceof TypeError
         }
     }
 
@@ -366,6 +371,26 @@ class UserInfo {
                 "X-DocuSign-SDK": "CodePen"
             })
         });
+    }
+
+    /***
+     * accountsEntry(accountId)
+     */
+    accountsEntry(accountId) {
+        return this.accounts.find(a => a.accountId === accountId)
+    }
+
+    /***
+     * addAccountOptions(elId)
+     * Adds option elements to the select element for switching accounts
+     */
+    addAccountOptions(elId) {
+        let html = "";
+        for (const account of this.accounts) {
+            html += `\n<option value="${account.accountId}">${account.accountName}${account.accountIsDefault ? " (default)":""}`;
+            html += ` ${account.accountExternalId}</option>`
+        }
+        $(`#${elId}`).append(html);
     }
 }
 

@@ -816,7 +816,7 @@
 
     <!-- SETTINGS MODAL -->
     <div id="settingsModal" class="modal fade" tabindex="-1">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Settings</h5>
@@ -824,10 +824,14 @@
                 </div>
                 <div class="modal-body">
                     <form id="settingsForm">
-                        <h5>Payment Gateway</h5>
-                        <p>Optional: enter a payment gateway ID to enable the payment examples</p>
-                        <label for="gatewayId" class="form-label">Payment Gateway ID:</label>
-                        <input id="gatewayId" class="ms-2 me-5form-control display-inline w14" type="text" />
+                        <h5>Account</h5>
+                        <div>
+                            <label for="accountRequest" class="form-label">Account:</label>
+                            <select id="accountRequest" class="ms-2 form-select display-inline w19"
+                                aria-label="Account">
+                                <option value="default">Default account</option>
+                            </select>
+                        </div>
                         <h5>Output</h5>
                         <div>
                             <label for="outputStyle" class="form-label">Output style:</label>
@@ -836,11 +840,9 @@
                                 <option value="openUrl">Open the Signing Ceremony</option>
                                 <option value="showUrl">Show the URL</option>
                             </select>
-                        </div>
-                        <p>
-                            <label for="useIframe" class="form-label">Use an iframe/application chrome?</label>
+                            <label for="useIframe" class="ms-3">Use an iframe & GUI chrome?</label>
                             <input id="useIframe" class="form-check-input baseline me-3 ms-1" type="checkbox">
-                        </p>
+                        </div>
                         <p>
                             For docusign.js signing ceremonies, if «iframe» is off, a zero GUI chrome iframe is used.
                         </p>
@@ -848,7 +850,6 @@
                         <p>Optional: Docusign can include authentication checks as part of the signing ceremony</p>
                         <p>
                             <label for="authStyle" class="form-label">Additional Authentication:</label>
-                        <br/>
                             <select id="authStyle" class="ms-2 form-select display-inline w19"
                                 aria-label="Additional Authentication style">
                                 <option value="none">None</option>
@@ -857,13 +858,15 @@
                             </select>
                         </p>
                         <p>
-                            <label for="idvConfigId" class="form-label">Identity Configuration ID:</label>
-                            <input id="idvConfigId" class="ms-2 me-5form-control display-inline w14" type="text" />
-                        </p>
-                        <p>
                             <label for="sms" class="form-label">SMS number:</label>
                             <input id="sms" type="tel" class="ms-2 me-5form-control display-inline w14" style="background:none;border-width:1px;">
+                            <label for="idvConfigId" class="ms-3 form-label">Identity Configuration ID:</label>
+                            <input id="idvConfigId" class="ms-2 me-5form-control display-inline w14" type="text" />
                         </p>
+                        <h5>Payment Gateway</h5>
+                        <p>Optional: enter a payment gateway ID to enable the payment examples</p>
+                        <label for="gatewayId" class="form-label">Payment Gateway ID:</label>
+                        <input id="gatewayId" class="ms-2 me-5form-control display-inline w14" type="text" />
                     </form>
                 </div>
                 <div class="modal-footer">
