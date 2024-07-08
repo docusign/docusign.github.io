@@ -11,6 +11,7 @@ embedding the signing ceremony into your application including Click to Agree an
 
 * [Embedded Sending example](app-examples/embedded-views-v2) demonstrates the 
     * embedded sending view, including UX customization options
+    * embedded correct view, including UX customization options
     * embedded template edit view
 
 ### Individual Consent Thank You page
@@ -18,7 +19,3 @@ A [generic consent thank you page](https://docusign.github.io/thankyou) can be u
 as the redirectUrl for people who have granted consent to an application.
 
 The page removes any query parameters from the URL resulting from the OAuth Authorization Grant flow.
-
-### CodePen example assets
-The /examples directory includes documents and templates used by the CodePen examples. 
-See [codepen.io/docusign](https://codepen.io/docusign)
