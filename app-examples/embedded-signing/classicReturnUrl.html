@@ -35,7 +35,7 @@
       const iOS = window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.myHandler;
       if (iOS) {
             console.log('Posting message to iOS: sessionEnd');
-            await window.webkit.messageHandlers.myHandler.postMessage(`SessionEnd=${event.sessionEndType}`);
+            window.webkit.messageHandlers.myHandler.postMessage(`SessionEnd=${event.sessionEndType}`);
       }
       if (webView && WebView && WebView.postMsg) {
         WebView.postMsg(`SessionEnd=${event.sessionEndType}`)       
