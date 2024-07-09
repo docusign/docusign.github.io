@@ -15,6 +15,9 @@
     <p>Please wait.</p>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <script type="module">
+        import { processUrlHash } from "../library/utilities.js";
+        const config = processUrlHash("event");
+
       const msg = {source: 'dsResponse', 
         hash: window.location.hash || '',
         href: window.location.href || '',
@@ -35,10 +38,10 @@
       const iOS = window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.myHandler;
       if (iOS) {
             console.log('Posting message to iOS: sessionEnd');
-            window.webkit.messageHandlers.myHandler.postMessage(`SessionEnd=${event.sessionEndType}`);
+            window.webkit.messageHandlers.myHandler.postMessage(`SessionEnd=${config.event}`);
       }
       if (webView && WebView && WebView.postMsg) {
-        WebView.postMsg(`SessionEnd=${event.sessionEndType}`)       
+        WebView.postMsg(`SessionEnd=${config.event}}`)
       } else if (window.parent && window.parent.opener) {
         window.parent.opener.postMessage(msg, '*'); // iframed case
       } else if (window.opener) {

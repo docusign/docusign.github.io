@@ -39,17 +39,18 @@
         }
       }
       
+      const config = processUrlHash("event");
+
       // is iOS bridge available?
       const iOS = window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.myHandler;
       if (iOS) {
           console.log('Posting message to iOS: sessionEnd');
-          await window.webkit.messageHandlers.myHandler.postMessage(`SessionEnd=${event.sessionEndType}`);
+          await window.webkit.messageHandlers.myHandler.postMessage(`SessionEnd=${config.event}`);
       }
 
       if (webView && WebView && WebView.postMsg) {
-        WebView.postMsg(`SessionEnd=${event.sessionEndType}`)       
+        WebView.postMsg(`SessionEnd=${event.sessionEndType}`)
         } else {
-            const config = processUrlHash("event");
             Object.keys(config).forEach(item => {
                 const msg = `<p><b>${item} = ${config[item]}</b></p>`;
                 $(`#main`).append(msg);
