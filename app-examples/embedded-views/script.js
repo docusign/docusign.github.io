@@ -243,6 +243,12 @@ $(function () {
             return false;
         }
 
+        if (qpSender.send === "0") {
+            msg(`It seems that if the Start Window is set to "Prepare," and any query parameters are added to the returned URL, 
+                the Docusign app shows the current document state and enables access to the web app. In other words, the
+                UX query parameters should only be used when the Start Window is "Tagger." This has been fixed with the revised API.`);
+        }
+
         const qp = new URLSearchParams(qpSender);
         msg(`Results URL: ${results.url}`); 
         let resultsUrl = results.url.replace(/&advcorrect=[01]/,''); // remove "&advcorrect=1"
