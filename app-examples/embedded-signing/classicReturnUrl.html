@@ -16,14 +16,15 @@
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <script type="module">
         import { processUrlHash } from "../library/utilities.js";
+
+        const msg = {
+            source: 'dsResponse', 
+            hash: window.location.hash || '',
+            href: window.location.href || '',
+            search: window.location.search || '',
+        }
         const config = processUrlHash("event");
 
-      const msg = {source: 'dsResponse', 
-        hash: window.location.hash || '',
-        href: window.location.href || '',
-        search: window.location.search || '',
-      }
-    
       // is "WebView" defined by an Android webview? 
       let webView;
       try {
