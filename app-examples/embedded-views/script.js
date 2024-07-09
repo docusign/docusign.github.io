@@ -229,7 +229,8 @@ $(function () {
         
         // Make the Embedded Correct API call
         req = {
-            returnUrl: dsReturnUrl
+            returnUrl: dsReturnUrl,
+            beginOnTagger: qpSender.send === "1" ? "true" : "false"
         };
         const apiMethod = `/accounts/${accountId}/envelopes/${envelopeId}/views/correct`;
         const httpMethod = "POST";
