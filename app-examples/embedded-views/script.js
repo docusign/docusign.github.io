@@ -5,7 +5,7 @@ import {
     CallApi,
     ImplicitGrant,
     UserInfo
-} from "https://docusign.github.io/app-examples/library/callapi.js" 
+} from "../library/callapi.js" 
  
 import {
     msg,
@@ -17,12 +17,14 @@ import {
     getStoredAccountId,
     setStoredAccountId,
     toast,
-    //switchAccountsModal
-} from "https://docusign.github.io/app-examples/library/utilities.js" 
+    processUrlHash,
+} from "../library/utilities.js" 
 // View the source at https://codepen.io/docusign/pen/OJoLNvQ
-import { CheckTemplates } from "https://docusign.github.io/app-examples/library/checkTemplates.js";
+import { CheckTemplates } from "../library/checkTemplates.js";
 
 $(function () {
+    const LOGIN_QP = "login";  // add qp login=all to see all login sites.
+    const LOGIN_ALL = "all"
     let clientId = "demo";
     // Viewing settings 
     const dsReturnUrlDefault = "https://docusign.github.io/jsfiddleDsResponse.html";
@@ -685,6 +687,17 @@ $(function () {
     };
     loginStage = loginStage.bind(this);
     
+    let loginProduction = async function loginProductionf(event) {
+        $("#login").addClass("hide");
+        clientId = "prod";
+        data.implicitGrant = new ImplicitGrant({
+            workingUpdateF: workingUpdate,
+            clientId: clientId
+        });
+        await data.implicitGrant.login();
+    };
+    loginProduction = loginProduction.bind(this);
+    
     /*
      * Switch Accounts was clicked
      * Displays the modal and processes clicks using the supplied
@@ -740,11 +753,16 @@ $(function () {
         window.addEventListener("message", messageListener);
         $("#btnOauth").click(login);
         $("#btnOauthStage").click(loginStage);
+        $("#btnOauthProd").click(loginProduction);
         $("#btnDoit").click(doit);
         $("#btnDoit2").click(doit2);
         $("#btnDoit3").click(doit3);
         $("#saccount a").click(switchAccountsButton);
         $("#switchAccountModal .modal-body").click(accountClicked);
 
+        const config = processUrlHash(LOGIN_QP);
+        if (config && config[LOGIN_QP] === LOGIN_ALL) {
+            $("#btnOauthStage,#btnOauthProd").removeClass("hide");
+        } 
     }    
 });
