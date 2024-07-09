@@ -83,7 +83,7 @@ $(function () {
         }
     ];
 
-    debugger; // uncomment with debugger open to find the right JS file.
+    //debugger; // uncomment with debugger open to find the right JS file.
 
     /*
      * The doit2 function is the example that is triggered by the
@@ -226,6 +226,7 @@ $(function () {
             msg(`Envelope create FAILED.`);
             return
         }
+        
         // Make the Embedded Correct API call
         req = {
             returnUrl: dsReturnUrl
@@ -241,14 +242,21 @@ $(function () {
             msg(`Create Correct View FAILED.`);
             return false;
         }
-        const resultsUrl = results.url;
-        msg(`Displaying sender view: ${resultsUrl}`); 
-        // no iframe: embeddedViewWindow = window.open(senderUrl, "_blank");
+
+        const qp = new URLSearchParams(qpSender);
+        msg(`Results URL: ${results.url}`); 
+        let resultsUrl = results.url.replace(/&advcorrect=[01]/,''); // remove "&advcorrect=1"
+        //resultsUrl = resultsUrl.replace(/&send=[01]/,''); // remove "&send=1"
+        qp.append("advcorrect", qpSender.send) // 1-tagger
+        qp.delete("send");
+        const correctUrl = `${resultsUrl}&${qp.toString()}`;
+        msg(`Displaying correct view: ${correctUrl}`); 
+        //embeddedViewWindow = window.open(correctUrl, "_blank");  // No frame
         embeddedViewWindow = window.open(
-            `${iframeitUrl}?label=Embedded+Correct+View&url=${encodeURIComponent(resultsUrl)}`, "_blank");
+            `${iframeitUrl}?label=Embedded+Correct+View&url=${encodeURIComponent(correctUrl)}`, "_blank");
         
         if(!embeddedViewWindow || embeddedViewWindow.closed || 
-            typeof embeddedViewWindow.closed=='undefined') {
+           typeof embeddedViewWindow.closed=='undefined') {
             // popup blocked
             alert ("Please enable the popup window");
         }
