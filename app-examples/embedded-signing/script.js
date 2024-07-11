@@ -597,8 +597,11 @@ $(async function () {
     // (We need to store config info because we will reload the page as 
     // part of logging in.)
     // Does the hash include a config item? Then save it.
-    const config = processUrlHash("supp1signerMustAcknowledge");
-    if (config) {storageSet(CONFIG_STORAGE, config)}
+    const config = processUrlHash("mode");
+    if (config) {
+        storageSet(CONFIG_STORAGE, config);
+        storageSet(MODE_STORAGE, config.mode); // save the mode 
+    }
     const classicResults = processUrlHash("classicResults");
     if (classicResults) {storageSet(CLASSIC_RESULT, classicResults)}
     let useStage = storageGet(STAGE_QP, false);
