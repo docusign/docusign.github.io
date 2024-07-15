@@ -8,7 +8,7 @@ const implicitGrantPath = "/oauth/auth";
 // Client IDs are NOT secrets. See
 // https://www.rfc-editor.org/rfc/rfc6749.html#section-2.2
 const oAuthClientIDdemo = "f399b5fa-1807-4cc2-8498-2fba58d14759"; // demo
-const oAuthClientIDstage = "00bd4cc7-6852-4d6d-a56d-8b006695dc9a"; // "75db0d4b-a09f-47c0-af54-8d533dd59ea5"; // stage
+const oAuthClientIDstage = "75db0d4b-a09f-47c0-af54-8d533dd59ea5"; // "00bd4cc7-6852-4d6d-a56d-8b006695dc9a"; // ; // stage
 const oAuthClientIDprod = "8dd0204d-d969-4097-b121-f4bc77b81a44"; // prod
 const oAuthScopes = "signature cors";
 const IMPLICIT_NONCE = "Implicit OAuth Nonce"
