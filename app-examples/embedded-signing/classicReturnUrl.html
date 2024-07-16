@@ -43,11 +43,12 @@
       }
       if (webView && WebView && WebView.postMsg) {
         WebView.postMsg(`SessionEnd=${config.event}}`)
-      } else if (window.parent && window.parent.opener) {
+      } else if (window.parent && window.parent.opener && 
+            window.parent.opener.origin === window.location.origin) {
         window.parent.opener.postMessage(msg, '*'); // iframed case
-      } else if (window.opener) {
+      } else if (window.opener && window.opener.origin === window.location.origin) {
         window.opener.postMessage(msg, '*');
-      } else {
+      } else if (window.parent && window.parent.origin === window.location.origin) {
         window.parent.postMessage(msg, '*');
       }
     </script>
