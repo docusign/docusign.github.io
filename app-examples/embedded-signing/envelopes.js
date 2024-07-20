@@ -516,7 +516,7 @@ class Envelopes {
         this.setResponsiveMode();
         if (this.ersd === true || this.ersd === false) { this.request.useDisclosure = this.ersd }
         // if null, don't add the attribute
-        this.setIDV();     
+        if (this.authStyle) {this.setIDV()}     
     }
 
     /***
