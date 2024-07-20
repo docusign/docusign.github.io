@@ -227,7 +227,7 @@ class UserInfo {
         }
         this.accessToken = args.accessToken;
         this.workingUpdateF = args.workingUpdateF || null;
-        this.onlyCheckDefaultAccount = args.onlyCheckDefaultAccount; // cors check 
+        this.loadingMessageShow = args.loadingMessageShow || (msg => {});
         this.oAuthServiceProvider = oAuthServiceProvider;
         this.userInfoPath = userInfoPath;
         this.eSignBase = eSignBase;
@@ -330,10 +330,12 @@ class UserInfo {
      * External account IDs are used in the Switch Account modal. 
      */
     async fetchExternalAccountIds() {
+        let i = this.accounts.length;
         for (const account of this.accounts) {
-            // if (this.onlyCheckDefaultAccount && !account.accountIsDefault) {continue}
+            this.loadingMessageShow(`Loading ${i} account ${i > 1 ? "details" : "detail"}`);
             // We need all account info to populate the change account options
             await this.checkAccount(account);
+            i -= 1;
         }
     }
 

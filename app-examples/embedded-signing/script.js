@@ -399,7 +399,7 @@ $(async function () {
         data.userInfo = new UserInfo({
             platform: platform,
             accessToken: data.implicitGrant.accessToken,
-            onlyCheckDefaultAccount: true,
+            loadingMessageShow: data.loadingModal.show.bind(data.loadingModal)
         });
         const ok = await data.userInfo.getUserInfo();
         if (!ok) {
