@@ -333,7 +333,7 @@ $(async function () {
      * setFormFromConfiguration update form to the configuration
      */
     function formToConfiguration(){
-        for (const property in configuration) {
+        for (const property in configurationProto) {
             if (property === "mode") {continue}
             configuration[property] = formCheckboxes[property] ? $(`#${property}`).prop('checked') : $(`#${property}`).val();
         }
