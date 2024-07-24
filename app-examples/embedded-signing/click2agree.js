@@ -58,6 +58,7 @@ class Click2Agree {
         this.ersd = args.ersd;
         this.outputStyle = args.outputStyle;
         this.useIframe = args.useIframe;
+        this.useModal = args.useModal;
 
         // supplemental = [{include: true, signerMustAcknowledge: "view"},
         //   {include: true, signerMustAcknowledge: "accept"}];
@@ -91,7 +92,11 @@ class Click2Agree {
             return;
         }
 
-        this.loadingModal.delayedHide("Opening the signing ceremony");
+        if (this.useModal && this.outputStyle === "openUrl") {
+            this.loadingModal.hide();
+        } else {
+            this.loadingModal.delayedHide("Opening the signing ceremony");
+        }
         if (this.outputStyle === "openUrl") {
             await this.focusedViewClickToAgree(recipientViewUrl);
         } else {
@@ -129,6 +134,12 @@ class Click2Agree {
                 */
             }
         }
+        const signingElId = this.useModal ? "c2aSigningModalBody" : this.signElId;
+        const signingModalId = "c2aSigningModal";
+        let modal = null;
+        if (this.useModal) {
+            modal = new bootstrap.Modal(document.getElementById(signingModalId), {keyboard: false, backdrop: 'static'});
+        }
 
         try {
             const docusign = await window.DocuSign.loadDocuSign(this.clientId);
@@ -136,7 +147,7 @@ class Click2Agree {
                 
             /** Event handlers **/
             signing.on('ready', (event) => {
-                $(`#${this.signElId} > iframe`).css('height', `${window.innerHeight - this.padding}px`);
+                $(`#${signingElId} > iframe`).css('height', `${window.innerHeight - this.padding}px`);
                 window.scroll(0, 0); // for iOS
                 console.log('UI is rendered');
             });
@@ -154,15 +165,23 @@ class Click2Agree {
                     this.messageModal({style: 'text', title: "Agreement Session Message", msg: msg});
                     this.logger.post("Agreement session ended", msg);                    
                 } 
-                $(`#${this.signElId}`).addClass("hide").empty(); // Important! REMOVE the signing ceremony
+                if (this.useModal) {
+                    modal.hide()
+                } else {
+                    $(`#${signingElId}`).addClass("hide"); // .empty(); // Important! REMOVE the signing ceremony
+                }
                 $(`#${this.mainElId}`).removeClass("hide");
             });
             
             $(`#${this.mainElId}`).addClass("hide");
-            $(`#${this.signElId}`).removeClass("hide");
+            if (this.useModal) {
+                modal.show();
+            } else {
+                $(`#${signingElId}`).removeClass("hide");
+            }
 
             // Open the signing ceremony            
-            signing.mount(`#${this.signElId}`);
+            signing.mount(`#${signingElId}`);
         } catch (error) {
             // Any configuration or API limits will be caught here
             this.messageModal({style: 'text', title: "Error during Agreement Ceremony", msg: error});

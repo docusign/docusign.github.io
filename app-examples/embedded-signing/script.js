@@ -95,6 +95,7 @@ $(async function () {
         smsNational: "",
         smsCc: "",
         accountRequest: "default",
+        useModal: false,
     }
     const formCheckboxes = {
         supp1include: true, 
@@ -108,6 +109,7 @@ $(async function () {
         useSigningCeremonyDefaultUx: true,
         useIframe: true, 
         useErsd: true,
+        useModal: true,
     }
 
     let templates = [
@@ -164,6 +166,7 @@ $(async function () {
             document: configuration.document,
             outputStyle: configuration.outputStyle,
             useIframe: configuration.useIframe,
+            useModal: configuration.useModal,
         })
     }.bind(this)
 
