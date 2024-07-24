@@ -97,6 +97,7 @@ $(async function () {
         accountRequest: "default",
         useModal: false,
     }
+    const configurationProto = structuredClone(configuration);
     const formCheckboxes = {
         supp1include: true, 
         supp2include: true, 
@@ -342,21 +343,26 @@ $(async function () {
         configuration.smsCc = resp.smsCc;
     }
     function setFormFromConfiguration() {
-        for (const property in configuration) {
+        function getProperty (p) {
+            // handle case where a new property was added but that property not in storage (pickled) 
+            return configuration[p] === undefined ? configurationProto[p] : configuration[p]
+        }
+
+        for (const property in configurationProto) {
             if (property === "mode") {continue}
             if (formCheckboxes[property]) {
-                $(`#${property}`).prop('checked', configuration[property]);
+                $(`#${property}`).prop('checked', getProperty(property));
             } else {
-                $(`#${property}`).val(configuration[property]);
+                $(`#${property}`).val(getProperty(property));
             }
-            if (configuration.useSigningCeremonyDefaultUx) {
+            if (getProperty('useSigningCeremonyDefaultUx')) {
                 $(`.classicColor`).attr("disabled", true);
             }
         }
-        if (configuration.smsCc) {
-            data.iti.setNumber("+" + configuration.smsCc + configuration.smsNational);
+        if (getProperty('smsCc')) {
+            data.iti.setNumber("+" + getProperty('smsCc') + getProperty('smsNational'));
         }
-        new bootstrap.Tab(`#${configuration.mode}`).show()
+        new bootstrap.Tab(`#${getProperty('mode')}`).show()
     }
 
     /***
