@@ -59,6 +59,8 @@ class Click2Agree {
         this.outputStyle = args.outputStyle;
         this.useIframe = args.useIframe;
         this.useModal = args.useModal;
+        this.showDecline = args.showDecline;
+
 
         // supplemental = [{include: true, signerMustAcknowledge: "view"},
         //   {include: true, signerMustAcknowledge: "accept"}];
@@ -122,6 +124,9 @@ class Click2Agree {
                         /** Text color of primary button */
                         color: $(`#${this.modelButtonId} span`).css('color'),
                     }
+                },
+                signingDeclineButton: {
+                    show: this.showDecline
                 },
                 /**
                  * signingNavigationButton object is NOT used when the view is Click to Agree

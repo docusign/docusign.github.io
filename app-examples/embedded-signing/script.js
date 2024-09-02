@@ -89,6 +89,7 @@ $(async function () {
         document3: "default",
         outputStyle: "openUrl",
         useIframe: true,
+        showDecline: false,
         gatewayId: "",
         authStyle: "none",
         idvConfigId: "",
@@ -109,6 +110,7 @@ $(async function () {
         supp32include: true,
         useSigningCeremonyDefaultUx: true,
         useIframe: true, 
+        showDecline: true,
         useErsd: true,
         useModal: true,
     }
@@ -146,7 +148,7 @@ $(async function () {
     ];
 
     /***
-     * signClickToAgree -- start the signing process
+     * signClickToAgree 
      */
     let signClickToAgree = async function signClickToAgreeF (e) {
         e.preventDefault();
@@ -168,11 +170,12 @@ $(async function () {
             outputStyle: configuration.outputStyle,
             useIframe: configuration.useIframe,
             useModal: configuration.useModal,
+            showDecline: configuration.showDecline,
         })
     }.bind(this)
 
     /***
-     * signFocusView -- Focus View example
+     * signFocusView
      */
     let signFocusView = async function signFocusViewF (e) {
         e.preventDefault();
@@ -199,11 +202,12 @@ $(async function () {
             idvConfigId: configuration.idvConfigId,    
             smsNational: configuration.smsNational,
             smsCc: configuration.smsCc,
+            showDecline: configuration.showDecline,
             });
     }.bind(this)
 
     /***
-     * dsjsDefault -- Focus View example
+     * dsjsDefault 
      */
     let dsjsDefault = async function dsjsDefaultF (e) {
         e.preventDefault();

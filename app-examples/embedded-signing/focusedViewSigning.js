@@ -40,6 +40,8 @@ class FocusedViewSigning {
         this.signing = false; 
         this.document = args.document;
         this.padding = args.padding;
+        this.showDecline = args.showDecline;
+
         this.documentChoice = { // response means generic "document" responsive
             default: {responsive: false, request: this.envelopes.createTemplateRequest.bind(this.envelopes)},
             htmlRegResp: {responsive: true, request: this.envelopes.createHtmlRegRequest.bind(this.envelopes)},
@@ -159,7 +161,10 @@ class FocusedViewSigning {
                     finishText: $(`#${this.modelButtonId} span`).text(), // default is Submit
                     // 'bottom-left'|'bottom-center'|'bottom-right',  default: bottom-right
                     position: $(`#${this.modelButtonPosition}`).val()
-                }
+                },
+                signingDeclineButton: {
+                    show: this.showDecline
+                },
             }
         }
 
