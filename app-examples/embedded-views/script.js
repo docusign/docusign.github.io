@@ -199,7 +199,7 @@ $(function () {
         const signer = {
             name: data.userInfo.name,
             email: data.userInfo.email,
-            clientUserId: 1000
+            clientUserId: $(`#dsClientUserId`).val() === 'true' ? 1000 : ""
         };
         envelopeId = await createEnvelope(signer);
         if (envelopeId) {

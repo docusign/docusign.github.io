@@ -82,18 +82,25 @@
                         <textarea id="comment" class="form-control" rows="3" style="width:40em;"></textarea>
                     </div>
                         <div class="mb-3">
-                        <label for="dsReturnUrl" class="form-label">Include a return URL?</label>
-                        <select id="dsReturnUrl" class="form-select form-select-sm" aria-label=".form-select-sm example">
-                            <option selected>true</option>
-                            <option>false</option>
-                        </select>
+                            <label for="dsClientUserId" class="form-label">Embedded signer (clientUserId)?</label>
+                            <select id="dsClientUserId" class="form-select form-select-sm" aria-label=".form-select-sm example">
+                                <option selected>true</option>
+                                <option>false</option>
+                            </select>
                         </div>
                         <div class="mb-3">
-                        <label for="send" class="form-label">Start window:</label>
-                        <select id="send" class="form-select form-select-sm" aria-label=".form-select-sm example">
-                            <option value="0" selected>Prepare window</option>
-                            <option value="1">Tagger window</option>
-                        </select>
+                            <label for="dsReturnUrl" class="form-label">Include a return URL?</label>
+                            <select id="dsReturnUrl" class="form-select form-select-sm" aria-label=".form-select-sm example">
+                                <option selected>true</option>
+                                <option>false</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="send" class="form-label">Start window:</label>
+                            <select id="send" class="form-select form-select-sm" aria-label=".form-select-sm example">
+                                <option value="0" selected>Prepare window</option>
+                                <option value="1">Tagger window</option>
+                            </select>
                         </div>
                         <div class="mb-3">
                         <label for="sendButtonAction" class="form-label">Send Button action:</label>
