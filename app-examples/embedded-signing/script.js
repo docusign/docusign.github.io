@@ -87,6 +87,9 @@ $(async function () {
         document1: "default",
         document2: "default",
         document3: "default",
+        template1: "none",
+        template2: "none",
+        template3: "none",
         outputStyle: "openUrl",
         useIframe: true,
         showDecline: false,
@@ -195,6 +198,7 @@ $(async function () {
             modelButtonPosition: "buttonPosition1",
             locale: configuration.locale1,
             document: configuration.document1,
+            template: configuration.template1,
             outputStyle: configuration.outputStyle,
             useIframe: configuration.useIframe,
             gatewayId: configuration.gatewayId,
@@ -226,6 +230,7 @@ $(async function () {
             modelButtonId: "modelButton2",
             locale: configuration.locale2,
             document: configuration.document2,
+            template: configuration.template2,
             outputStyle: configuration.outputStyle,
             useIframe: configuration.useIframe,
             gatewayId: configuration.gatewayId,
@@ -255,6 +260,7 @@ $(async function () {
             email: data.userInfo.email,
             locale: configuration.locale3,
             document: configuration.document3,
+            template: configuration.template3,
             outputStyle: configuration.outputStyle,
             useIframe: configuration.useIframe,
             gatewayId: configuration.gatewayId,
@@ -353,7 +359,8 @@ $(async function () {
         }
 
         for (const property in configurationProto) {
-            if (property === "mode") {continue}
+            const skip = {mode: true, accountRequest: true, template1: true, template2: true, template3: true};
+            if (skip[property]) {continue}
             if (formCheckboxes[property]) {
                 $(`#${property}`).prop('checked', getProperty(property));
             } else {
@@ -538,6 +545,7 @@ $(async function () {
         const result = await checkTemplates(templates);
         if (result.ok) {
             data.loadingModal.delayedHide(result.msg)
+            setTemplateOptions(data.checkTemplates.accountTemplates)
         } else {
             data.loadingModal.hide();
             messageModal({style: 'text', title: "Templates issue", msg: 
@@ -559,6 +567,27 @@ $(async function () {
         const okMsg = emptyOk ? "Done." : data.checkTemplates.msg;
         const ok = !data.checkTemplates.errMsg;
         return {ok: ok, msg: ok ? okMsg : data.checkTemplates.errMsg}
+    }
+
+    /***
+     * setTemplateOptions sets the select options
+     */
+    function setTemplateOptions(accountTemplates) {
+        let optionsHtml = `<option value="none">None</option>`;
+
+        // sort by name. See 
+        // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort#sorting_array_of_objects
+        accountTemplates.sort((a, b) => {
+            const nameA = a.name.toUpperCase(); // ignore upper and lowercase
+            const nameB = b.name.toUpperCase(); // ignore upper and lowercase
+            if (nameA < nameB) {return -1}
+            if (nameA > nameB) {return 1}          
+            return 0; // names must be equal
+          });
+        const templatesOpt = accountTemplates.map((a) => `<option value="${a.templateId}">${a.name}</option>`);
+        optionsHtml += templatesOpt.join();
+
+        $(`#template1, #template2, #template3`).empty().prepend(optionsHtml);
     }
 
     // Mainline

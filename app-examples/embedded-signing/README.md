@@ -29,6 +29,10 @@ Click the **Settings** item in the top navigation bar to open the Settings Modal
 ### Account
 Use this setting to change the account that will be used.
 
+### Signer User Experience
+Show Decline option? -- This setting controls the visibility of the Decline 
+button for the Focused View and Focused View/Click to Agree tabs.
+
 ### Output
 By default, the tool opens the signing or agreement ceremony by replacing the tool's UI with the Docusign session.
 
@@ -45,6 +49,21 @@ Select **Default Phone/SMS Authentication** and enter a phone number to enable t
 
 ### Payment Gateway
 As discussed below, enter your Payment Gateway ID if your document includes a Payment tab.
+
+## Common options
+
+### Document
+Chooses which document will be used.
+
+### Template
+Choose a template from the templates in your account.
+
+If a template is chosen, the **Document** option is ignored.
+
+### Supplemental Documents
+Use the checkboxes to include or omit supplements 1 and 2.
+
+Use the select fields to choose how the signer will interact with the supplemental document. 
 
 ## Docusign.js
 The [Docusign.js library](https://developers.docusign.com/docs/esign-rest-api/esign101/concepts/embedding/docusign-js-embedded-reference/)

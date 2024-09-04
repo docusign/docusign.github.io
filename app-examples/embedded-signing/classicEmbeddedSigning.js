@@ -83,7 +83,8 @@ class ClassicSigning {
         this.name = args.name;
         this.email = args.email;
         this.locale = args.locale;
-        this.document = args.document;
+        this.template = args.template === "none" ? false : args.template; // Using a specific template
+        this.document = args.template ? "default" : args.document;
         this.outputStyle = args.outputStyle; // openUrl, showUrl
         this.useIframe = args.useIframe;
         this.gatewayId = args.gatewayId;
@@ -116,7 +117,7 @@ class ClassicSigning {
         this.envelopes.smsCc = this.smsCc;
         this.envelopes.name = this.name;
         this.envelopes.email = this.email;
-        this.envelopes.templateId = this.templateId;
+        this.envelopes.templateId = this.template ? this.template : this.templateId; // Use a specific template?
         this.envelopes.useDisclosure = this.useDisclosure; 
         this.envelopes.locale = this.locale; 
         this.envelopes.responsive = this.documentChoice[this.document].responsive;

@@ -72,7 +72,8 @@ class FocusedViewSigning {
         this.modelButtonId = args.modelButtonId;
         this.modelButtonPosition = args.modelButtonPosition;
         this.locale = args.locale;
-        this.document = args.document;
+        this.template = args.template === "none" ? false : args.template; // Using a specific template
+        this.document = args.template ? "default" : args.document;
         this.useDisclosure = true; // why demo with this off?
         this.outputStyle = args.outputStyle;
         this.useIframe = args.useIframe;
@@ -103,7 +104,7 @@ class FocusedViewSigning {
         this.envelopes.smsCc = this.smsCc;
         this.envelopes.name = this.name;
         this.envelopes.email = this.email;
-        this.envelopes.templateId = this.templateId;
+        this.envelopes.templateId = this.template ? this.template : this.templateId; // Use a specific template?
         this.envelopes.useDisclosure = this.useDisclosure; 
         this.envelopes.locale = this.locale;
         this.envelopes.ersd = this.ersd === false ? null : true; 
