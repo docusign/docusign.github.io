@@ -478,7 +478,7 @@ $(function () {
                                     {
                                         email: email,
                                         name: name,
-                                        clientUserId: clientUserId,
+                                        // clientUserId: clientUserId,
                                         roleName: "Signer1",
                                         recipientId: "1",
                                     }
