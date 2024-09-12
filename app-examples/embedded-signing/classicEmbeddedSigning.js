@@ -84,7 +84,7 @@ class ClassicSigning {
         this.email = args.email;
         this.locale = args.locale;
         this.template = args.template === "none" ? false : args.template; // Using a specific template
-        this.document = args.template ? "default" : args.document;
+        this.document = this.template ? "default" : args.document;
         this.outputStyle = args.outputStyle; // openUrl, showUrl
         this.useIframe = args.useIframe;
         this.gatewayId = args.gatewayId;

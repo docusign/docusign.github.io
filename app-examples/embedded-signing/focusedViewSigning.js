@@ -73,7 +73,7 @@ class FocusedViewSigning {
         this.modelButtonPosition = args.modelButtonPosition;
         this.locale = args.locale;
         this.template = args.template === "none" ? false : args.template; // Using a specific template
-        this.document = args.template ? "default" : args.document;
+        this.document = this.template ? "default" : args.document;
         this.useDisclosure = true; // why demo with this off?
         this.outputStyle = args.outputStyle;
         this.useIframe = args.useIframe;
