@@ -37,7 +37,7 @@ import {
 
 const CONFIG_STORAGE = "embeddedSigningConfiguration";
 const MODE_STORAGE = "embeddedSigningMode";
-const CLASSIC_RESULT = 'classicResult'; // store the classic non-iframe signing result
+const CLASSIC_RESULT = 'embeddedSigning classicResult'; // store the classic non-iframe signing result
 const STAGE_QP = 'stage'; // if ?stage=1 then use stage
 const PADDING = 70; // padding-top for the signing ceremony.
 
