@@ -4,7 +4,7 @@
 // Embedded Signing main JS script
 
 
-import { ImplicitGrant } from "../library/implicitGrant.js" 
+import { AuthCodePkce } from "../library/authCodePkce.js" 
 import { CheckTemplates } from "../library/checkTemplates.js";
 import { Envelopes } from "./envelopes.js";
 import { Click2Agree } from "./click2agree.js"
@@ -326,7 +326,7 @@ $(async function () {
      * checkToken returns true if we're good to go.
      */
     function checkToken() {
-        const tokenOk = data.implicitGrant.checkToken();
+        const tokenOk = data.authCodePkce.checkToken();
         if (!tokenOk) {
             messageModal({style: 'text', title: "Your Login Session Has Expired", 
             msg: 
@@ -408,17 +408,17 @@ $(async function () {
      * Start login process
      */
     const login = function loginF() {
-        data.implicitGrant.login();
+        data.authCodePkce.login();
     }.bind(this);
 
     /***
      * Complete login process.
      */
     async function completeLogin() {
-        oAuthClientID = data.implicitGrant.oAuthClientID;
+        oAuthClientID = data.authCodePkce.oAuthClientID;
         data.userInfo = new UserInfo({
             platform: platform,
-            accessToken: data.implicitGrant.accessToken,
+            accessToken: data.authCodePkce.accessToken,
             loadingMessageShow: data.loadingModal.show.bind(data.loadingModal)
         });
         const ok = await data.userInfo.getUserInfo();
@@ -463,7 +463,7 @@ $(async function () {
 
         data.logger.post('Account Information', `Account ID: ${accountId}, Name: ${data.userInfo.defaultAccountName}`);
         data.callApi = new CallApi({
-            accessToken: data.implicitGrant.accessToken,
+            accessToken: data.authCodePkce.accessToken,
             apiBaseUrl: data.userInfo.defaultBaseUrl
         });
         data.loadingModal.show("Checking the account settings");
@@ -592,7 +592,7 @@ $(async function () {
 
     // Mainline
     let data = {
-        implicitGrant: null,
+        authCodePkce: null,
         userInfo: null,
         callApi: null,
         click2agree: null,
@@ -663,13 +663,14 @@ $(async function () {
 
     // The Implicit grant constructor looks at hash data to see if we're 
     // now receiving the OAuth response
-    data.implicitGrant = new ImplicitGrant({
+    data.authCodePkce = new AuthCodePkce({
         oAuthReturnUrl: `${location.origin}${location.pathname}`,
         clientId: platform,
         showMsg: toast
     });
+    await data.authCodePkce.oauthResponse();
     // If we're not logged in, then ask to start the login flow.
-    if (!data.implicitGrant.checkToken()) {
+    if (!data.authCodePkce.checkToken()) {
         loginModal.show();
     } else {
         // logged in
