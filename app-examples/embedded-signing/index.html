@@ -62,14 +62,25 @@
                     <li class="nav-item" id="account-brand"> 
                     </li>
                     <li class="nav-item"> <!-- 40 x 40 -->
-                        <button id="user-picture" type="button" class="btn btn-link nav-link"></button>
+                        <button id="user-picture" type="button" class="btn btn-link nav-link" data-bs-toggle="modal"
+                        data-bs-target="#userInfoModal"></button>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
 
-        <div id="signing-ceremony" class="hide"></div>
+    <!-- #################################################################### -->
+    <!-- #################################################################### -->
+    <!-- ###                                                               ## -->
+    <!-- ###  End of navigation. Start of body.                            ## -->
+    <!-- ###                                                               ## -->
+    <!-- #################################################################### -->
+    <!-- #################################################################### -->
+    <!-- #################################################################### -->
+
+        <div id="signing-ceremony" hidden></div>
+        <div id="loader" hidden></div>
         <div id="main" class="container pt8">
             <ul class="nav nav-tabs nav-fill" id="myTab" role="tablist">
                 <li class="nav-item" role="presentation">
@@ -918,6 +929,29 @@
                         <p>Optional: enter a payment gateway ID to enable the payment examples</p>
                         <label for="gatewayId" class="form-label">Payment Gateway ID:</label>
                         <input id="gatewayId" class="ms-2 me-5form-control display-inline w14" type="text" />
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- USER INFO MODAL -->
+    <div id="userInfoModal" class="modal fade" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="userInfoForm">
+                        <p>Account GUID: <span id="userInfoAccount"></span></p>
+                        <p>User GUID: <span id="userInfoUser"></span></p>
+                        <button id="logout" type="button" class="btn btn-link"
+                           style="padding-left: 0px;margin-left: 0px;">Log Out</button>
                     </form>
                 </div>
                 <div class="modal-footer">

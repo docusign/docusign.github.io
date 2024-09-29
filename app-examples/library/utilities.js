@@ -512,9 +512,13 @@ function adjustRows() {
     resizer.addEventListener("mousedown", mouseDownHandler);
 }
 
+// https://stackoverflow.com/questions/14226803/wait-5-seconds-before-executing-next-line
+const delay = (ms) => new Promise((res) => setTimeout(res, ms));
+
+
 /////////////////////
 export { msg, htmlMsg, adjustRows, errMsg, workingUpdate, usingHttps, LoadingModal,
     getStoredAccountId, setStoredAccountId, toast, switchToHttps, messageModal, 
     processUrlHash, storageGet, storageSet, ButtonOnChange, settingsGet, settingsSet,
-    userPictureAccountBrand, checkAccountSettings, monitorSigningHeight, getPhoneNumber
+    userPictureAccountBrand, checkAccountSettings, monitorSigningHeight, getPhoneNumber,
 };

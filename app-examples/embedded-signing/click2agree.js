@@ -173,7 +173,7 @@ class Click2Agree {
                 if (this.useModal) {
                     modal.hide()
                 } else {
-                    $(`#${signingElId}`).addClass("hide"); // .empty(); // Important! REMOVE the signing ceremony
+                    document.getElementById(this.signElId).setAttribute("hidden", "");
                 }
                 $(`#${this.mainElId}`).removeClass("hide");
             });
@@ -182,7 +182,7 @@ class Click2Agree {
             if (this.useModal) {
                 modal.show();
             } else {
-                $(`#${signingElId}`).removeClass("hide");
+                $(`#${signingElId}`).removeAttr("hidden");
             }
 
             // Open the signing ceremony            

@@ -183,12 +183,12 @@ class DsjsDefaultSigning {
                     this.logger.post("Signing session ended", msg);
 
                 } 
-                $(`#${this.signElId}`).addClass("hide").empty(); // Important! REMOVE the signing ceremony
+                document.getElementById(this.signElId).setAttribute("hidden", "");
                 $(`#${this.mainElId}`).removeClass("hide");
             });
             
             $(`#${this.mainElId}`).addClass("hide");
-            $(`#${this.signElId}`).removeClass("hide");
+            $(`#${this.signElId}`).removeAttr("hidden");
 
             // Open the signing ceremony
             signing.mount(`#${this.signElId}`);

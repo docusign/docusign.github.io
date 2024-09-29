@@ -193,12 +193,12 @@ class FocusedViewSigning {
                     this.messageModal({style: 'text', title: "Signing Session Message", msg: msg});
                     this.logger.post("Signing Session Message", msg);
                 } 
-                $(`#${this.signElId}`).addClass("hide");//.empty(); // Important! REMOVE the signing ceremony
+                document.getElementById(this.signElId).setAttribute("hidden", "");
                 $(`#${this.mainElId}`).removeClass("hide");
             });
             
             $(`#${this.mainElId}`).addClass("hide");
-            $(`#${this.signElId}`).removeClass("hide");
+            $(`#${this.signElId}`).removeAttr("hidden");
 
             // Open the signing ceremony
             signing.mount(`#${this.signElId}`);

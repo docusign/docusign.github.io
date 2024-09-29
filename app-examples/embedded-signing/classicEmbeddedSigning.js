@@ -157,7 +157,7 @@ class ClassicSigning {
         if (this.outputStyle === "openUrl") {
             if (this.useIframe) {
                 $(`#${this.mainElId}`).addClass("hide");
-                $(`#${this.signElId}`).removeClass("hide").html(`
+                $(`#${this.signElId}`).removeAttr("hidden").html(`
                     <iframe src="${recipientViewUrl}" frameborder="0" 
                         style="height:height=${window.innerHeight - this.padding}px};
                         width:100%" 
@@ -199,7 +199,8 @@ class ClassicSigning {
         this.messageModal({style: 'text', title: "Signing Session Ended", msg: msg});
         this.logger.post("Signing session ended", msg);
         
-        $(`#${this.signElId}`).addClass("hide").empty(); // Important! REMOVE the signing ceremony
+        //$(`#${this.signElId}`).setAttribute("hidden", "").empty(); // Important! REMOVE the signing ceremony
+        document.getElementById(this.signElId).setAttribute("hidden", "");
         $(`#${this.mainElId}`).removeClass("hide");
     }
 

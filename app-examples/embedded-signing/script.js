@@ -391,6 +391,17 @@ $(async function () {
     }.bind(this);
 
     /***
+     * logout -- create a URL from the configuration
+     */
+    const logout = async function logoutF(e) {
+        e.preventDefault();
+        // unfortunately the account server doesn't actually redirect 
+        // back to us. Sigh.
+        window.location.href =
+            `${data.userInfo.oAuthServiceProvider}/logout?redirect_uri=${window.location.href}`;
+    }.bind(this);
+    
+    /***
      * Ask for confirmation before leaving window
      */
     const beforeUnloadHandler = function beforeUnloadHandlerF(event) {
@@ -441,6 +452,7 @@ $(async function () {
      * setAccount
      */
     async function setAccount(){
+        let apiBaseUrl = data.userInfo.defaultBaseUrl;
         if (configuration.accountRequest === "default") {
             accountId = data.userInfo.defaultAccount;
         } else {
@@ -448,11 +460,13 @@ $(async function () {
             const accountEntry = data.userInfo.accounts.find(a => a.accountId === configuration.accountRequest);
             if (accountEntry) {
                 accountId = accountEntry.accountId;
+                apiBaseUrl = accountEntry.accountBaseUrl;
                 await data.userInfo.checkAccount(accountEntry);
                 if (accountEntry.corsError) {
                     messageModal({style: "text", title: "CORS Error", 
                         msg: accountEntry.corsError + " Using default account ID"});
-                    accountId = data.userInfo.defaultAccount;  
+                    accountId = data.userInfo.defaultAccount;
+                    apiBaseUrl = data.userInfo.defaultBaseUrl;
                 }
             } else {
                 messageModal({style: "text", title: "No Account Access", 
@@ -462,9 +476,10 @@ $(async function () {
         }
 
         data.logger.post('Account Information', `Account ID: ${accountId}, Name: ${data.userInfo.defaultAccountName}`);
+        $(`#userInfoAccount`).text(accountId);
         data.callApi = new CallApi({
             accessToken: data.authCodePkce.accessToken,
-            apiBaseUrl: data.userInfo.defaultBaseUrl
+            apiBaseUrl: apiBaseUrl
         });
         data.loadingModal.show("Checking the account settings");
         if (!await checkAccountSettings({accountId: accountId, userInfo: data.userInfo, callApi: data.callApi})) {
@@ -609,6 +624,7 @@ $(async function () {
     $("#dsjsDefault").click(dsjsDefault);
     $("#classicSign").click(classicSign);
     $("#saveToUrl").click(saveToUrl);
+    $("#logout").click(logout);
     $(".env-view").click(view);
     $(".info").click(e => {$(e.target).text($(e.target).text() === "Information" ? 
         "Close Information" : "Information")});
@@ -632,7 +648,6 @@ $(async function () {
             return false;
         }
     });
-       
 
     // Starting up...
     switchToHttps();
@@ -692,6 +707,8 @@ $(async function () {
             $(`#signername1`).val(data.userInfo.name);
             $(`#signername2`).val(data.userInfo.name);
             $(`#signername3`).val(data.userInfo.name);
+            $(`#userInfoModal .modal-title`).text(data.userInfo.name);
+            $(`#userInfoUser`).text(data.userInfo.userId);
             data.modelButton1Changes = new ButtonOnChange({
                 buttonId: "modelButton1",
                 textId: "buttonText1",
