@@ -8,14 +8,15 @@ const authPath = "/oauth/auth";
 const tokenPath = "/oauth/token";
 // Client IDs are NOT secrets. See
 // https://www.rfc-editor.org/rfc/rfc6749.html#section-2.2
-const oAuthClientIDdemo = ""; // demo
+const oAuthClientIDdemo = "DOCU-d63d0bdb-75ee-41b7-9005-e574a8aeb0ce"; // demo
 const oAuthClientIDstage = "ec5769e4-ec17-494c-98a7-bcc0a289e214"; // stage
 const oAuthClientIDprod = ""; // prod
 
 const oAuthScopes = "signature cors";
-const oAuthReturnUrl =
+const defaltOAuthReturnUrl =
     "https://docusign.github.io/authGrantReturn.html";
 const logLevel = 0; // 0 is terse; 9 is verbose
+const OAUTH_DATA = "OAuth PKCE data";
 
 /*
  * CLASS AuthCodePkce
@@ -23,13 +24,19 @@ const logLevel = 0; // 0 is terse; 9 is verbose
  * authentication code grant flow with PKCE without a secret
  * -- for public clients
  *
- * It opens, then later closes, a new browser tab.
+ * It can use the app browser tab or open, then later close, a new browser tab.
+ * See this.newTab
  * The client app must call handleMessage when the window receives a message event
  * 
  * Constructor
  *   args -- an object containing attributes:
- *   workingUpdateF -- function called when working state changes
- *   platform === "stage", "demo", or "prod" -- selects the Docusign platform
+ *      platform === "stage", "demo", or "prod" -- selects the Docusign platform
+ *      OR clientId === "prod", "demo" (default), "stage", or the actual clientId
+ *      oAuthServiceProvider -- only used if clientId is the actual clientId
+ *      workingUpdateF -- optional function called when working state changes
+ *      showMsg -- optional function to show a msg to the human
+ *      oAuthReturnUrl -- optional url for the app itself. If supplied then 
+ *        a new tab will NOT be used
  *
  * public values
  *   .oAuthClientID
@@ -60,12 +67,36 @@ class AuthCodePkce {
                 this.oAuthClientID = oAuthClientIDstage
             }
         }
+        if (args.clientId) {
+            if (args.clientId === "prod") {
+                this.oAuthServiceProvider = oAuthServiceProviderProd;
+                this.oAuthClientID = oAuthClientIDprod
+            } else if (args.clientId === "demo") {
+                this.oAuthServiceProvider = oAuthServiceProviderDemo;
+                this.oAuthClientID = oAuthClientIDdemo
+            } else if (args.clientId === "stage") {
+                this.oAuthServiceProvider = oAuthServiceProviderStage;
+                this.oAuthClientID = oAuthClientIDstage
+            } else {
+                this.oAuthServiceProvider = args.oauthServiceProvider;
+                this.oAuthClientID = args.clientId
+            }
+        }
 
+        this.workingUpdateF = args.workingUpdateF;
+        this._showMsg = args.showMsg; 
+        if (args.oAuthReturnUrl) {
+            // use the app's browser tab
+            this.oAuthReturnUrl = args.oAuthReturnUrl;
+            this.newTab = false;
+        } else {
+            // use a new tab
+            this.oAuthReturnUrl = defaltOAuthReturnUrl;
+            this.newTab = true;
+        }
         this.authPath = authPath;
         this.tokenPath = tokenPath;
         this.oAuthScopes = oAuthScopes;
-        this.oAuthReturnUrl = oAuthReturnUrl;
-        this.workingUpdateF = args.workingUpdateF || null;
 
         // public variables
         this.working = false;
@@ -76,6 +107,15 @@ class AuthCodePkce {
         // internal
         this._loginWindow = null;
         this._nonce = null;
+    }
+
+    /***
+     * showMsg 
+     */
+    showMsg(m) {
+        if (this._showMsg) {
+            this._showMsg(m)
+        }
     }
 
     /*
@@ -89,9 +129,9 @@ class AuthCodePkce {
         }
 
         await this.createCodeVerifierChallenge();
-
         // Make a random nonce to use with OAuth call
         this._nonce = this.generateCodeVerifier()
+        this.storeOAuthData();
 
         const url =
             `${this.oAuthServiceProvider}${this.authPath}` +
@@ -102,18 +142,23 @@ class AuthCodePkce {
             `&code_challenge_method=S256` +
             `&redirect_uri=${this.oAuthReturnUrl}` +
             `&state=${this._nonce}`;
-        this._loginWindow = window.open(url, "_blank");
-        const newTab = this._loginWindow;
-        if (!newTab || newTab.closed || typeof newTab.closed=='undefined') {
-            // POPUP BLOCKED
-            alert ("Please enable the popup login window. Then reload this page.")
+        if (this.newTab) {
+            this._loginWindow = window.open(url, "_blank");
+            const newTab = this._loginWindow;
+            if (!newTab || newTab.closed || typeof newTab.closed=='undefined') {
+                // POPUP BLOCKED
+                alert ("Please enable the popup login window. Then reload this page.")
+            }
+            this._loginWindow.focus();
+        } else {
+            location.href = url; // In the current tab, goto the OAuth URL 
         }
-        this._loginWindow.focus();
     }
 
     /*
      * handleMessage processes the incoming response message
      * from the Authorization Service Provider
+     * via a separate browser tab
      */
     async handleMessage(data) {               
         if (!data || data.source !== "oauthResponse") {
@@ -129,9 +174,9 @@ class AuthCodePkce {
             return ("error");
         }
         const params = new URLSearchParams(queryString);
-        const code = params.get("code"); // the authorization code
+        this.code = params.get("code"); // the authorization code
         const state = params.get("state"); // the returned state
-        if (!code) {
+        if (!this.code) {
             this.err ("Bad OAuth response");
             return ("error");
         }
@@ -139,7 +184,40 @@ class AuthCodePkce {
             this.err ("Bad state response. Possible attacker!?!");
             return "error";
         }
+        await this.authCodeExchange()
+    }
 
+    /***
+     * handle oauthResponse on the current browser tab.
+     * This method is only used if a new tab was not used.
+     */
+    async oauthResponse() {
+        const search = location.search.substring(1); // remove the #
+        if (!search.length) {return} // EARLY RETURN (Nothing to see here!)
+        window.history.pushState("", "", `${location.origin}${location.pathname}`);
+        const items = search.split(/\=|\&/);
+        let i = 0;
+        let response = {};
+        while (i + 1 < items.length) {
+            response[items[i]] = items[i + 1];
+            i += 2;
+        }
+        const state = response.state;
+        this.getOAuthData();
+        if (state !== this._nonce) {
+            console.error({incoming_nonce: state, stored_nonce: this._nonce});
+            this.showMsg("OAuth problem: Bad state response. Possible attacker!?!");
+        }
+        this.code = response.code;
+        if (!this.code) {
+            this.err ("Bad OAuth response");
+            this.showMsg("Bad OAuth response. Missing code.");
+            return ("error");
+        }
+        await this.authCodeExchange()
+    }
+    
+    async authCodeExchange() {
         // exchange the authorization code for the access token
         // https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.3
 
@@ -158,14 +236,14 @@ class AuthCodePkce {
         try {
             const formData = new FormData();
             formData.append('grant_type', 'authorization_code');
-            formData.append('code', code);
+            formData.append('code', this.code);
             formData.append('client_id', this.oAuthClientID);
             formData.append('code_verifier', this.codeVerifier);
             const url = `${this.oAuthServiceProvider}${this.tokenPath}`;
             const rawResponse = await fetch(url,
                     {mode: 'cors',
                     method: 'POST',
-                    headers: new Headers({"X-DocuSign-SDK": "CodePen"}), 
+                    headers: new Headers({"X-DocuSign-SDK": "PKCE Lib"}), 
                     body: formData
                     });
             const response = rawResponse && rawResponse.ok && await rawResponse.json();
@@ -202,7 +280,6 @@ class AuthCodePkce {
             this.workingUpdateF(this.working);
         }
     }
-
 
     logout() {
         this.accessToken = null;
@@ -256,20 +333,46 @@ class AuthCodePkce {
 
     /**
      * return codeVerifier -- a secret
-     * 43 - 128 bytes
+     * 128 characters
      * Characters English letters A-Z or a-z, Numbers 0-9, Symbols “-”, “.”, “_” or “~”.
-     * Note that this solution can return varying string lengths
      * See https://crypto.stackexchange.com/q/109579/8680 
      */
     generateCodeVerifier() {
+        function dec2hex(dec) {
+            return ("0" + dec.toString(16)).substr(-2);
+        }
+        
         const len = 128;
-        const array = new Uint32Array( len / 8);
+        var array = new Uint32Array( len / 2);
         window.crypto.getRandomValues(array);
-        return Array.from(array, x => x.toString(16)).join("");
+        return Array.from(array, dec2hex).join("");
     }
 
-      
-
+    /**
+     * storeNonce -- stores the nonce and codeVerifier in the browser's storage 
+     */
+    storeOAuthData() {
+        try {
+            localStorage.setItem(OAUTH_DATA, 
+                JSON.stringify({nonce: this._nonce, codeVerifier: this.codeVerifier}))
+        } catch {};
+    }
+    /**
+     * getOAuthData -- gets the nonce and codeVerifier from the browser's storage 
+     */
+    getOAuthData() {
+        this._nonce = null;
+        this.codeVerifier = null;
+        try {
+            const j = localStorage.getItem(OAUTH_DATA)
+            if (j) {
+                const d = JSON.parse(j);
+                this._nonce = d.nonce;
+                this.codeVerifier = d.codeVerifier;
+            }
+            localStorage.setItem(OAUTH_DATA, null)
+        } catch {};
+    }
 }
 
 export { AuthCodePkce };

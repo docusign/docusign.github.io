@@ -68,9 +68,18 @@ class Logger {
         log.method = options.method || 'get';
         log.resource = resource;
         log.requestHeaders = {};
-        options.headers.forEach((v, k) => {log.requestHeaders[k] = v});
-        log.requestContentType = options.headers.get("Content-Type");
-        log.requestBody = options.body;
+        if (options.headers) {
+            options.headers.forEach((v, k) => {log.requestHeaders[k] = v});
+            log.requestContentType = options.headers.get("Content-Type");
+        }
+        if (options.body instanceof FormData) {
+            log.requestBody = `Form Data`;
+            for (const pair of options.body.entries()) {
+                log.requestBody += `\n${pair[0]}: ${pair[1]}`;
+              }              
+        } else {
+            log.requestBody = options.body;
+        }
         const nameRes = this.apiMethods.find(log.method, resource);
         if (nameRes) {
             log.apiName = nameRes.name;

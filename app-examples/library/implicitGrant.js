@@ -26,6 +26,7 @@ const logLevel = 0; // 0 is terse; 9 is verbose
  *   showMsg -- function to show a msg to the human
  *   clientId -- "prod", "demo" (default), "stage", or the actual clientId
  *   oAuthServiceProvider -- only used if clientId is the actual clientId
+ *   oAuthReturnUrl -- url for the app itself 
  *
  * public values
  *   .accessToken -- the access_token or null
