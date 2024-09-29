@@ -341,8 +341,8 @@ class UserInfo {
      */
     async fetchExternalAccountIds() {
         let i = this.accounts.length;
+        this.loadingMessageShow(`Loading ${i} account ${i > 1 ? "details" : "detail"}`);
         for (const account of this.accounts) {
-            this.loadingMessageShow(`Loading ${i} account ${i > 1 ? "details" : "detail"}`);
             // We need all account info to populate the change account options
             await this.checkAccount(account);
             i -= 1;
