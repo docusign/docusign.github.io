@@ -1,5 +1,12 @@
 // Copyright © 2022 Docusign, Inc.
 // License: MIT Open Source https://opensource.org/licenses/MIT
+
+import {
+    storageGet, 
+    storageSet,
+} from "../library/utilities.js" 
+
+
 // Set basic variables
 const oAuthServiceProviderProd = "https://account.docusign.com"; // prod
 const oAuthServiceProviderDemo = "https://account-d.docusign.com"; 
@@ -231,6 +238,9 @@ class UserInfo {
         this.oAuthServiceProvider = oAuthServiceProvider;
         this.userInfoPath = userInfoPath;
         this.eSignBase = eSignBase;
+
+        // constants
+        this.USE_ACCOUNT_CACHE = true;
     
         // public variables
         this.working = false;
@@ -340,6 +350,14 @@ class UserInfo {
     }
 
     async checkAccount (account) {
+        const accountKey = `account_${account.accountId}`;
+        if (this.USE_ACCOUNT_CACHE) {
+            const cacheResult = storageGet(accountKey);
+            if (cacheResult) {
+                account.accountExternalId = cacheResult.externalAccountId;
+                return
+            }
+        }
         try {
             const url = `${account.accountBaseUrl}/accounts/${account.accountId}`;
             const response = await fetch(url,
@@ -353,6 +371,9 @@ class UserInfo {
             const data = response && await response.json();
             if (response.ok) {
                 account.accountExternalId = data.externalAccountId
+                if (this.USE_ACCOUNT_CACHE) {
+                    storageSet(accountKey, {externalAccountId: data.externalAccountId});
+                }
             } else {
                 account.corsError = `${data.errorCode}; ${data.message}`
             }

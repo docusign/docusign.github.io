@@ -275,7 +275,7 @@ class LoadingModal {
      * delayedHide -- show a final message for a couple of seconds,
      *      then hide the modal
      */
-    delayedHide(msg, timeoutSec=3) {
+    delayedHide(msg, timeoutSec=2) {
         $(this.titleEl).text(msg);
         setTimeout(() => {this.modal.hide()}, timeoutSec * 1000);
         this.shown = false;
