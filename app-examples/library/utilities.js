@@ -5,6 +5,7 @@
 const DSexampleAccountId = "DSCodePenAccountId";
 const EMBEDDED_SIGNING_SETTINGS_STORAGE = "embeddedSigningSettings";
 const EMBEDDED_SIGNING_SETTINGS = ["outputStyle", "useIframe", "authStyle", "idvConfigId", "smsNational", "smsCc"]; // names of the settings
+const CACHE_ACCOUNT_INFO = true; // user picture too
 
 // Monitor screen size changes and adjust the signing div
 function monitorSigningHeight({signingId, padding}) {
@@ -298,11 +299,23 @@ async function userPictureAccountBrand({accountId, userInfo, callApi}){
     const pictureId = "user-picture";
     const accountBrandId = "account-brand";
     const accountInfo = "account-info";
+    const userPictureKey = `picture_${userInfo.userId}`;
+    const accountLogoKey = `logo_${accountId}`;
+
     // user's picture
-    let apiMethod = `/accounts/${accountId}/users/${userInfo.userId}/profile/image`;
-    let results = await callApi.getImageDataUrl(apiMethod);
-    if (results) {
-        $(`#${pictureId}`).html(`<div class="user-photo"><img src="${results}" class="user-photo" /></div>`)
+    let pictureResults;
+    if (CACHE_ACCOUNT_INFO) {
+        pictureResults = storageGet(userPictureKey);
+    }
+    if (!pictureResults) {
+        const apiMethod = `/accounts/${accountId}/users/${userInfo.userId}/profile/image`;
+        pictureResults = await callApi.getImageDataUrl(apiMethod);
+    }
+    if (CACHE_ACCOUNT_INFO && pictureResults) {
+        storageSet(userPictureKey, pictureResults)
+    }
+    if (pictureResults) {
+        $(`#${pictureId}`).html(`<div class="user-photo"><img src="${pictureResults}" class="user-photo" /></div>`)
     } else {
         const firstI = userInfo.given_name ? userInfo.given_name.charAt(0) : userInfo.name.charAt(0);
         const lastI = userInfo.family_name ? userInfo.family_name.charAt(0) : '';
@@ -321,27 +334,36 @@ async function userPictureAccountBrand({accountId, userInfo, callApi}){
 
     // account brand image
     $(`#${accountBrandId}`).empty();
-    apiMethod = `/accounts/${accountId}/brands?include_logos=true`;
-    results = await callApi.callApiJson({
-        apiMethod: apiMethod, httpMethod: "GET", req: null});
-    if (!results) {return} // EARLY return
-    // look for a logo
     let logo;
-    const brands = results.brands;
-    if (brands) {
-        for(let i = 0; i < brands.length; i++){
-            const brand = brands[i];
-            if((brand.isSendingDefault || brand.isSigningDefault) && brand.logos && brand.logos.primary) {
-                logo = brand.logos.primary;
-                break;
-        }
+    if (CACHE_ACCOUNT_INFO) {
+        logo = storageGet(accountLogoKey);
     }
-}
-    if (!logo) {return} // EARLY return
-    apiMethod = `/accounts/${accountId}${logo}`;
-    results = await callApi.getImageDataUrl(apiMethod);
-    if (results) {
-        $(`#${accountBrandId}`).html(`<img src="${results}" class="brand-logo me-3" />`)
+    if (!logo) {
+        let apiMethod = `/accounts/${accountId}/brands?include_logos=true`;
+        const results = await callApi.callApiJson({
+            apiMethod: apiMethod, httpMethod: "GET", req: null});
+        if (!results) {return} // EARLY return
+        // look for a logoBrand
+        let logoBrand;
+        const brands = results.brands;
+        if (brands) {
+            for(let i = 0; i < brands.length; i++){
+                const brand = brands[i];
+                if((brand.isSendingDefault || brand.isSigningDefault) && brand.logos && brand.logos.primary) {
+                    logoBrand = brand.logos.primary;
+                    break;
+                }
+            }
+        }    
+        if (!logoBrand) {return} // EARLY return
+        apiMethod = `/accounts/${accountId}${logoBrand}`;
+        logo = await callApi.getImageDataUrl(apiMethod);
+    }
+    if (CACHE_ACCOUNT_INFO && logo) {
+        storageSet(accountLogoKey, logo)
+    }
+    if (logo) {
+        $(`#${accountBrandId}`).html(`<img src="${logo}" class="brand-logo me-3" />`)
     }
 }
 
