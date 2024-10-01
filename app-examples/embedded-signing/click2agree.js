@@ -27,6 +27,7 @@ class Click2Agree {
         this.showMsg = args.showMsg;
         this.messageModal = args.messageModal;
         this.loadingModal = args.loadingModal;
+        this.loader = args.loader;
         this.clientId = args.clientId;
         this.accountId = args.accountId;
         this.callApi = args.callApi;
@@ -68,7 +69,7 @@ class Click2Agree {
         // https://developers.docusign.com/docs/esign-rest-api/reference/envelopes/envelopes/create/#schema__envelopedefinition_documents_signermustacknowledge
 
         this.signing = true;
-        this.loadingModal.show("Creating the envelope");
+        this.loader.show("Creating the envelope");
 
         this.envelopes.name = this.name;
         this.envelopes.email = this.email;
@@ -81,30 +82,31 @@ class Click2Agree {
         this.envelopeId = await this.envelopes.sendEnvelope();
 
         if (!this.envelopeId) {
-            this.loadingModal.delayedHide("Could not send the envelope");
+            this.loader.delayedHide("Could not send the envelope");
             this.signing = false;
             return
         }
 
-        this.loadingModal.show("Creating the recipient view");
+        this.loader.show("Creating the recipient view");
         const recipientViewUrl = await this.envelopes.recipientView();
         if (!recipientViewUrl) {
-            this.loadingModal.delayedHide("Could not open the recipient view");
+            this.loader.delayedHide("Could not open the recipient view");
             this.signing = false;
             return;
         }
 
-        if (this.useModal && this.outputStyle === "openUrl") {
-            this.loadingModal.hide();
-        } else {
-            this.loadingModal.delayedHide("Opening the signing ceremony");
-        }
         if (this.outputStyle === "openUrl") {
+            if (this.useModal) {
+                this.loader.hide();
+            } else {
+                this.loader.delayedHide("Opening the signing ceremony");
+            }        
             await this.focusedViewClickToAgree(recipientViewUrl);
         } else {
+            this.loader.hide();
+            $(`#${this.mainElId}`).removeClass("hide");
             this.externalFocusedView(recipientViewUrl);
         }
-
     }
 
     /***
@@ -216,7 +218,7 @@ class Click2Agree {
         this.signing = false;
         const url = `${window.location.origin}${window.location.pathname}${EXTERNAL_FRAMED_URL}`
             + this.encodeAll(config);
-        this.loadingModal.hide();
+        this.loader.hide();
         this.messageModal({style: 'qr', title: "Signing Ceremony URL", url: url, usingChrome: this.useIframe});
     }
 
@@ -228,20 +230,20 @@ class Click2Agree {
         this.signing = true;
         this.envelopeId = this.envelopes.envelopeId;
         if (!this.envelopeId) {
-            this.loadingModal.delayedHide("Envelope ID not found");
+            this.loader.delayedHide("Envelope ID not found");
             this.signing = false;
             return
         }
 
-        this.loadingModal.show("Creating the recipient view");
+        this.loader.show("Creating the recipient view");
         const recipientViewUrl = await this.envelopes.recipientView();
         if (!recipientViewUrl) {
-            this.loadingModal.delayedHide("Could not open the recipient view");
+            this.loader.delayedHide("Could not open the recipient view");
             this.signing = false;
             return;
         }
 
-        this.loadingModal.delayedHide("Opening the view");
+        this.loader.delayedHide("Opening the view");
         await this.focusedViewClickToAgree(recipientViewUrl);
     }
     
