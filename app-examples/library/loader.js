@@ -25,7 +25,8 @@ class Loader {
         this.progressBarEl = this.statusEl.getElementsByClassName("progress-bar")[0];
         this.progressValue;
         this.progressTick = 250; // milliseconds
-        this.progressTotalSec = 15; // sec
+        this.progressTotalSec = 15; // sec -- the maximum expected time needed with 
+                                    //        mobile signers on a slow network
         // We want to reach 80% after this.progressTotalSec seconds
         this.progressPerTick =  (80.0 / this.progressTotalSec) * (this.progressTick / 1000);
         this.progressFunction = this.progressFunction.bind(this);
