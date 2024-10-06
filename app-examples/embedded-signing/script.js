@@ -68,7 +68,7 @@ $(async function () {
         supp32signerMustAcknowledge: "accept",
         buttonPosition1: "bottom-right",
         buttonText1: "Submit",
-        buttonText1: "Agree",
+        buttonText3: "Agree",
         backgroundColor1: "#000000",
         textColor1: "#FFFFFF",
         backgroundColor2: "#f7ba00",
@@ -727,6 +727,7 @@ $(async function () {
             data.modelButton1Changes = new ButtonOnChange({
                 buttonId: "modelButton1",
                 textId: "buttonText1",
+                defaultText: "Submit",
                 backgroundColorId: "backgroundColor1",
                 textColorId: "textColor1"
             });
@@ -737,6 +738,8 @@ $(async function () {
             });
             data.modelButton3Changes = new ButtonOnChange({
                 buttonId: "modelButton3",
+                textId: "buttonText3",
+                defaultText: "Agree",
                 backgroundColorId: "backgroundColor3",
                 textColorId: "textColor3"
             });

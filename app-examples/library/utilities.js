@@ -400,10 +400,12 @@ class ButtonOnChange{
         this.textId = args.textId;
         this.backgroundColorId  = args.backgroundColorId;
         this.textColorId  = args.textColorId;
+        this.defaultText = args.defaultText;
         
         // prevent action when the model button is clicked
         $(`#${this.buttonId}`).click(e => e.preventDefault());
         // handlers for modifying the button's UX
+        this.changed = this.changed.bind(this);
         if (this.textId) {$(`#${this.textId}`).on("input", this.changed)}
         $(`#${this.backgroundColorId}`).on("input", this.changed);
         $(`#${this.textColorId}`).on("input", this.changed);
@@ -423,9 +425,10 @@ class ButtonOnChange{
         const targetInfo = modelButtonData.split("-");
         // [0] -- id of the button
         // [1] -- operation; {text, textcolor, background}
-        const val = $(event.target).val();
+        let val = $(event.target).val();
 
         if (targetInfo[1] === "text") {
+            if (!val) {val = this.defaultText}
             $(`#${targetInfo[0]} span`).text(val);
         } else if (targetInfo[1] === "textcolor") {
             $(`#${targetInfo[0]} span`).css('color', val);

@@ -112,6 +112,13 @@
                         Signing</button>
                 </li>
             </ul>
+    <!-- #################################################################### -->
+    <!-- #################################################################### -->
+    <!-- ###                                                               ## -->
+    <!-- ###  Click to Agree form.                                         ## -->
+    <!-- ###                                                               ## -->
+    <!-- #################################################################### -->
+    <!-- #################################################################### -->
             <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade show active" id="click2agree-tab-pane" role="tabpanel"
                     aria-labelledby="click2agree-tab" tabindex="0">
@@ -148,6 +155,7 @@
                             <h3>Known Issues</h3>
                             <ul>
                                 <li>C2A-3503 Supplemental documents with Read Accept mode cause the agreement ceremony to hang.</li>
+                                <li>C2A-3614 Button text can't be customized.</li>
                             </ul>
                         </div>
                     </div>
@@ -159,8 +167,8 @@
                             <a href="https://support.docusign.com/s/document-item?language=en_US&rsc_301&bundleId=pik1583277475390&topicId=aqg1583277336549.html&_LANG=enus"
                                 target="_blank">ERSD agreement</a>.
                         </p>
-                        <div> <!-- Jira C2A-3474 -->
-                            <span class="hide">Locale:
+                        <div>
+                            <span>Locale:
                                 <select id="locale" class="ms-2 form-select display-inline w10"
                                     aria-label="locale select">
                                     <option value="default">Default</option>
@@ -209,7 +217,7 @@
                                     <option value="uk">Ukrainian (uk)</option>
                                     <option value="vi">Vietnamese (vi)</option>
                                 </select>
-                            </span> <!-- the span hides the select due to the bug -->
+                            </span> 
                             <span class="hide">
                                 <label for="document" class="form-label">Document:</label>
                                 <select id="document" class="ms-2 form-select display-inline w19"
@@ -220,13 +228,12 @@
                                     <option value="payment">Payment example</option>
                                 </select>
                             </span> <!-- responsive not working for c2a -->
-                        </div>
-                        <p>
-                            <label for="useErsd" class="form-label">Use ERSD?</label>
+
+                            <label for="useErsd" class="ms-3 form-label">Use ERSD?</label>
                             <input id="useErsd" class="form-check-input baseline me-3 ms-1" type="checkbox">
-                            <label for="useModal" class="form-label ms-5">Use modal?</label>
+                            <label for="useModal" class="form-label ms-3">Use modal?</label>
                             <input id="useModal" class="form-check-input baseline me-3 ms-1" type="checkbox">
-                        </p>
+                        </div>
                         <h4 class="mt-3">Supplemental Documents</h4>
                         <div>
                             <label for="supp1include" class="form-label">Include supplemental #1?</label>
@@ -255,10 +262,23 @@
                         </div>
 
                         <h4 class="mt-3">The Agreement Ceremony’s primary button UX can be modified by the developer</h4>
-                        <p>Example button:
+                        <p>
+                            <span hidden>Button position on the screen:
+                            <select id="buttonPosition3" class="ms-2 me-5 form-select display-inline w10"
+                                aria-label="button position">
+                                <option value="bottom-left">Bottom Left</option>
+                                <option value="bottom-center">Bottom Center</option>
+                                <option value="bottom-right" selected>Bottom Right</option>
+                            </select>
+                            </span>
+                        Example button:
                             <button id="modelButton3" class="modelButton display-inline ms-2">
-                                <span>Submit</span>
+                                <span>Agree</span>
                             </button>
+                        </p>
+                        <p>Finish text:
+                            <input id="buttonText3" class="ms-2 form-control display-inline w10" type="text"
+                                data-modelbutton="modelButton3-text" placeholder="Agree" aria-label="button text">
                         </p>
                         <div class="colorpicker">
                             <label>Background color:</label>
@@ -275,8 +295,14 @@
               <a class="env-view hide btn btn-secondary btn-lg ms-5 mt-3" type="button" role="button">View</a>
               <p>Sign--creates a new agreement. View--view an existing agreement.</p>  -->
                     </form>
-
                 </div>
+    <!-- #################################################################### -->
+    <!-- #################################################################### -->
+    <!-- ###                                                               ## -->
+    <!-- ###  Classic Signing Ceremony form.                               ## -->
+    <!-- ###                                                               ## -->
+    <!-- #################################################################### -->
+    <!-- #################################################################### -->
                 <div class="tab-pane fade" id="classic-tab-pane" role="tabpanel" aria-labelledby="classic-tab"
                     tabindex="0">
                     <h2 class="mt-4">Classic Signing Ceremony
@@ -423,6 +449,13 @@
                         <p>Sign--creates a new agreement. View--view an existing agreement. </p>
                     </form>
                 </div>
+    <!-- #################################################################### -->
+    <!-- #################################################################### -->
+    <!-- ###                                                               ## -->
+    <!-- ###  Focused View form.                                           ## -->
+    <!-- ###                                                               ## -->
+    <!-- #################################################################### -->
+    <!-- #################################################################### -->
                 <div class="tab-pane fade" id="focusedView-tab-pane" role="tabpanel" aria-labelledby="focusedView-tab"
                     tabindex="0">
                     <h2 class="mt-4">Focused View
