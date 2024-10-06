@@ -12,6 +12,7 @@ import { FocusedViewSigning } from "./focusedViewSigning.js";
 import { DsjsDefaultSigning } from "./dsjsDefaultSigning.js";
 import { ClassicSigning } from "./classicEmbeddedSigning.js";
 import { Logger } from "../library/logger.js";
+import { Loader } from "../library/loader.js";
 
 import {
     CallApi,
@@ -48,6 +49,7 @@ $(async function () {
     let loginModal = new bootstrap.Modal('#modalLogin'); // for managing the loginModal
     let configuration = {
         mode: "click2agree-tab", 
+        loaderChoice: "modal",
         supp1include: false, 
         supp1signerMustAcknowledge: "view",
         supp2include: false, 
@@ -504,6 +506,7 @@ $(async function () {
             showMsg: toast,
             messageModal: messageModal,
             loadingModal: data.loadingModal,
+            loader: data.loader,
             clientId: oAuthClientID,
             accountId: accountId,
             callApi: data.callApi,
@@ -518,6 +521,7 @@ $(async function () {
             messageModal: messageModal,
             loadingModal: data.loadingModal,
             clientId: oAuthClientID,
+            loader: data.loader,
             accountId: accountId,
             callApi: data.callApi,
             mainElId: "main",
@@ -530,6 +534,7 @@ $(async function () {
             showMsg: toast,
             messageModal: messageModal,
             loadingModal: data.loadingModal,
+            loader: data.loader,
             clientId: oAuthClientID,
             accountId: accountId,
             callApi: data.callApi,
@@ -543,6 +548,7 @@ $(async function () {
             showMsg: toast,
             messageModal: messageModal,
             loadingModal: data.loadingModal,
+            loader: data.loader,
             clientId: oAuthClientID,
             accountId: accountId,
             callApi: data.callApi,
@@ -614,7 +620,13 @@ $(async function () {
         loadingModal: new LoadingModal(),
         modelButton1Changes: null,
         logger: new Logger(),
+        loader: null,
     };
+    data.loader = new Loader({
+        loaderChoice: configuration.loaderChoice, parentEl: "loaderdiv",
+        mainEl: "main", loadingModal: data.loadingModal,
+        statusEl: "status", backgroundColor: 0xF8F9FA
+    })
 
     // Register event handlers
     monitorSigningHeight({signingId: "signing-ceremony", padding: 70})
@@ -635,6 +647,7 @@ $(async function () {
         formToConfiguration();
         settingsSet(configuration);
         if (oldAccountRequest !== configuration.accountRequest) {setAccount()}
+        data.loader.loaderChoice = configuration.loaderChoice;
     });
     window.addEventListener("beforeunload", beforeUnloadHandler);
     window.addEventListener("message", envelopeCreated);
@@ -676,7 +689,7 @@ $(async function () {
             <p><a href='${location.origin}${location.pathname}?${STAGE_QP}=0'>Reset to Demo login</a></p>`)
     }
 
-    // The Implicit grant constructor looks at hash data to see if we're 
+    // The OAuth constructor looks at hash data to see if we're 
     // now receiving the OAuth response
     data.authCodePkce = new AuthCodePkce({
         oAuthReturnUrl: `${location.origin}${location.pathname}`,
@@ -709,6 +722,7 @@ $(async function () {
             $(`#signername3`).val(data.userInfo.name);
             $(`#userInfoModal .modal-title`).text(data.userInfo.name);
             $(`#userInfoUser`).text(data.userInfo.userId);
+            data.loader.loaderChoice = configuration.loaderChoice; 
             data.modelButton1Changes = new ButtonOnChange({
                 buttonId: "modelButton1",
                 textId: "buttonText1",

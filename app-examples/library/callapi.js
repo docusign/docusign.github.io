@@ -304,11 +304,18 @@ class UserInfo {
                 corsError: false
             }))
         await this.fetchExternalAccountIds();
+        let foundDefault = false;
         this.accounts.forEach((a, i) => {
             if (a.accountIsDefault) {
-                this.defaultAccountIndex = i    
+                this.defaultAccountIndex = i
+                foundDefault = true;    
             }
         });
+        if (!foundDefault) {
+            // No default account! This should never happen, but it does.
+            // Use the first account as the default
+            this.defaultAccountIndex = 0;
+        }
         this.defaultAccount = this.accounts[this.defaultAccountIndex].accountId;
         this.defaultAccountName = this.accounts[this.defaultAccountIndex].accountName;
         this.defaultBaseUrl = this.accounts[this.defaultAccountIndex].accountBaseUrl;
