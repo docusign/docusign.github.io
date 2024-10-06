@@ -1,5 +1,5 @@
 // Copyright © 2024 Docusign, Inc.
-// Based on file: https://github.com/mrdoob/three.js/blob/master/examples/webgl_buffergeometry_rawshader.html
+// Based on file: https://github.com/mrdoob/three.js/blob/master/examples/webgl_mesh_batch.html
 // license (MIT): https://github.com/mrdoob/three.js/blob/master/LICENSE
 // 
 // Updates are License: MIT Open Source https://opensource.org/licenses/MIT
@@ -69,7 +69,7 @@ class AnimationFloating {
     }
 
     /***
-     * delete -- deletes the dom element
+     * destroy -- deletes the dom element
      * After calling delete, delete this instance of the class 
      */
     destroy() {
@@ -79,6 +79,9 @@ class AnimationFloating {
         this.rendered = false;
     }
     
+    /***
+     * The remainder of this file is from the three JS source file
+     */
     randomizeMatrix(matrix) {
         this.position.x = Math.random() * 40 - 20;
         this.position.y = Math.random() * 40 - 20;

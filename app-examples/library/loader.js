@@ -3,6 +3,7 @@
 //
 
 import {AnimationFloating} from "./animation/animationFloating.js";
+import { RawShader } from "./animation/rawShader.js";
 
 /***
  * Loader gives the user feedback as a "loader"--either
@@ -11,7 +12,7 @@ import {AnimationFloating} from "./animation/animationFloating.js";
  */
 class Loader {
     constructor(args) {
-        this.loaderChoice = args.loaderChoice; // modal | animationFloating
+        this.loaderChoice = args.loaderChoice; // modal | animationFloating | animationShader
         this.parentEl = document.getElementById(args.parentEl); // ID of the element
         this.mainEl = document.getElementById(args.mainEl); // ID of the element
         this.statusEl = document.getElementById(args.statusEl); // ID of the element
@@ -28,6 +29,22 @@ class Loader {
         // We want to reach 80% after this.progressTotalSec seconds
         this.progressPerTick =  (80.0 / this.progressTotalSec) * (this.progressTick / 1000);
         this.progressFunction = this.progressFunction.bind(this);
+        
+        this.AnimationClass;
+        this.animation; 
+        this.getSize = this.getSize.bind(this);
+    }
+
+    /***
+     * Setter for loaderChoice
+     */
+    set loaderChoice(_loaderChoice) {
+        this._loaderChoice = _loaderChoice;
+        if (_loaderChoice === "animationFloating") {
+            this.AnimationClass = AnimationFloating
+        } else if (_loaderChoice === "animationShader") {
+            this.AnimationClass = RawShader
+        }
     }
 
     /***
@@ -52,7 +69,7 @@ class Loader {
         this.setProgress();
         this.progressIntervalId = setInterval (this.progressFunction, this.progressTick);
 
-        this.animationFloating = new AnimationFloating({
+        this.animation = new this.AnimationClass({
             parentEl: this.parentEl,
             backgroundColor: this.backgroundColor,
             getSize: this.getSize,
@@ -62,7 +79,7 @@ class Loader {
         this.parentEl.removeAttribute("hidden");
         this.shown = true;
         $(this.mainEl).addClass("hide");
-        this.animationFloating.show();
+        this.animation.show();
         return;
     }
 
@@ -90,7 +107,8 @@ class Loader {
      */
     getSize(parentEl) {
         // The following works if the parentEl is setup with 100% height
-        return parentEl.getBoundingClientRect();
+        // The issue is the height of a div that is currently empty
+        return this.parentEl.getBoundingClientRect();
     }
 
     /***
@@ -98,13 +116,14 @@ class Loader {
      *      then hide the modal
      */
     delayedHide(msg, timeoutSec=2) {
+        if (this._useModal()) {
+            return this.loadingModal.delayedHide(msg, timeoutSec)
+        }
+
         if (!this.shown) {
             return
         }
         this.shown = false;
-        if (this._useModal()) {
-            return this.loadingModal.delayedHide(msg, timeoutSec)
-        }
         $(this.statusMessageSelector).text(msg);
 
         setTimeout(() => {this.hide(true)}, timeoutSec * 1000);
@@ -114,24 +133,24 @@ class Loader {
      * hide -- immediately close the loader
      */
     hide(force = false) {
-        if (!this.shown && !force) {
-            return
-        }
-        this.shown = false;
-
         if (this._useModal()) {
             return this.loadingModal.hide()
         }
 
+        if (!(this.shown || force)) {
+            return
+        }
+        this.shown = false;
+
         clearInterval(this.progressIntervalId);
-        this.animationFloating.destroy();
-        this.animationFloating = undefined;
+        this.animation.destroy();
+        this.animation = undefined;
         this.parentEl.setAttribute("hidden", "");
         this.statusEl.setAttribute("hidden", "");
     }
 
     _useModal() {
-        return this.loaderChoice === "modal"
+        return this._loaderChoice === "modal"
     }
 }
 
