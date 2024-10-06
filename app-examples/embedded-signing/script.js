@@ -722,6 +722,7 @@ $(async function () {
             $(`#signername3`).val(data.userInfo.name);
             $(`#userInfoModal .modal-title`).text(data.userInfo.name);
             $(`#userInfoUser`).text(data.userInfo.userId);
+            $(`#userInfoEmail`).text(data.userInfo.email);
             data.loader.loaderChoice = configuration.loaderChoice; 
             data.modelButton1Changes = new ButtonOnChange({
                 buttonId: "modelButton1",
