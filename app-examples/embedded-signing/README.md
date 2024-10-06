@@ -29,10 +29,6 @@ Click the **Settings** item in the top navigation bar to open the Settings Modal
 ### Account
 Use this setting to change the account that will be used.
 
-### Signer User Experience
-Show Decline option? -- This setting controls the visibility of the Decline 
-button for the Focused View and Focused View/Click to Agree tabs.
-
 ### Output
 By default, the tool opens the signing or agreement ceremony by replacing the tool's UI with the Docusign session.
 
@@ -43,6 +39,17 @@ If you choose to have the URL displayed, remember that you must use it within 5 
 If this option is checked, then an iframe with minimal GUI chrome (just the top navigation bar)
 is used. If the option is not checked, then a 100% iframe is used for the first three example 
 categories since the Docusign JS library always creates an iframe.
+
+### Signer User Experience
+Show Decline option? -- This setting controls the visibility of the Decline 
+button for the Focused View and Focused View/Click to Agree tabs.
+
+Loading indicator -- choose the style for the loading indicator used while the app 
+waits for the envelope and signing ceremony to be created. 
+
+See [Tognazzini](https://asktog.com/atc/principles-of-interaction-design/#latencyReduction) 
+and [Nielsen](https://www.nngroup.com/articles/response-times-3-important-limits/) 
+for more information on application latency and loading indicators.
 
 ### Authentication
 Select **Default Phone/SMS Authentication** and enter a phone number to enable this option.
