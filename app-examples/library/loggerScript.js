@@ -60,7 +60,7 @@ $(function () {
      *    log.requestHeaders 
      *    log.requestContentType
      *    log.requestBody
-     *    log.status
+     *    log.status -- can be null
      *    log.statusText
      *    log.responseHeaders
      *    log.error
@@ -71,6 +71,7 @@ $(function () {
      *    log.responseBody
      *    log.apiName
      *    log.apiDocs
+     *    log.bodyJson -- optional. If provided then used instead of request/response
      */
     function postLog(log) {
         const accordianId = `id${(new Date).getTime()}`
@@ -86,7 +87,7 @@ $(function () {
         <div id="${accordianItemId}" class="accordion-collapse collapse" data-bs-parent="#${accordianId}">
             <div class="accordion-body">
                 ${logInfo(log)}
-                ${tabs(log)}
+                ${logbody(log)}
             </div>
         </div>
     </div>
@@ -98,14 +99,23 @@ $(function () {
     }
 
     function logInfo(log) {
-        let out = `<p class="mb-0">Status: ${log.status} ${log.statusText}</p>`;
+        let out = log.status ? (`<p class="mb-0">Status: ${log.status} ${log.statusText}</p>`) : "";
         if (log.apiDocs) {
             out += `<p class="mb-0">${log.resource}</p>`;
             out += `<p><a href="${log.apiDocs}" target="_blank">${log.apiName} documentation</a></p>`;
-        } else {
+        } else if (log.resource) {
             out += `<p>${log.resource}</p>`
         }
         return out
+    }
+    
+    function logbody(log) {
+        if (log.bodyJson) {
+            const outBody = JSON.stringify(log.bodyJson, null, 4);
+            return `<pre><code class="language-json">${outBody}</code></pre>` 
+        } else {
+            return tabs(log)
+        }
     }
     
     function tabs(log) {
@@ -186,13 +196,14 @@ $(function () {
     }    
 
     function title(log) {
-        const success = log.status > 199 && log.status < 300 ? "✅" : "❌";
+        const success = log.status ? (log.status > 199 && log.status < 300 ? "✅" : "❌") : "";
         const name = log.apiName ? log.apiName : log.resource
         const result = `${success}<span class="ms-2 me-2">${operationFormatter(log)}</span>${name}`;
         return result
     }
 
     function operationFormatter(log) {
+        if (!log.method) {return ""}
         const op = log.method.toUpperCase();
         let klass = ""
         if (op === "GET") {

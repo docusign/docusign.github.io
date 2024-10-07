@@ -171,6 +171,10 @@ class FocusedViewSigning {
                 },
             }
         }
+        this.logger.postLog ({
+            apiName: "Docusign JS signing configuration",
+            bodyJson: signingConfiguration,
+        });
 
         try {
             const docusign = await window.DocuSign.loadDocuSign(this.clientId);
@@ -188,11 +192,11 @@ class FocusedViewSigning {
                 // Event: { returnUrl: url, type: "sessionEnd", sessionEndType: "signing_complete"}
                 this.signing = false;
                 if (event.type === "sessionEnd") {
-                    const msg = `<p>Result: <b>${event.sessionEndType.replace("_", " ")}</b><br/>Msg 101</p>${END_MSG}`;
+                    const msg = `<p>Result: <b>${event.sessionEndType.replace("_", " ")}</b></p>${END_MSG}`;
                     this.messageModal({style: 'text', title: "Signing Session Ended", msg: msg});
                     this.logger.post("Signing session ended", msg);
                 } else {
-                    const msg = `<p>Event data: ${JSON.stringify(event)}<br/>Msg 102</p>`;
+                    const msg = `<p>Event data: ${JSON.stringify(event)}</p>`;
                     this.messageModal({style: 'text', title: "Signing Session Message", msg: msg});
                     this.logger.post("Signing Session Message", msg);
                 } 
