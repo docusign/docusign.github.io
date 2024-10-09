@@ -67,6 +67,11 @@ Choose a template from the templates in your account.
 
 If a template is chosen, the **Document** option is ignored.
 
+#### Template Role
+The template should have a role named `signer` (lowercase s).
+The template's tabs and other settings for the `signer` role will be used. 
+Note that the tool changes the signer recipient to be a captive (embedded) recipient.
+
 ### Supplemental Documents
 Use the checkboxes to include or omit supplements 1 and 2.
 
