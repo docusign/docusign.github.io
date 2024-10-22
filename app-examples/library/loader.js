@@ -2,8 +2,9 @@
 // License: MIT Open Source https://opensource.org/licenses/MIT
 //
 
-import {AnimationFloating} from "./animation/animationFloating.js";
-import { RawShader } from "./animation/rawShader.js";
+import {AnimationFloating} from "./animation/lib/animationFloating.js";
+import { RawShader } from "./animation/lib/rawShader.js";
+import { storageGet, storageSet } from "./utilities.js";
 
 /***
  * Loader gives the user feedback as a "loader"--either
@@ -11,10 +12,15 @@ import { RawShader } from "./animation/rawShader.js";
  * or via an animation with additional feedback
  */
 class Loader {
+    #loaderChoice = null;
     constructor(args) {
-        this.loaderChoice = args.loaderChoice; // modal | animationFloating | animationShader
+        // The loader choice from the settings UX
+        this.loaderChoice = args.loaderChoice; // multiple | modal | animationFloating | animationShader
+        // The loader choice that will be used
+        this._loaderChoice;
+        this.makeLoaderChoice(); // sets this._loaderChoice
         this.parentEl = document.getElementById(args.parentEl); // ID of the element
-        this.mainEl = document.getElementById(args.mainEl); // ID of the element
+        this.mainEl = args.mainEl ? document.getElementById(args.mainEl) : null; // ID of the element
         this.statusEl = document.getElementById(args.statusEl); // ID of the element
         this.loadingModal = args.loadingModal;
         this.backgroundColor = args.backgroundColor;
@@ -32,20 +38,56 @@ class Loader {
         this.progressFunction = this.progressFunction.bind(this);
         
         this.AnimationClass;
+        if (this._loaderChoice === "animationFloating") {
+            this.AnimationClass = AnimationFloating
+        } else if (this._loaderChoice === "animationShader") {
+            this.AnimationClass = RawShader
+        }
+
         this.animation; 
         this.getSize = this.getSize.bind(this);
     }
 
     /***
-     * Setter for loaderChoice
+     * Setter/Getter for loaderChoice
      */
-    set loaderChoice(_loaderChoice) {
-        this._loaderChoice = _loaderChoice;
-        if (_loaderChoice === "animationFloating") {
+    set loaderChoice(loaderChoiceArg) {
+        this.#loaderChoice = loaderChoiceArg; 
+        this.makeLoaderChoice()
+        if (this._loaderChoice === "animationFloating") {
             this.AnimationClass = AnimationFloating
-        } else if (_loaderChoice === "animationShader") {
+        } else if (this._loaderChoice === "animationShader") {
             this.AnimationClass = RawShader
         }
+    }
+    get loaderChoice() {
+        return this.#loaderChoice
+    }
+
+    /***
+     * makeLoaderChoice -- if "multiple" then determine the next choice
+     */
+    makeLoaderChoice() {
+        const LOADER_CHOICE = "Animation loader choice";
+        if (this.loaderChoice !== "multiple") {
+            this._loaderChoice = this.loaderChoice;
+            return; 
+        }
+
+        const choices = ["modal", "animationFloating", "animationShader"];
+        const oldChoice = storageGet(LOADER_CHOICE, null);
+        const oldChoiceI = oldChoice ? 
+            choices.findIndex((element) => element === oldChoice) : null;
+        let newChoice;
+        if (!oldChoice) {
+            newChoice = choices[choices.length - 1];
+        } else if (oldChoiceI > -1) {
+            newChoice = choices[(oldChoiceI + 1) % choices.length]
+        } else {
+            newChoice = choices[0]
+        }
+        this._loaderChoice = newChoice;
+        storageSet(LOADER_CHOICE, newChoice);
     }
 
     /***
@@ -79,7 +121,7 @@ class Loader {
         this.statusEl.removeAttribute("hidden");
         this.parentEl.removeAttribute("hidden");
         this.shown = true;
-        $(this.mainEl).addClass("hide");
+        if (this.mainEl) {$(this.mainEl).addClass("hide")}
         this.animation.show();
         return;
     }
@@ -118,7 +160,9 @@ class Loader {
      */
     delayedHide(msg, timeoutSec=2) {
         if (this._useModal()) {
-            return this.loadingModal.delayedHide(msg, timeoutSec)
+            this.loadingModal.delayedHide(msg, timeoutSec);
+            this.loaderChoice = this.loaderChoice; // will go on to the next loader if appropriate
+            return
         }
 
         if (!this.shown) {
@@ -126,7 +170,6 @@ class Loader {
         }
         this.shown = false;
         $(this.statusMessageSelector).text(msg);
-
         setTimeout(() => {this.hide(true)}, timeoutSec * 1000);
     }
 
@@ -135,7 +178,9 @@ class Loader {
      */
     hide(force = false) {
         if (this._useModal()) {
-            return this.loadingModal.hide()
+            this.loadingModal.hide()
+            this.loaderChoice = this.loaderChoice; // will go on to the next loader if appropriate
+            return
         }
 
         if (!(this.shown || force)) {
@@ -148,6 +193,7 @@ class Loader {
         this.animation = undefined;
         this.parentEl.setAttribute("hidden", "");
         this.statusEl.setAttribute("hidden", "");
+        this.loaderChoice = this.loaderChoice; // will go on to the next loader if appropriate
     }
 
     _useModal() {
