@@ -146,7 +146,7 @@
                     treeItem.append(treeItemIcon);
                 }
                 // Set node Text.
-                treeItem.append(node.text);
+                treeItem.append(`<span class="bstvNode">${node.text}</span>`);
                 // Reset node href if present
                 if (node.href) {
                     treeItem.attr('href', node.href);
