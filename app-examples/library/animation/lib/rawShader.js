@@ -4,7 +4,8 @@
 // 
 // Updates are License: MIT Open Source https://opensource.org/licenses/MIT
 //
-import * as THREE from 'https://unpkg.com/three@0.169/build/three.module.min.js';
+//import * as THREE from 'https://unpkg.com/three@0.169/build/three.module.min.js';
+import * as THREE from './three.module.min.js';
 
 /***
  * RawShader is a class version of the source three js animation example

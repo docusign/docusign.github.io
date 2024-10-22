@@ -5,13 +5,14 @@
 // Updates are License: MIT Open Source https://opensource.org/licenses/MIT
 //
 
-import * as THREE from 'https://unpkg.com/three@0.169/build/three.module.min.js';
-import { OrbitControls } from './lib/OrbitControls.js';
+//import * as THREE from 'https://unpkg.com/three@0.169/build/three.module.min.js';
+import * as THREE from './three.module.min.js';
+import { OrbitControls } from './OrbitControls.js';
 //import { OrbitControls } from 'https://unpkg.com/three@0.169/examples/jsm/controls/OrbitControls.js';
 //import * as THREE from './lib/three.module.min.js';
 //  NOTE BENA: Both this three import and the three import within OrbitControls must
 //             be from the exact same three module path/URL or the lib will be loaded twice
-import { radixSort } from './lib/SortUtils.js';
+import { radixSort } from './SortUtils.js';
 
 /***
  * AnimationFloater is a class version of the source three js 
