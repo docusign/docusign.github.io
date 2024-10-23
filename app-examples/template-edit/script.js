@@ -1,7 +1,7 @@
 // Copyright © 2024 Docusign, Inc.
 // License: MIT Open Source https://opensource.org/licenses/MIT
 //
-// Embedded Signing main JS script
+// Template Editing main JS script
 
 
 import { AuthCodePkce } from "../library/authCodePkce.js" 
@@ -18,10 +18,8 @@ import {
     toast,
     messageModal,
     LoadingModal,
-    processUrlHash,
     storageGet, 
     storageSet,
-    ButtonOnChange,
     settingsGet, 
     settingsSet,
     userPictureAccountBrand,
@@ -38,15 +36,11 @@ $(async function () {
     let accountId;
     let loginModal = new bootstrap.Modal('#modalLogin'); // for managing the loginModal
     let configuration = {
-        loaderChoice: "multiple",
+        loaderChoice: "animationFloating",
         accountRequest: "default",
     }
     const configurationProto = structuredClone(configuration);
-    const formCheckboxes = {
-        showDecline: true,
-        useErsd: true,
-        useModal: true,
-    }
+    const formCheckboxes = {    }; // The checkboxes in forms
 
     /***
      * listTemplates 
