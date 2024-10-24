@@ -149,7 +149,6 @@ class Templates {
     constructor(args) {
         this.showMsg = args.showMsg;
         this.messageModal = args.messageModal;
-        this.loadingModal = args.loadingModal;
         this.loader = args.loader;
         this.clientId = args.clientId;
         this.accountId = args.accountId;
@@ -301,7 +300,8 @@ class Templates {
                         bottomEnd: 'paging',
                     },
                     language: {
-                        infoFiltered: '(Filtered from _MAX_ total templates.)'
+                        infoFiltered: '(Filtered from _MAX_ total templates.)',
+                        emptyTable: 'No templates found.'
                     }            
                 }                
             );

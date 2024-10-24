@@ -130,7 +130,7 @@ $(async function () {
         data.userInfo = new UserInfo({
             platform: platform,
             accessToken: data.authCodePkce.accessToken,
-            loadingMessageShow: data.loadingModal.show.bind(data.loadingModal)
+            loadingMessageShow: data.loader.show.bind(data.loader)
         });
         const ok = await data.userInfo.getUserInfo();
         if (!ok) {
@@ -181,7 +181,7 @@ $(async function () {
             accessToken: data.authCodePkce.accessToken,
             apiBaseUrl: apiBaseUrl
         });
-        data.loadingModal.show("Checking the account settings");
+        data.loader.show("Checking the account settings");
         if (!await checkAccountSettings({accountId: accountId, userInfo: data.userInfo, callApi: data.callApi})) {
             data.logger.post('Account setting error', 'The account does not have a required setting');
             return false; // EARLY RETURN
@@ -190,7 +190,6 @@ $(async function () {
         data.templates = new Templates({
             showMsg: toast,
             messageModal: messageModal,
-            loadingModal: data.loadingModal,
             clientId: oAuthClientID,
             loader: data.loader,
             accountId: accountId,
@@ -202,17 +201,17 @@ $(async function () {
             padding: PADDING,
         });
 
-        data.loadingModal.show("Retrieving your photo and the account’s logo")
+        data.loader.show("Retrieving your photo and the account’s logo")
         await userPictureAccountBrand({accountId: accountId, userInfo: data.userInfo, callApi: data.callApi});
         
-        data.loadingModal.show("Retrieving folder data");
+        data.loader.show("Retrieving folder data");
         await data.templates.folderFetch();
         data.templates.renderTree({treeId: "tree"});
 
-        data.loadingModal.show("Listing templates");
+        data.loader.show("Listing templates");
         await data.templates.list({title: "My Templates", listType: "myTemplates"});
 
-        data.loadingModal.delayedHide("Done.")
+        data.loader.hide();
         return true;
     }
 
@@ -265,7 +264,7 @@ $(async function () {
     // Are we logged in?
     if (data.authCodePkce.checkToken()) {
         // logged in
-        data.loadingModal.show("Completing Login Process")
+        data.loader.show("Completing Login Process")
         if (await completeLogin()) {
             // tooltips: https://getbootstrap.com/docs/5.3/components/tooltips/
             const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
@@ -281,7 +280,7 @@ $(async function () {
             data.loader.loaderChoice = configuration.loaderChoice; 
         } else {
             // couldn't login
-            data.loadingModal.hide();
+            data.loader.hide();
             loginModal.show();            
         }
     } else {
