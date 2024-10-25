@@ -49,7 +49,7 @@ $(async function () {
     let loginModal = new bootstrap.Modal('#modalLogin'); // for managing the loginModal
     let configuration = {
         mode: "click2agree-tab", 
-        loaderChoice: "modal",
+        loaderChoice: "animationFloating",
         supp1include: false, 
         supp1signerMustAcknowledge: "view",
         supp2include: false, 
@@ -565,10 +565,10 @@ $(async function () {
         data.loadingModal.show("Checking templates")
         const result = await checkTemplates(templates);
         if (result.ok) {
-            data.loadingModal.delayedHide(result.msg)
             setTemplateOptions(data.checkTemplates.accountTemplates)
+            data.loadingModal.hide()
         } else {
-            data.loadingModal.hide();
+            data.loadingModal.hide()
             messageModal({style: 'text', title: "Templates issue", msg: 
                 `<p>Problem while loading example templates
                 to your eSignature account:</p><p>${result.msg}</p>`});
@@ -648,6 +648,7 @@ $(async function () {
         settingsSet(configuration);
         if (oldAccountRequest !== configuration.accountRequest) {setAccount()}
         data.loader.loaderChoice = configuration.loaderChoice;
+        storageSet(CONFIG_STORAGE, configuration);
     });
     window.addEventListener("beforeunload", beforeUnloadHandler);
     window.addEventListener("message", envelopeCreated);

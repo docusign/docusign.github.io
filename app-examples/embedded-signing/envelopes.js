@@ -29,6 +29,7 @@ const SUPP_FILE_NAMES = ["Terms and Conditions 1.pdf", "Terms and Conditions 2.h
 const SUPP_DOC_NAMES = [{name: "Terms and Conditions 1.pdf", ext: "pdf"}, {name: "Terms and Conditions 2.html", ext: "html"}];
 const SIMPLE_HTML = "simple_with_image.html.txt";
 const HTML_RESPONSIVE = "htmlSmartSections.html.txt";
+const HTML_C2A_RESPONSIVE = "htmlC2ASmartSections.html.txt";
 const PAYMENT_DOC = "payment_order_form.docx";
 const DEFAULT_PHONE_AUTH_ID = "c368e411-1592-4001-a3df-dca94ac539ae"; 
 
@@ -57,6 +58,8 @@ class Envelopes {
         this.useDisclosure = true;
         this.returnUrl = RETURN_URL;
         this.defaultReturnUrl = RETURN_URL;
+        this.htmlResponsiveNoTabs = false; // false: use HTML_RESPONSIVE
+                                           // true:  use HTML_C2A_RESPONSIVE 
     }
 
     /***
@@ -384,7 +387,8 @@ class Envelopes {
      * Responsive HTML with smart sections
      */
     async createHtmlResponsiveRequest() {
-        const doc = await this.callApi.getDoc(SUPP_DOCS_URL + HTML_RESPONSIVE);
+        const doc = await this.callApi.getDoc(SUPP_DOCS_URL + 
+            (this.htmlResponsiveNoTabs ? HTML_C2A_RESPONSIVE : HTML_RESPONSIVE));
         if (!doc) {
             this.showMsg(this.callApi.errMsg); // Error!
             return
@@ -400,42 +404,6 @@ class Envelopes {
                         name: this.name,
                         clientUserId: this.clientUserId,
                         recipientId: "1",
-                        tabs: {
-                            signHereTabs: [
-                                {
-                                    tabLabel: "clientSignature"
-                                }
-                            ],
-                            dateSignedTabs: [
-                                {
-                                    tabLabel: "clientDateSigned",
-                                    font: "Arial",
-                                    fontSize: "Size12"
-                                }
-                            ],
-                            textTabs: [
-                                {
-                                    tabLabel: "Approver",
-                                    value: "Samantha Approver",
-                                    locked: "true",
-                                    font: "Arial",
-                                    fontSize: "Size12",
-                                    maxLength: "4000",
-                                    height: "11",
-                                    width: "100"
-                                },
-                                {
-                                    tabLabel: "BusinessName",
-                                    value: "ACME Widgets",
-                                    locked: "true",
-                                    font: "Arial",
-                                    fontSize: "Size12",
-                                    maxLength: "4000",
-                                    height: "11",
-                                    width: "60"
-                                }
-                            ]
-                        }
                     }
                 ]
             },
@@ -462,6 +430,46 @@ class Envelopes {
                     }
                 }
             ]
+        }
+        if (!this.htmlResponsiveNoTabs) {
+            // include tabs
+            req.recipients.signers[0].tabs = 
+            {
+                signHereTabs: [
+                    {
+                        tabLabel: "clientSignature"
+                    }
+                ],
+                dateSignedTabs: [
+                    {
+                        tabLabel: "clientDateSigned",
+                        font: "Arial",
+                        fontSize: "Size12"
+                    }
+                ],
+                textTabs: [
+                    {
+                        tabLabel: "Approver",
+                        value: "Samantha Approver",
+                        locked: "true",
+                        font: "Arial",
+                        fontSize: "Size12",
+                        maxLength: "4000",
+                        height: "11",
+                        width: "100"
+                    },
+                    {
+                        tabLabel: "BusinessName",
+                        value: "ACME Widgets",
+                        locked: "true",
+                        font: "Arial",
+                        fontSize: "Size12",
+                        maxLength: "4000",
+                        height: "11",
+                        width: "60"
+                    }
+                ]
+            }
         }
         this.request = req;
         return req

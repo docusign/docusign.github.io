@@ -37,6 +37,11 @@ class Click2Agree {
         this.logger = args.logger;
         this.padding = args.padding;
         this.signing = false; 
+
+        this.documentChoice = { // response means transform the document to be responsive
+            default: {responsive: false, request: this.envelopes.createNoTabsEnvRequest.bind(this.envelopes)},
+            htmlC2AResponsive: {responsive: false, request: this.envelopes.createHtmlResponsiveRequest.bind(this.envelopes)},
+        }
     }
 
     /***
@@ -71,12 +76,13 @@ class Click2Agree {
         this.signing = true;
         this.loader.show("Creating the envelope");
 
+        this.envelopes.htmlResponsiveNoTabs = true;
         this.envelopes.name = this.name;
         this.envelopes.email = this.email;
         this.envelopes.locale = this.locale; 
-        this.envelopes.responsive = this.responsive;
+        this.envelopes.responsive = this.documentChoice[this.document].responsive;
         this.envelopes.ersd = this.ersd === false ? null : true;
-        await this.envelopes.createNoTabsEnvRequest();
+        await this.documentChoice[this.document].request();
         // add supplemental docs
         await this.envelopes.updateRequest(this.supplemental)
         this.envelopeId = await this.envelopes.sendEnvelope();
