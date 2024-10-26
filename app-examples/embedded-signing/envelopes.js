@@ -21,6 +21,7 @@ const FRAME_ANCESTORS = ["http://localhost", "https://docusign.github.io", "http
     "https://apps-s.docusign.com", "https://stage.docusign.net"];
 const MESSAGE_ORIGINS_DEMO = ["https://apps-d.docusign.com"];
 const MESSAGE_ORIGINS_STAGE = ["https://apps-s.docusign.com"];
+const MESSAGE_ORIGINS_PROD = ["https://apps.docusign.com"];
 const RETURN_URL = `https://docusign.github.io/app-examples/embedded-signing/classicReturnUrl.html`;
 const ROLE = "signer" // the role name used by the example templates
 const STATIC_DOC_URL = "Web site Access Agreement.pdf";
@@ -733,13 +734,21 @@ class Envelopes {
      *    https://developers.docusign.com/docs/esign-rest-api/reference/envelopes/envelopeviews/createrecipient/
      */
     async recipientView(returnUrl = RETURN_URL) {
+        let messageOrigins;
+        if (this.platform === 'demo') {
+            messageOrigins = MESSAGE_ORIGINS_DEMO
+        } else if (this.platform === 'stage') {
+            messageOrigins = MESSAGE_ORIGINS_STAGE
+        } else if (this.platform === 'prod') {
+            messageOrigins = MESSAGE_ORIGINS_PROD
+        }
         this.returnUrl = returnUrl;
         const request = {
             authenticationMethod: "None",
             clientUserId: this.clientUserId,
             email: this.email,
             frameAncestors: FRAME_ANCESTORS,
-            messageOrigins: this.platform === 'demo' ? MESSAGE_ORIGINS_DEMO : MESSAGE_ORIGINS_STAGE,
+            messageOrigins: messageOrigins,
             returnUrl: this.returnUrl,
             userName: this.name,
         }
