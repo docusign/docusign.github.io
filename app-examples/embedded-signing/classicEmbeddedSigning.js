@@ -131,6 +131,7 @@ class ClassicSigning {
         if (!this.envelopeId) {
             this.loader.delayedHide("Could not send the envelope");
             this.signing = false;
+            $(`#${this.mainElId}`).removeClass("hide");
             return
         }
 
@@ -147,6 +148,7 @@ class ClassicSigning {
         if (!recipientViewUrl) {
             this.loader.delayedHide("Could not open the recipient view");
             this.signing = false;
+            $(`#${this.mainElId}`).removeClass("hide");
             return;
         }
 

@@ -90,6 +90,7 @@ class Click2Agree {
         if (!this.envelopeId) {
             this.loader.delayedHide("Could not send the envelope");
             this.signing = false;
+            $(`#${this.mainElId}`).removeClass("hide");
             return
         }
 
@@ -98,6 +99,7 @@ class Click2Agree {
         if (!recipientViewUrl) {
             this.loader.delayedHide("Could not open the recipient view");
             this.signing = false;
+            $(`#${this.mainElId}`).removeClass("hide");
             return;
         }
 
