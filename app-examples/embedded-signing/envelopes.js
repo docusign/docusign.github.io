@@ -18,7 +18,7 @@
 const CLIENT_USER_ID = 1000;
 // See https://developers.docusign.com/docs/esign-rest-api/reference/envelopes/envelopeviews/createrecipient/#schema__recipientviewrequest_frameancestors
 const FRAME_ANCESTORS = ["http://localhost", "https://docusign.github.io", "https://apps-d.docusign.com", 
-    "https://apps-s.docusign.com", "https://stage.docusign.net"];
+    "https://apps-s.docusign.com", "https://apps.docusign.com", "https://stage.docusign.net"];
 const MESSAGE_ORIGINS_DEMO = ["https://apps-d.docusign.com"];
 const MESSAGE_ORIGINS_STAGE = ["https://apps-s.docusign.com"];
 const MESSAGE_ORIGINS_PROD = ["https://apps.docusign.com"];
