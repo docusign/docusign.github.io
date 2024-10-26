@@ -36,10 +36,12 @@ import {
     getPhoneNumber,
 } from "../library/utilities.js" 
 
-const CONFIG_STORAGE = "embeddedSigningConfiguration";
-const MODE_STORAGE = "embeddedSigningMode";
-const CLASSIC_RESULT = 'embeddedSigning classicResult'; // store the classic non-iframe signing result
+const APP_NAME = "embeddedSigning";
+const CONFIG_STORAGE = APP_NAME + " Configuration";
+const MODE_STORAGE = APP_NAME + " Mode";
+const CLASSIC_RESULT = APP_NAME + ' classicResult'; // store the classic non-iframe signing result
 const STAGE_QP = 'stage'; // if ?stage=1 then use stage
+const PROD_QP  = 'prod' ; // if ?prod=1 then use prod
 const PADDING = 70; // padding-top for the signing ceremony.
 
 $(async function () {
@@ -675,12 +677,20 @@ $(async function () {
     }
     const classicResults = processUrlHash("classicResults");
     if (classicResults) {storageSet(CLASSIC_RESULT, classicResults)}
-    let useStage = storageGet(STAGE_QP, false);
+    let useStage = storageGet(APP_NAME + STAGE_QP, false);
+    let useProd = storageGet(APP_NAME + PROD_QP, false);
     const stageResults = processUrlHash(STAGE_QP);
+    const prodResults = processUrlHash(PROD_QP);
     useStage = stageResults ? stageResults.stage === '1' : useStage;
-    storageSet(STAGE_QP, useStage)
+    useProd = prodResults ? prodResults.prod   === '1' : useProd;
+    if (useStage && useProd) {useStage = false}
+    storageSet(APP_NAME + STAGE_QP, useStage)
+    storageSet(APP_NAME + PROD_QP , useProd)
     if (useStage) {
-        // Use stage, not demo!
+        // Use stage!
+        const dsJsScript = document.createElement('script');
+        dsJsScript.src = "https://js-s.docusign.com/bundle.js";
+        document.head.appendChild(dsJsScript);
         platform = 'stage';
         $(`#modalLogin .modal-title`).text(`Stage Login`);
         $(`#modalLogin .btn-primary`).text(`Stage Login`);
@@ -688,7 +698,24 @@ $(async function () {
             <p style='color:purple;'>Stage login</p>
             <p>You must be on the VPN or an office network</p>
             <p><a href='${location.origin}${location.pathname}?${STAGE_QP}=0'>Reset to Demo login</a></p>`)
+    } else if (useProd) {
+        // Use production!
+        const dsJsScript = document.createElement('script');
+        dsJsScript.src = "https://js.docusign.com/bundle.js";
+        document.head.appendChild(dsJsScript);
+        platform = 'prod';
+        $(`#modalLogin .modal-title`).text(`Production Login`);
+        $(`#modalLogin .btn-primary`).text(`Production Login`);
+        $(`#modalLogin .modal-body`).html(`
+            <p style='color:purple;'>Production login</p>
+            <p><a href='${location.origin}${location.pathname}?${PROD_QP}=0'>Reset to Demo login</a></p>`)
+    } else {
+        const dsJsScript = document.createElement('script');
+        dsJsScript.src = "https://js-d.docusign.com/bundle.js";
+        document.head.appendChild(dsJsScript);
+        platform = "demo";
     }
+
 
     // The OAuth constructor looks at hash data to see if we're 
     // now receiving the OAuth response
