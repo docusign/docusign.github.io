@@ -106,7 +106,8 @@ class Loader {
     getSize(parentEl) {
         // The following works if the parentEl is setup with 100% height
         // The issue is the height of a div that is currently empty
-        return this.parentEl.getBoundingClientRect();
+        const size = this.parentEl.getBoundingClientRect();
+        return size
     }
 
     /***

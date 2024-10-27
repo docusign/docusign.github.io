@@ -1,23 +1,12 @@
 // Copyright © 2024 Docusign, Inc.
 // License: MIT Open Source https://opensource.org/licenses/MIT
 
+import {TemplateActions} from "./templateActions.js" 
+
 /*
  * CLASS Templates
- * The Templates examples
- *
- * args -- an object containing attributes:
- *   showMsg -- function to show a msg to the human
- *   clientId -- the actual clientId
- *   callApi -- instance of CallApi
- *   envelopes -- instance of Envelopes
- *   
- * public values
  */
 
-/***
- * Public variables
- * signing -- is the signing window open?
- */
 class Templates {
     /***
      * Properties in this.templates
@@ -40,7 +29,7 @@ class Templates {
      * 
      */
     templates = [];
-    busy = false; // loading via a tree click?
+    busy = false;
 
     /***
      * Properties for folders
@@ -126,7 +115,8 @@ class Templates {
                 if (type === 'display') {
                     if (datum && datum.length > 0) {
                         const html = datum.reduce((priorV, val) =>
-                            (priorV + `<a href="#" data-folderId="${val.folderId}">${val.name}</a> `),
+                            (priorV + `<a class="folderList" href="#"
+                                data-folderId="${val.listType}|${val.folderId}">${val.name}</a>`),
                             "");
                         return html;
                     } else {return ""}
@@ -145,6 +135,31 @@ class Templates {
                 } else return datum
             }
         },
+        {title: "", data: "templateId",
+            searchable: false,
+            orderable: false,
+            render: function ( datum, type, row ) {
+                if (type === 'display') {
+                    const html = `
+<div class="dropdown templateAction" data-templateId="${datum}" >
+    <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Actions
+    </button>
+    <ul class="dropdown-menu">
+        <li><a class="dropdown-item" href="#" data-action="edit">Edit</a></li>
+        <li><a class="dropdown-item" href="#" data-action="copy">Copy</a></li>
+        <li><a class="dropdown-item" href="#" data-action="matchInclude">Include in Matching</a></li>
+        <li><a class="dropdown-item" href="#" data-action="matchExclude">Exclude in Matching</a></li>
+        <li><a class="dropdown-item" href="#" data-action="delete">Delete</a></li>
+        <li><a class="dropdown-item" href="#" data-action="download">Download</a></li>
+        <li><a class="dropdown-item" href="#" data-action="allShare">Share with All</a></li>
+        <li><a class="dropdown-item" href="#" data-action="allUnshare">Unshare with All</a></li>
+    </ul>
+</div>`
+                        return html;
+                } else return null
+            }
+        },
     ]
 
     constructor(args) {
@@ -160,8 +175,23 @@ class Templates {
         this.logger = args.logger;
         this.padding = args.padding;
 
+        this.templateActions = new TemplateActions({
+            showMsg: args.showMsg,
+            messageModal: args.messageModal,
+            loader: args.loader,
+            clientId: args.clientId,
+            accountId: args.accountId,
+            callApi: args.callApi,
+            mainElId: args.mainElId,
+            logger: args.logger,  
+        })
+
         this.dataTableApi = null;
         this.folderClicked = this.folderClicked.bind(this);
+        $(`#${this.templatesTableElId}`).on ('click', ".folderList", this.folderClicked);
+
+        this.actionClicked = this.actionClicked.bind(this);
+        $(`#${this.templatesTableElId}`).on ('click', ".templateAction a", this.actionClicked);
     }
 
     /***
@@ -266,8 +296,11 @@ class Templates {
 
                     v.folderIds.forEach((fv, i) => {
                         // array of folderId. Create folders array of {folderId, name}
-                        if (!this.rootFolderIds[fv]) template.folders.push(
-                            {folderId: fv, name: this.folderHash[fv].name}) 
+                        if (!this.rootFolderIds[fv]) template.folders.push({
+                            folderId: fv, 
+                            name: this.folderHash[fv].name, 
+                            listType: this.folderHash[fv].listType
+                        })
                     })
                     this.templates.push(template);
                 })
@@ -383,9 +416,13 @@ class Templates {
      * An item in the tree or a folder name in a row was clicked. Reload the templates appropriately
      */
     async folderClicked(evt) {
+        evt.preventDefault();
         if (this.busy) {return}; // EARLY return
         this.busy = true;
-        const id = $(evt.target).closest('div')[0].id;
+        // figure out if the event is from the treeview or datatable
+        const datatableId = $(evt.target).attr("data-folderId");
+        const treeId = $(evt.target).closest('div')[0].id;
+        const id = datatableId || treeId;
         const takeAction = id && id.indexOf("|") !== -1;
         if (!takeAction) {
             this.busy = false;
@@ -398,6 +435,31 @@ class Templates {
         const folderId = !!splits[1] && splits[1];
         await this.list({title: name, listType: listType, folderId: folderId});
         this.busy = false;
+    }
+
+    /***
+     * actionClicked handles the template actions
+     *  data-action="edit"
+     *  data-action="copy"
+     *  data-action="matchInclude"
+     *  data-action="matchExclude"
+     *  data-action="delete"
+     *  data-action="download"
+     *  data-action="allShare"
+     *  data-action="allUnshare"
+     */
+    async actionClicked(evt) {
+        evt.preventDefault();
+        $(`#${this.mainElId}`).attr("hidden", "");
+        $(`#${this.templatesTableElId}`).attr("hidden", "");
+
+        const action = $(evt.target).attr("data-action");
+        const templateId = $(evt.target).closest('.templateAction').attr("data-templateId");
+        await this.templateActions.action({action: action, templateId: templateId})
+        
+        $(`#${this.mainElId}`).removeAttr("hidden");
+        $(`#${this.templatesTableElId}`).removeAttr("hidden");
+
     }
 
     /***
@@ -441,7 +503,11 @@ class Templates {
         }
         if (folder.type !== "recyclebin"){
             folder.icon = "fa fa-folder"
-            this.folderHash[folder.folderId] = {name: folder.name};
+            if (this.folderHash[folder.folderId]) {
+                this.folderHash[folder.folderId].name = folder.name;
+            } else {
+                this.folderHash[folder.folderId] = {name: folder.name};
+            }
         }
         if (folder.parentFolderId) {
             folder.id = `subFolder|${folder.folderId}`;
