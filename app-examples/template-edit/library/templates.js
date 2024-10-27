@@ -50,7 +50,8 @@ class Templates {
      */
     folders = [];
     sharedFolders = [];
-    folderHash = {}; // Just the real folders -- id: name
+    folderHash = {}; // Just the real folders -- id: {name, listType}
+    rootFolderIds = {}; // Unfortunately there is more than one ID for the "Templates" folder
 
     columns = [ // columns in the table
         {title: `&nbsp;<i class="fa fa-star"></i>`, data: "favorite",
@@ -160,7 +161,7 @@ class Templates {
         this.padding = args.padding;
 
         this.dataTableApi = null;
-        this.treeClicked = this.treeClicked.bind(this);
+        this.folderClicked = this.folderClicked.bind(this);
     }
 
     /***
@@ -175,7 +176,7 @@ class Templates {
          *   sharedFolder; "{folder_name}" A shared folder; ...?folder_ids=cec6a98a-e900-4b22-9e10-f1988835348a
          *   subFolder; "{folder_name}" A subfolder; ...?user_filter=owned_by_me&folder_ids=c4a54e3e-601a-40f8-ba8d-4297433a2d23
          *   favorites; "Favorites"; ...?user_filter=favorited_by_me
-         *   all; "All Templates"; ... [no filters]
+         *   allTemplates; "All Templates"; ... [no filters]
          *   deleted; "Deleted"; ... ?folder_ids=3a7df8c0-6713-448b-a907-d27ac94d1e02&folder_types=recyclebin 
          *                  Above is the "recylebin" folderId
          */
@@ -197,6 +198,9 @@ class Templates {
         } else if (listType === "deleted") {
             qp.folder_types = "recyclebin";
             qp.folder_ids = this.recyclebinId;
+        } else if (listType === "allTemplates") {
+            qp.folder_types = null;
+            qp.folder_ids = null;
         } 
 
         const batch = 40; // how many to get per call (count request property)
@@ -238,6 +242,9 @@ class Templates {
                         folderName: v.folderName,
                         folders: [],
                     }
+                    if (v.folderName === "Templates") {
+                        this.rootFolderIds[v.folderId] = true;
+                    }
                     /**
                      *   matching -- Eligible -- autoMatch": "true" && lastUsed !have year 9999
                      *               Included -- lastUsed has year 9999 
@@ -259,8 +266,8 @@ class Templates {
 
                     v.folderIds.forEach((fv, i) => {
                         // array of folderId. Create folders array of {folderId, name}
-                        if (v.folderName !== "Templates" || i > 0) template.folders.push(
-                            {folderId: fv, name: this.folderHash[fv]}) 
+                        if (!this.rootFolderIds[fv]) template.folders.push(
+                            {folderId: fv, name: this.folderHash[fv].name}) 
                     })
                     this.templates.push(template);
                 })
@@ -352,7 +359,7 @@ class Templates {
                         folder.icon = "fa fa-folder";
                         this.folders.push(folder);
                     } else if (folder.type === "sharedtemplates") {
-                        this.folderHash[folder.folderId] = folder.name;
+                        this.folderHash[folder.folderId] = {name: folder.name, listType: `sharedFolder`};
                         this.sharedFolders.push(folder)
                         folder.id = `sharedFolder|${folder.folderId}`;                
                     }
@@ -372,10 +379,10 @@ class Templates {
     }
 
     /***
-     * treeClicked
-     * An item in the tree was clicked. Reload the templates appropriately
+     * folderClicked
+     * An item in the tree or a folder name in a row was clicked. Reload the templates appropriately
      */
-    async treeClicked(evt) {
+    async folderClicked(evt) {
         if (this.busy) {return}; // EARLY return
         this.busy = true;
         const id = $(evt.target).closest('div')[0].id;
@@ -402,12 +409,13 @@ class Templates {
         this.folders.forEach(folder => {this.processFolder(folder)});
         this.sharedFolders.forEach(folder => {this.processFolder(folder)});
         // fix things up -- add some pseudo folders, etc
+        const allTemplates = {text: "All Templates", icon: "fa fa-folder", id: "allTemplates|"};
         const myTemplates = {text: "My Templates", icon: "fa fa-folder", id: "myTemplates|"};
         const favorites = {text: "Favorites", icon: "fa fa-star", id: "favorites|"};
         const sharedFolders = {text: "Shared Folders", icon: "fa fa-folder",
             nodes: this.sharedFolders};
 
-        this.folders.unshift(myTemplates, favorites);
+        this.folders.unshift(myTemplates, favorites, allTemplates);
         this.folders.push(sharedFolders);
         
         $(`#${this.treeId}`).bstreeview({
@@ -418,7 +426,7 @@ class Templates {
             parentsMarginLeft: '1.25rem',
             openNodeLinkOnNewTab: true
         });
-        $(".bstvNode").on("click", this.treeClicked);
+        $(".bstvNode").on("click", this.folderClicked);
     }
 
     /***
@@ -433,10 +441,11 @@ class Templates {
         }
         if (folder.type !== "recyclebin"){
             folder.icon = "fa fa-folder"
-            this.folderHash[folder.folderId] = folder.name;
+            this.folderHash[folder.folderId] = {name: folder.name};
         }
         if (folder.parentFolderId) {
             folder.id = `subFolder|${folder.folderId}`;
+            this.folderHash[folder.folderId].listType = `subFolder`;
         }
 
         folder.hasSubFolders = folder.hasSubFolders === "true";

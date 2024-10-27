@@ -4,27 +4,25 @@
 // Template Editing main JS script
 
 
-import { AuthCodePkce } from "../library/authCodePkce.js" 
-import { Logger } from "../library/logger.js";
-import { Loader } from "../library/loader.js";
+import { AuthCodePkce } from "./library/authCodePkce.js" 
+import { Logger } from "./library/logger.js";
+import { Loader } from "./library/loader.js";
 import {
     CallApi,
     UserInfo
-} from "../library/callapi.js" 
-import { Templates } from "../library/templates.js" 
+} from "./library/callapi.js" 
+import { Templates } from "./library/templates.js" 
 
 import {
     switchToHttps,
     toast,
     messageModal,
     LoadingModal,
-    storageGet, 
     storageSet,
-    settingsGet, 
     settingsSet,
     userPictureAccountBrand,
     checkAccountSettings,
-} from "../library/utilities.js" 
+} from "./library/utilities.js" 
 
 const CONFIG_STORAGE = "templateEditConfiguration";
 const STAGE_QP = 'stage'; // if ?stage=1 then use stage
@@ -253,13 +251,13 @@ $(async function () {
 
     // Starting up...
     switchToHttps();
-    // The OAuth constructor looks at hash data to see if we're 
-    // now receiving the OAuth response
     data.authCodePkce = new AuthCodePkce({
         oAuthReturnUrl: `${location.origin}${location.pathname}`,
         clientId: platform,
         showMsg: toast
     });
+    // Look at the hash data to see if we're 
+    // now receiving the OAuth response
     await data.authCodePkce.oauthResponse();
     // Are we logged in?
     if (data.authCodePkce.checkToken()) {
