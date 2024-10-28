@@ -3,6 +3,9 @@
 
 import {TemplateActions} from "./templateActions.js" 
 
+const NEW_TEMPLATE = "newTemplate";
+const UPLOAD_TEMPLATE = "uploadTemplate";
+
 /*
  * CLASS Templates
  */
@@ -148,8 +151,10 @@ class Templates {
     <ul class="dropdown-menu">
         <li><a class="dropdown-item" href="#" data-action="edit">Edit</a></li>
         <li><a class="dropdown-item" href="#" data-action="copy">Copy</a></li>
+        <!-- (hopefully in the future)
         <li><a class="dropdown-item" href="#" data-action="matchInclude">Include in Matching</a></li>
-        <li><a class="dropdown-item" href="#" data-action="matchExclude">Exclude in Matching</a></li>
+        <li><a class="dropdown-item" href="#" data-action="matchExclude">Exclude in Matching</a></li> 
+        -->
         <li><a class="dropdown-item" href="#" data-action="delete">Delete</a></li>
         <li><a class="dropdown-item" href="#" data-action="download">Download</a></li>
         <li><a class="dropdown-item" href="#" data-action="allShare">Share with All</a></li>
@@ -192,6 +197,9 @@ class Templates {
 
         this.actionClicked = this.actionClicked.bind(this);
         $(`#${this.templatesTableElId}`).on ('click', ".templateAction a", this.actionClicked);
+        $(`#${NEW_TEMPLATE}, #${UPLOAD_TEMPLATE}`).on ('click', this.actionClicked);
+
+        this.list = this.list.bind(this);
     }
 
     /***
@@ -199,8 +207,9 @@ class Templates {
      *   lists the templates; maintains the list in memory; displays in data table
      */
     async list(args) {
-        const listType = args.listType; // see chart:
         /***
+         * listType chart:
+         * 
          * listType; title; Templates:list options  
          *   myTemplates; "My Templates" (default list);  ...?user_filter=owned_by_me
          *   sharedFolder; "{folder_name}" A shared folder; ...?folder_ids=cec6a98a-e900-4b22-9e10-f1988835348a
@@ -210,25 +219,30 @@ class Templates {
          *   deleted; "Deleted"; ... ?folder_ids=3a7df8c0-6713-448b-a907-d27ac94d1e02&folder_types=recyclebin 
          *                  Above is the "recylebin" folderId
          */
-        const folderId = args.folderId; // used for sharedFolder and subFolder listTypes
-        const title = args.title;
-        $(`#${this.templatesTitleId}`).text(title); // Set the table's title
+        if (args && args.listType) {
+            this.listType = args.listType; // see chart:
+            this.folderId = args.folderId; // used for sharedFolder and subFolder listTypes
+            this.title = args.title;
+        } 
+        // else use the prior values
+
+        $(`#${this.templatesTitleId}`).text(this.title); // Set the table's title
 
         // Templates:list query parameters
         let qp = {user_filter: null, folder_ids: null, folder_types: null};
-        if (listType === "myTemplates") {
+        if (this.listType === "myTemplates") {
             qp.user_filter = "owned_by_me";
-        } else if (listType === "sharedFolder") {
-            qp.folder_ids = folderId;
-        } else if (listType === "subFolder") {
+        } else if (this.listType === "sharedFolder") {
+            qp.folder_ids = this.folderId;
+        } else if (this.listType === "subFolder") {
             qp.user_filter = "owned_by_me";
-            qp.folder_ids = folderId;
-        } else if (listType === "favorites") {
+            qp.folder_ids = this.folderId;
+        } else if (this.listType === "favorites") {
             qp.user_filter = "favorited_by_me";
-        } else if (listType === "deleted") {
+        } else if (this.listType === "deleted") {
             qp.folder_types = "recyclebin";
             qp.folder_ids = this.recyclebinId;
-        } else if (listType === "allTemplates") {
+        } else if (this.listType === "allTemplates") {
             qp.folder_types = null;
             qp.folder_ids = null;
         } 
@@ -354,6 +368,7 @@ class Templates {
     /***
      * folderFetch
      * Gets list of folders, and stores in folders
+     * Also looks up the everyoneGroup ID
      */
     async folderFetch() {
         let startPosition = 0; // same as the received set size
@@ -386,6 +401,7 @@ class Templates {
                         folder.icon = "fa fa-trash";
                         folder.id = "deleted|";
                         this.recyclebinId = folder.folderId;
+                        this.rootFolderIds[folder.folderId] = true;
                         this.folders.push(folder);
                     } else if (folder.type === "templates") {
                         folder.name = "Folders";
@@ -408,7 +424,44 @@ class Templates {
                 ok = false;
             }
         }
-    return ok
+    return ok && await this.everyoneGroup();
+    }
+
+    /***
+     * looks up and sets this.everyoneGroupId here and in this.templateActions
+     */
+    async everyoneGroup() {
+        let startPosition = 0; // same as the received set size
+        let totalSetSize = null
+        let ok = true;
+        this.everyoneGroupId = false;
+
+        while (ok && !this.everyoneGroupId && (totalSetSize === null || startPosition < totalSetSize)) {
+            const results = await this.callApi.callApiJson({
+                apiMethod: `/accounts/${this.accountId}/groups?` +
+                    `&start_position=${startPosition}&count=50`,
+                httpMethod: "GET"
+            });
+            if (results !== false) { // good result 
+                totalSetSize = parseInt(results.totalSetSize); // convert to integer 
+                const resultSetSize = parseInt(results.resultSetSize);
+                startPosition += parseInt(results.resultSetSize);
+                results.groups.forEach(group => {
+                    if (group.groupType === "everyoneGroup") {
+                        this.everyoneGroupId = group.groupId;
+                        this.templateActions.everyoneGroupId = group.groupId;
+                    }
+                })
+            } else {
+                this.messageModal({
+                    style: 'text', title: "Grouplist problem", msg:
+                        `<p>Error message: ${this.callApi.errMsg}</p>`
+                });
+                this.logger.post("Group list Problem: Operation Canceled", `<p>Error message: ${this.callApi.errMsg}</p>`);
+                ok = false;
+            }
+            return ok
+        }
     }
 
     /***
@@ -447,6 +500,10 @@ class Templates {
      *  data-action="download"
      *  data-action="allShare"
      *  data-action="allUnshare"
+     * 
+     *  And buttons:
+     *  data-action="newTemplate" 
+     *  data-action="uploadTemplate"
      */
     async actionClicked(evt) {
         evt.preventDefault();
@@ -455,11 +512,18 @@ class Templates {
 
         const action = $(evt.target).attr("data-action");
         const templateId = $(evt.target).closest('.templateAction').attr("data-templateId");
-        await this.templateActions.action({action: action, templateId: templateId})
+        const templateEntry = this.templates.find(t => t.templateId === templateId);
+        const templateName = templateEntry ? templateEntry.name : "";
+        
+        const redoList = await this.templateActions.action({action: action, templateId: templateId,
+            list: this.list, templateName: templateName
+        })
         
         $(`#${this.mainElId}`).removeAttr("hidden");
         $(`#${this.templatesTableElId}`).removeAttr("hidden");
-
+        if (redoList) {
+            this.list()
+        }
     }
 
     /***

@@ -195,7 +195,7 @@ class UserInfo {
                     headers: new Headers({
                         Authorization: `Bearer ${this.accessToken}`,
                         Accept: `application/json`,
-                        "X-DocuSign-SDK": "CodePen"}) 
+                        "X-DocuSign-SDK": "Template Editor"}) 
                     });
             const data = response && await response.json();
             if (response.ok) {
@@ -220,7 +220,7 @@ class UserInfo {
             headers: new Headers({
                 Authorization: `Bearer ${this.accessToken}`,
                 Accept: `application/json`,
-                "X-DocuSign-SDK": "CodePen"
+                "X-DocuSign-SDK": "Template Editor"
             })
         });
     }
@@ -287,7 +287,7 @@ class CallApi {
                 Accept: `application/json`,
                 Authorization: `Bearer ${this.accessToken}`,
                 "Content-Type": "application/json",
-                "X-DocuSign-SDK": "CodePen v2"
+                "X-DocuSign-SDK": "Template Editor"
             }
             headers.forEach (header => {headersReq[header.h] = header.v})
 
@@ -328,7 +328,7 @@ class CallApi {
                 Accept: `application/json`,
                 Authorization: `Bearer ${this.accessToken}`,
                 "Content-Type": "application/json",
-                "X-DocuSign-SDK": "CodePen v2",
+                "X-DocuSign-SDK": "Template Editor",
                 Accept: `*/*`
             }
 

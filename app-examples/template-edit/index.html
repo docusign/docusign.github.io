@@ -72,7 +72,7 @@
     </div>
     <div id="loaderdiv" hidden></div>
     <div id="template-edit" hidden></div>
-    <div id="main" class="container-fluid mx-20 pt8">
+    <div id="main" class="container-fluid mx-20 pt8" hidden>
         <div class="row">
             <div class="col-md-auto">
                 <!-- #################################################################### -->
@@ -82,6 +82,7 @@
                 <!-- ###                                                               ## -->
                 <!-- #################################################################### -->
                 <!-- #################################################################### -->
+                <a id="downloadA" hidden></a>
                 <div id="tree"></div>
             </div>
             <div class="col">
@@ -94,11 +95,11 @@
                 <!-- #################################################################### -->
                 <div class="row"> <!-- someday this row's content should be fixed (not scroll) -->
                     <div class="col">
-                        <h2 id="templatesTitle" class="mt-4"></h2>
-                        <!-- <form>
-                            <a id="listTemplates" class="btn btn-primary btn-lg mt-3" type="button"
-                            role="button">List Templates</a>
-                        </form> -->
+                        <h2 class="mt-4">
+                            <span id="templatesTitle"></span> 
+                            <a id="newTemplate"    role="button" data-action="newTemplate"    href="#" class="btn btn-primary btn-sm ms-5">+ New Template</a>
+                            <a id="uploadTemplate" role="button" data-action="uploadTemplate" href="#" class="btn btn-primary btn-sm ms-5">Upload Template</a> 
+                        </h2>
                     </div>
                 </div>
                 <div class="row"> <!-- Row with the data table -->
@@ -176,6 +177,31 @@
         </div>
     </div>
 
+    <!-- DELETE CONFIRMATION MODAL -->
+    <div id="deleteConfirmModal" class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirm Template Deletion</h5>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <h5>Delete template</h5>
+                        <div>
+                            <select id="deleteConfirm" class="ms-2 form-select" aria-label="Delete Confirm">
+                                <option value="default">Do not delete</option>
+                                <option value="delete">Yes, delete the template!</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- SETTINGS MODAL -->
     <div id="settingsModal" class="modal fade" tabindex="-1">
         <div class="modal-dialog modal-lg">
@@ -194,25 +220,7 @@
                                 <option value="default">Default account</option>
                             </select>
                         </div>
-                        <h5 class="mt-3">Output</h5>
-                        <div>
-                            <label for="outputStyle" class="form-label">Output style:</label>
-                            <select id="outputStyle" class="ms-2 form-select display-inline w19"
-                                aria-label="Output style">
-                                <option value="openUrl">Open the Signing Ceremony</option>
-                                <option value="showUrl">Show the URL</option>
-                            </select>
-                            <label for="useIframe" class="ms-3">Use an iframe & GUI chrome?</label>
-                            <input id="useIframe" class="form-check-input baseline me-3 ms-1" type="checkbox">
-                        </div>
-                        <p>
-                            For docusign.js signing ceremonies, if «iframe» is off, a zero GUI chrome iframe is used.
-                        </p>
                         <h5>Signer User Experience</h5>
-                        <div>
-                            <label for="showDecline" class="">Show Decline option?</label>
-                            <input id="showDecline" class="form-check-input baseline ms-1" type="checkbox">
-                        </div>
                         <div>
                             <label for="loaderChoice" class="">Loading indicator</label>
                             <select id="loaderChoice" class="ms-2 form-select display-inline w19"
@@ -222,27 +230,6 @@
                                 <option value="animationShader">Animation 2</option>
                             </select>
                         </div>
-                        <h5 class="mt-3">Authentication</h5>
-                        <p>Optional: Docusign can include authentication checks as part of the signing ceremony</p>
-                        <p>
-                            <label for="authStyle" class="form-label">Additional Authentication:</label>
-                            <select id="authStyle" class="ms-2 form-select display-inline w19"
-                                aria-label="Additional Authentication style">
-                                <option value="none">None</option>
-                                <option value="defaultPhone">Default Phone/SMS authentication</option>
-                                <option value="custom">Identity Configuration ID</option>
-                            </select>
-                        </p>
-                        <p>
-                            <label for="sms" class="form-label">SMS number:</label>
-                            <input id="sms" type="tel" class="ms-2 me-5form-control display-inline w14" style="background:none;border-width:1px;">
-                            <label for="idvConfigId" class="ms-3 form-label">Identity Configuration ID:</label>
-                            <input id="idvConfigId" class="ms-2 me-5form-control display-inline w14" type="text" />
-                        </p>
-                        <h5>Payment Gateway</h5>
-                        <p>Optional: enter a payment gateway ID to enable the payment examples</p>
-                        <label for="gatewayId" class="form-label">Payment Gateway ID:</label>
-                        <input id="gatewayId" class="ms-2 me-5form-control display-inline w14" type="text" />
                     </form>
                 </div>
                 <div class="modal-footer">
