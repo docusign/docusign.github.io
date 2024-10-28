@@ -276,7 +276,8 @@ class TemplateActions {
 
     async uploadTemplateListener(evt){
         const uploadButtonClicked = evt.target.id === "uploadButton"
-        const templateFile = uploadButtonClicked && document.getElementById(TEMPLATE_UPLOAD_FILE_PICKER).files[0];
+        const templateFile = uploadButtonClicked && 
+            document.getElementById(TEMPLATE_UPLOAD_FILE_PICKER).files[0];
         
         if (!uploadButtonClicked || !templateFile) {
             this.showMsg("Operation Canceled");
@@ -285,7 +286,6 @@ class TemplateActions {
         }
 
         this.loader.show(`Uploading ${templateFile.name}`);
-        this.templateUploadName = templateFile.name;
         const reader = new FileReader();
         reader.onload = this.fileLoaded.bind(this);
         reader.readAsArrayBuffer(templateFile); // continues via callback
@@ -294,34 +294,20 @@ class TemplateActions {
     async fileLoaded(e) {
         // e.target.result is the file's content as array buffer
         const fileContentsBuffer = e.target.result;
-        const boundary = "----WebKitFormBoundary4TWF4qSQLNQ7Zsy4";
-        const hyphens = "--";
-        const contentType = `multipart/form-data; boundary=${boundary}`;
-        const CRLF = "\r\n";
-        const encoder = new TextEncoder();
-
-        const reqBodyStart = encoder.encode([
-            hyphens, boundary,
-            CRLF, 'Content-Type: application/json',
-            CRLF, 'Content-Disposition: form-data',
-            CRLF,
-            CRLF, "{}",
-            CRLF, hyphens, boundary,
-            CRLF, `Content-Type: application/zip`,
-            CRLF, `Content-Disposition: file; filename="${this.templateUploadName}"; fileExtension=.zip`,
-            CRLF,
-            CRLF
-        ].join(''));
-        const reqBodyEnd = encoder.encode([CRLF, hyphens, boundary, hyphens, CRLF].join(''));
-
-        const reqBody = this.spliceBuffers([reqBodyStart, fileContentsBuffer, reqBodyEnd]);
+        const contentType = `application/zip`;
+        const templateFileEl = document.getElementById(TEMPLATE_UPLOAD_FILE_PICKER);
+        const templateFile = templateFileEl.files[0];
+        const templateUploadName = templateFile.name
+        templateFileEl.value = ""; // reset the file picker
      
         let apiMethod = `/accounts/${this.accountId}/templates`;
         const results = await this.callApi.callApiJson({
             apiMethod: apiMethod,
             httpMethod: "POST",
-            headers: [{h: "Content-Type", v: contentType}],
-            body: reqBody
+            headers: [{h: "Content-Type", v: contentType},
+                {h: "Content-Disposition", v: `file; filename="${templateUploadName}"; fileExtension=.zip`},
+                ],
+           body: fileContentsBuffer
         });
         if (results === false) {
             this.loader.hide();
@@ -346,25 +332,7 @@ class TemplateActions {
             this.list = null;
         }
     }
-
-    /***
-     * splice together array of arrayBuffers
-     * https://stackoverflow.com/a/78490330/64904
-     */
-    spliceBuffers(buffers) {
-        const len = buffers.map(
-            (buffer) => buffer.byteLength).reduce(
-                (prevLength, curr) => {return prevLength + curr}, 0);
-        const tmp = new Uint8Array(len);
-        let bufferOffset = 0;
-        for (let i=0; i < buffers.length; i++) {
-            tmp.set(new Uint8Array(buffers[i]), bufferOffset);
-            bufferOffset += buffers[i].byteLength;
-        }
-        return tmp;
-    }
  
-
     async download() {
         $(`#${this.mainElId}`).attr("hidden", "");
         $(`#${this.templatesTableElId}`).attr("hidden", "");
