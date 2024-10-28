@@ -12,6 +12,10 @@ const TEMPLATE_EDIT_MODAL = "templateEditModal"; // the ID
 const TEMPLATE_DELETE_MODAL = "deleteConfirmModal";
 const TEMPLATE_DELETE_SELECT = "deleteConfirm";
 const DOWNLOAD_ANCHOR = "downloadA";
+const TEMPLATE_UPLOAD_MODAL = "uploadTemplateModal";
+const TEMPLATE_UPLOAD_BUTTON = "uploadButton";
+const TEMPLATE_CANCEL_UPLOAD_BUTTON = "cancelUploadButton";
+const TEMPLATE_UPLOAD_FILE_PICKER = "uploadTemplateFile";
 
 class TemplateActions {
     editModal;
@@ -34,6 +38,9 @@ class TemplateActions {
 
         this.deleteListener = this.deleteListener.bind(this);
         $(`#${TEMPLATE_DELETE_MODAL}`).on('hide.bs.modal', this.deleteListener);
+
+        this.uploadTemplateListener = this.uploadTemplateListener.bind(this);
+        $(`#${TEMPLATE_UPLOAD_BUTTON}, #${TEMPLATE_CANCEL_UPLOAD_BUTTON}`).on('click', this.uploadTemplateListener);
     }
 
     /***
@@ -45,7 +52,8 @@ class TemplateActions {
         this.templateName = args.templateName;
         this.list = args.list;
         const actionRequest = args.action;
-        this.logger.post(`${actionRequest} Action`, `Template ID ${this.templateId}`);
+        this.logger.post(`${actionRequest} Action`, 
+            this.templateId ? `Template ID ${this.templateId}` : null);
         return await this[actionRequest](); 
     }
 
@@ -257,6 +265,105 @@ class TemplateActions {
             this.list = null;
         }
     } 
+
+    async uploadTemplate() {
+        if (!this.uploadModal) {
+            this.uploadModal = new bootstrap.Modal(`#${TEMPLATE_UPLOAD_MODAL}`);
+        }
+        this.uploadModal.show();
+        return false;
+    }
+
+    async uploadTemplateListener(evt){
+        const uploadButtonClicked = evt.target.id === "uploadButton"
+        const templateFile = uploadButtonClicked && document.getElementById(TEMPLATE_UPLOAD_FILE_PICKER).files[0];
+        
+        if (!uploadButtonClicked || !templateFile) {
+            this.showMsg("Operation Canceled");
+            this.logger.post(null, `Operation Canceled`);
+            return // EARLY RETURN
+        }
+
+        this.loader.show(`Uploading ${templateFile.name}`);
+        this.templateUploadName = templateFile.name;
+        const reader = new FileReader();
+        reader.onload = this.fileLoaded.bind(this);
+        reader.readAsArrayBuffer(templateFile); // continues via callback
+    }
+
+    async fileLoaded(e) {
+        // e.target.result is the file's content as array buffer
+        const fileContentsBuffer = e.target.result;
+        const boundary = "----WebKitFormBoundary4TWF4qSQLNQ7Zsy4";
+        const hyphens = "--";
+        const contentType = `multipart/form-data; boundary=${boundary}`;
+        const CRLF = "\r\n";
+        const encoder = new TextEncoder();
+
+        const reqBodyStart = encoder.encode([
+            hyphens, boundary,
+            CRLF, 'Content-Type: application/json',
+            CRLF, 'Content-Disposition: form-data',
+            CRLF,
+            CRLF, "{}",
+            CRLF, hyphens, boundary,
+            CRLF, `Content-Type: application/zip`,
+            CRLF, `Content-Disposition: file; filename="${this.templateUploadName}"; fileExtension=.zip`,
+            CRLF,
+            CRLF
+        ].join(''));
+        const reqBodyEnd = encoder.encode([CRLF, hyphens, boundary, hyphens, CRLF].join(''));
+
+        const reqBody = this.spliceBuffers([reqBodyStart, fileContentsBuffer, reqBodyEnd]);
+     
+        let apiMethod = `/accounts/${this.accountId}/templates`;
+        const results = await this.callApi.callApiJson({
+            apiMethod: apiMethod,
+            httpMethod: "POST",
+            headers: [{h: "Content-Type", v: contentType}],
+            body: reqBody
+        });
+        if (results === false) {
+            this.loader.hide();
+            $(`#${this.mainElId}`).removeAttr("hidden");
+            $(`#${this.templatesTableElId}`).removeAttr("hidden");
+    
+            this.messageModal({
+                style: 'text', title: "Template Create problem", msg:
+                    `<p>Error message: ${this.callApi.errMsg}</p>`
+            });
+            this.logger.post("Templates:create Problem: Operation Canceled", `<p>Error message: ${this.callApi.errMsg}</p>`);
+            return; // EARLY return
+        }
+        // good result:
+        this.logger.post(null, `Template created. TemplateId: ${results.templateId}`);
+        this.loader.hide();
+        $(`#${this.mainElId}`).removeAttr("hidden");
+        $(`#${this.templatesTableElId}`).removeAttr("hidden");
+
+        if (this.list) {
+            await this.list();
+            this.list = null;
+        }
+    }
+
+    /***
+     * splice together array of arrayBuffers
+     * https://stackoverflow.com/a/78490330/64904
+     */
+    spliceBuffers(buffers) {
+        const len = buffers.map(
+            (buffer) => buffer.byteLength).reduce(
+                (prevLength, curr) => {return prevLength + curr}, 0);
+        const tmp = new Uint8Array(len);
+        let bufferOffset = 0;
+        for (let i=0; i < buffers.length; i++) {
+            tmp.set(new Uint8Array(buffers[i]), bufferOffset);
+            bufferOffset += buffers[i].byteLength;
+        }
+        return tmp;
+    }
+ 
 
     async download() {
         $(`#${this.mainElId}`).attr("hidden", "");

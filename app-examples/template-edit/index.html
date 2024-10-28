@@ -82,7 +82,6 @@
                 <!-- ###                                                               ## -->
                 <!-- #################################################################### -->
                 <!-- #################################################################### -->
-                <a id="downloadA" hidden></a>
                 <div id="tree"></div>
             </div>
             <div class="col">
@@ -99,6 +98,7 @@
                             <span id="templatesTitle"></span> 
                             <a id="newTemplate"    role="button" data-action="newTemplate"    href="#" class="btn btn-primary btn-sm ms-5">+ New Template</a>
                             <a id="uploadTemplate" role="button" data-action="uploadTemplate" href="#" class="btn btn-primary btn-sm ms-5">Upload Template</a> 
+                            <a id="downloadA" hidden></a> <!-- used for downloading a template -->
                         </h2>
                     </div>
                 </div>
@@ -172,6 +172,27 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- UPLOAD TEMPLATE MODAL -->
+    <div id="uploadTemplateModal" class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Upload Template</h5>
+                </div>
+                <div class="modal-body">
+                    <div>Select the template file to upload</div>
+                    <form>
+                        <input id="uploadTemplateFile" name="file" class="form-control" type="file" />
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button id="cancelUploadButton" type="button" class="btn btn-secondary me-5" data-bs-dismiss="modal">Cancel</button>
+                    <button id="uploadButton" type="button" class="btn btn-primary" data-bs-dismiss="modal">Upload</button>
                 </div>
             </div>
         </div>

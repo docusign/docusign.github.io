@@ -271,15 +271,23 @@ class CallApi {
      * apiMethod -- the API endpoint but without the server nor
      *     "/restapi/v2.1" parts of the URL
      * httpMethod -- GET / POST / PUT / DELETE
-     * req -- object that will be stringified and sent as the request body
+     * req -- a JSON object string that will be stringified and sent as the request body
+     * 
      * qp -- array of two element arrays. Eg [ ['n1', 'val1'], ['n2', 'val2'] ]. See
-     * https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams/URLSearchParams 
+     * https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams/URLSearchParams
+     * 
+     * headers array of objects: h (header_name) and v (value).
+     * Eg [{h: "Content-Type", v: contentTypeValue}]
+     * 
+     * body -- the body to be used. Eg a buffer If supplied, req is ignored.
      */
-    async callApiJson({ apiMethod, httpMethod, req, qp, headers = []}) {
-        let body = null;
+    async callApiJson({ apiMethod, httpMethod, req, qp, headers = [], body}) {
         this.errMsg = "";
         if (httpMethod === "POST" || httpMethod === "PUT") {
-            body = JSON.stringify(req, null, 4);
+            if (!body) {
+                // JSON object
+                body = JSON.stringify(req, null, 4);
+            }
         }
 
         try {
