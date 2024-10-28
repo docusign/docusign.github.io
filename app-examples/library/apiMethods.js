@@ -24,7 +24,14 @@ Accounts:listSettings|esign-rest-api/reference/accounts/accounts/listsettings/|g
 AccountBrands:getLogo|esign-rest-api/reference/accounts/accountbrands/getlogo/|get|^.*\/restapi\/v2.1\/accounts\/.*\/brands\/.*\/logos\/.*$
 AccountBrands:list|esign-rest-api/reference/accounts/accountbrands/list/|get|^.*\/restapi\/v2.1\/accounts\/.*\/brands$
 AccountBrands:list|esign-rest-api/reference/accounts/accountbrands/list/|get|^.*\/restapi\/v2.1\/accounts\/.*\/brands\?.*$
-Accounts:get|esign-rest-api/reference/accounts/accounts/get/|get|^.*\/restapi\/v2.1\/accounts\/.*$`; // Must be last!
+Accounts:get|esign-rest-api/reference/accounts/accounts/get/|get|^.*\/restapi\/v2.1\/accounts\/[a-zA-Z0-9\-]*$
+Groups:list|esign-rest-api/reference/usergroups/groups/list/|get|^.*\/restapi\/v2.1\/accounts\/.*\/groups\?.*$
+Templates:autoMatch|esign-rest-api/reference/templates/templates/|put|^.*\/restapi\/v2.1\/accounts\/.*\/templates\/auto_match\/?$
+Templates:create|esign-rest-api/reference/templates/templates/create/|post|^.*\/restapi\/v2.1\/accounts\/.*\/templates\/?$
+Folders:moveEnvelopes|esign-rest-api/reference/folders/folders/moveenvelopes/|put|^.*\/restapi\/v2.1\/accounts\/.*\/folders\/recyclebin\/?$
+Folders:moveEnvelopes|esign-rest-api/reference/folders/folders/moveenvelopes/|put|^.*\/restapi\/v2.1\/accounts\/.*\/folders\/[a-zA-Z0-9\-]+\/?$
+Accounts:updateSharedAccess|esign-rest-api/reference/accounts/accounts/updatesharedaccess/|put|^.*\/restapi\/v2.1\/accounts\/.*\/shared_access\/?\?.*$
+TemplateViews:createEdit|esign-rest-api/reference/templates/templateviews/createedit/|post|^.*\/restapi\/v2.1\/accounts\/.*\/templates\/.*\/views\/edit\/?$`;
 
 class ApiMethods {
     constructor() {
