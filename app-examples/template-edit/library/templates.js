@@ -151,10 +151,8 @@ class Templates {
     <ul class="dropdown-menu">
         <li><a class="dropdown-item" href="#" data-action="edit">Edit</a></li>
         <li><a class="dropdown-item" href="#" data-action="copy">Copy</a></li>
-        <!-- (hopefully in the future)
         <li><a class="dropdown-item" href="#" data-action="matchInclude">Include in Matching</a></li>
         <li><a class="dropdown-item" href="#" data-action="matchExclude">Exclude in Matching</a></li> 
-        -->
         <li><a class="dropdown-item" href="#" data-action="delete">Delete</a></li>
         <li><a class="dropdown-item" href="#" data-action="download">Download</a></li>
         <li><a class="dropdown-item" href="#" data-action="allShare">Share with All</a></li>

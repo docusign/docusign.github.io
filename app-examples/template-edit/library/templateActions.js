@@ -195,9 +195,10 @@ class TemplateActions {
     
             this.messageModal({
                 style: 'text', title: "Template Update problem", msg:
-                    `<p>Error message: ${this.callApi.errMsg}</p>`
+                    `<p>This option is scheduled for Jan 2025</p><p>Error message: ${this.callApi.errMsg}</p>`
             });
             this.logger.post("Templates:autoMatch Problem: Operation Canceled", `<p>Error message: ${this.callApi.errMsg}</p>`);
+            this.logger.post(null, `This option is scheduled for Jan 2025`);
             return; // EARLY return
         }
         // good result:

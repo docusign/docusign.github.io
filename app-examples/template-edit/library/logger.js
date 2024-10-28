@@ -12,7 +12,7 @@ import {
 } from "./utilities.js";
 
 const NAV_ITEM_ID = "#logger";
-const LOGGER_URL = "../library/logger.html";
+const LOGGER_URL = "./library/logger.html";
 const LOGGER_SAVED_STATUS = "logger_saved_status"; // local storage key
 
 class Logger {
