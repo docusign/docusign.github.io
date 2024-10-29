@@ -61,7 +61,7 @@ class TemplateActions {
      * messageListener handles incoming messages from the Template Edit view
      */
     async messageListener(message) {
-        if (message.origin !== IFRAME_RETURN_ORIGIN) {
+        if (message.origin !== IFRAME_RETURN_ORIGIN || !message || !message.data || !message.data.href) {
             return; // EARLY RETURN
         }
         if (this.editModal) {
