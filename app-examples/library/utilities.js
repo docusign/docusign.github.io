@@ -121,7 +121,7 @@ function settingsSet(configuration) {
 function getPhoneNumber(iti) {
     let phoneNumber;
     let resp = {smsNational: null, smsCc: null};
-    const rawTel = iti.getNumber() || "";
+    const rawTel = (iti && iti.getNumber()) || "";
     try {
         phoneNumber = libphonenumber.parsePhoneNumber(rawTel);
     } catch (error) {
