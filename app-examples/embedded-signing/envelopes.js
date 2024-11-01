@@ -512,6 +512,31 @@ class Envelopes {
         return req
     }
 
+
+    /***
+     * noDocument envelope request. Only supplemental docs
+     */
+    async noDocument() {
+        const req = {
+            useDisclosure: true,
+            emailSubject: "Please sign the attached document",
+            status: "sent",
+            recipients: {
+                signers: [
+                    {
+                        clientUserId: this.clientUserId,
+                        email: this.email,
+                        name: this.name,
+                        recipientId: "1",
+                    }
+                ]
+            },
+            documents: []
+        }
+        this.request = req;
+        return req
+    }
+
     /***
      * updateRequest munges the request 
      * 1. Adds supplemental docs

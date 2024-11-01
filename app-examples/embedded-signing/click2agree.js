@@ -41,6 +41,7 @@ class Click2Agree {
         this.documentChoice = { // response means transform the document to be responsive
             default: {responsive: false, request: this.envelopes.createNoTabsEnvRequest.bind(this.envelopes)},
             htmlC2AResponsive: {responsive: false, request: this.envelopes.createHtmlResponsiveRequest.bind(this.envelopes)},
+            none: {responsive: false, request: this.envelopes.noDocument.bind(this.envelopes)},
         }
     }
 
