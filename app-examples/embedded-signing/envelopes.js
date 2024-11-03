@@ -620,8 +620,6 @@ class Envelopes {
                                                 "pageNumber": "1",
                                                 "xPosition": "0",
                                                 "yPosition": "0",
-                                                "width": "60",
-                                                "height": "19",
                                             }
                                         ],
                                         viewTabs: [
@@ -634,7 +632,6 @@ class Envelopes {
                                                 "pageNumber": "1",
                                                 "xPosition": "0",
                                                 "yPosition": "0",
-                                                "tabType": "view"
                                             }
                                         ]
                                     }
@@ -660,8 +657,6 @@ class Envelopes {
                                 "pageNumber": "1",
                                 "xPosition": "0",
                                 "yPosition": "0",
-                                "width": "60",
-                                "height": "19",
                             }
                         );
                         this.request.recipients.signers[0].tabs.viewTabs.push(
@@ -674,7 +669,6 @@ class Envelopes {
                                 "pageNumber": "1",
                                 "xPosition": "0",
                                 "yPosition": "0",
-                                "tabType": "view"
                             }
                         )
                     }
