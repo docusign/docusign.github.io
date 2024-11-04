@@ -1,135 +1,154 @@
-# Docusign Embedded Signing Examples
+# Docusign Template Edit Example
 
 ## Introduction
-This application enables developers to test the multiple styles of Docusign signing ceremonies that 
-can be embedded in web and mobile applications. The four styles are:
-* **Focused View** is a minimalist signing ceremony that puts the documents to be
-signed front and center for the signer. Focused View is designed to be embedded in a web application.
-* **Click to Agree** is a Clickwrap *agreement ceremony*. It enables the user to agree with (not sign) a
-document. The agreement can include one or more supplemental documents. An optional ERSD can be included too.
-* **Docusign.js with Default View** uses the classic embedded signing UX with the developer-friendly 
-benefits (see below) of docusign.js.
-* **Classic Embedded Signing** is the most powerful Docusign signing ceremony. It can be used with all 
-types of Docusign signatures (SES, AES, QES), and with all types of Docusign IDV authentication options.
+This application example is a Single Page App (SPA) that:
+* Lists the templates in an account
+* Templates can be edited; copied; added to or removed from the set of match-eligible templates;
+  deleted; downloaded; shared or unshared with everyone in the account. 
 
-## Limitations
-Each of the four tabs for the signing examples includes an **Information** button. Use the 
-Information button to see the known limitations, if any, for that style of signing. 
+## Support
+This example is ***not a Docusign product!*** It is **not** supported by Docusign.
+Support can be purchased from Docusign Professional Services.
+Docusign support contracts do **not** include support for this example or other code examples.
 
 ## Top Navigation Bar Items
 * **Settings** -- see the Settings section below.
 * **Start Logging** -- opens the logging window. The logging window includes the API calls used by the tool. 
 Click on an API Call to expand it and to see the API request and response.
-* **Save to URL** -- saves the current configuration of the tool to a URL. 
 * **README** -- displays this file.
 
 ## Settings
 Click the **Settings** item in the top navigation bar to open the Settings Modal.
 
 ### Account
-Use this setting to change the account that will be used.
+Use this setting to change the account that will be used. The setting is sticky and the 
+selected account will again be used the next time the example is used on the same browser.
+If the selected account is not available to the user then the user's default 
+account will be used.
 
-### Output
-By default, the tool opens the signing or agreement ceremony by replacing the tool's UI with the Docusign session.
-
-Instead of the tool opening the ceremony, you can choose to have the URL displayed for you to then open it. 
-If you choose to have the URL displayed, remember that you must use it within 5 minutes. 
-
-**Use an iframe & GUI chrome?** This field only applies if the **URL** output option is selected.
-If this option is checked, then an iframe with minimal GUI chrome (just the top navigation bar)
-is used. If the option is not checked, then a 100% iframe is used for the first three example 
-categories since the Docusign JS library always creates an iframe.
-
-### Signer User Experience
-Show Decline option? -- This setting controls the visibility of the Decline 
-button for the Focused View and Focused View/Click to Agree tabs.
-
-Loading indicator -- choose the style for the loading indicator used while the app 
-waits for the envelope and signing ceremony to be created. 
+### Loading indicator
+Choose the style for the loading indicator used while the app 
+waits for API calls to complete. 
 
 See [Tognazzini](https://asktog.com/atc/principles-of-interaction-design/#latencyReduction) 
 and [Nielsen](https://www.nngroup.com/articles/response-times-3-important-limits/) 
 for more information on application latency and loading indicators.
 
-### Authentication
-Select **Default Phone/SMS Authentication** and enter a phone number to enable this option.
+## Authentication
+This example runs entirely in the browser. It obtains its access token when the
+user logs in. The OAuth Authorizatiion Code grant flow is used with PKCE and without
+a secret (since the example is classified as a 
+[Public client](https://datatracker.ietf.org/doc/html/rfc6749#section-2.1) per the OAuth standards.)
 
-### Payment Gateway
-As discussed below, enter your Payment Gateway ID if your document includes a Payment tab.
+## Template table
+When the example starts, it will load "My Templates," similar to the My Templates folder
+in the Docusign web app. 
+See the 
+[Docusign Templates User Guide](https://support.docusign.com/s/document-item?language=en_US&rsc_301&bundleId=xry1643227563338&topicId=dqj1578456412286.html&_LANG=enus)
 
-## Common options
+### Columns
 
-### Document
-Chooses which document will be used.
+#### *Star*
+The *Star* column includes a star if the template was marked as a favorite template.
 
-### Template
-Choose a template from the templates in your account.
+#### Shared All
+The Shared All column has a check mark if the template is shared with all members of the account.
 
-If a template is chosen, the **Document** option is ignored.
+#### Name
+The name of the template.
 
-#### Template Role
-The template should have a role named `signer` (lowercase s).
-The template's tabs and other settings for the `signer` role will be used. 
-Note that the tool changes the signer recipient to be a captive (embedded) recipient.
+#### Owner
+The owner of the template.
 
-### Supplemental Documents
-Use the checkboxes to include or omit supplements 1 and 2.
+#### Created Date
+The Create Date for the template.
 
-Use the select fields to choose how the signer will interact with the supplemental document. 
+#### Last Change
+The date the template was last changed.
 
-## Docusign.js
-The [Docusign.js library](https://developers.docusign.com/docs/esign-rest-api/esign101/concepts/embedding/docusign-js-embedded-reference/)
-is used with first three example categories listed above. 
+#### Folders
+The private and shared folders that the template belongs to. 
+Clicking on a folder name will update the table to show the 
+templates in that folder.
 
-Docusign.js and [Classic Embedded Signing](https://developers.docusign.com/docs/esign-rest-api/reference/envelopes/envelopeviews/createrecipient/) 
-differ in how they return control to your application:
-* Classic Embedded Signing: the browser is redirected to your application. The **event** query parameter contains the status.
-* Docusign.js: the library raises a DOM event to your application.
+#### Actions
+The Action button for the template.
 
-iframes: Docusign.js always creates an iframe in the DOM for the signing ceremony. The library deletes the iframe after the signing session has completed.
+### **New Template** button
+Creates a new template and opens the template edit view for the template.
 
-While the Classic Embedded Signing ceremony can be used with an iframe, management of the iframe is the developer's responsibility.
+### **Upload Template** button
+Enables you to upload a template definition file (zip format), and add the 
+new template to your template folder.
 
-## Payment tabs
-Testing the different signing ceremonies with a 
-[payment tab](https://developers.docusign.com/docs/esign-rest-api/esign101/concepts/tabs/payment/) requires additional set up and configuration steps.
+### Search
+Enables you to search all of the templates listed in the table, including
+templates not displayed on the current page of the table. 
 
-### Configure a test payment gateway
-1. Login to your developer (demo) account.
-1. Click the **Settings** link in the top navigation bar to open the eSignature Administration app.
-1. Click the **Payments** link in the **Integrations** section of the lefthand navigation bar.
-1. Click **Add Payment Gateway**
-1. Click **Stripe** (It has an easy to use demo account feature.)
-1. Click **Skip this form** in the test mode section
-1. You are brought back to the **Payments** screen with a listing
-for your new Stripe test account.
-1. Click the **Edit** choice for the Stripe account. 
-1. Select the credit cards you'd like to accept and save your changes.
-1. Copy the **Gateway Account ID** for Stripe. You'll need it for the
-next step. 
+The search is for the Matching, Name, Owner, and Folder content. For example,
+to view only the templates eligible for matching, enter "eligible" in the search field.
 
-### Configure the application
-1. Start the Embedded Signing Examples application
-1. Click **Settings** (top navigation bar)
-1. Enter the payment gateway ID into the Settings form
-1. Close the form
+### Template column controls
+Use the Up Arrow/Down Arrow glyphs for each column to sort the entire table by that column,
+ascending or descending.
 
-### Testing payments
-Currently, payments tabs are supported by the Classic Embedded Signing UX
-and by Docusign.js with Default View.
+### Template controls
+At the bottom of the table, the number of templates in the table is shown,
+the templates per page can be set, and the table can be paged to subsequent 
+or prior pages.
 
-1. In the test application, select the **Classic Embedded Signing** tab. 
-1. Choose the *Payment example* Document.
-1. Sign the document.
-1. You will then be asked for your credit card information. You can use
-a real credit card, or a test number.
+## Template Actions
+Templates can be edited; copied; added to or removed from the set of match-eligible templates;
+  deleted; downloaded; shared or unshared with everyone in the account. 
 
-Stripe test MasterCard number: 5555555555554444
+## Template folders
+The example lists the user's template folders in the left navigation column of the example.
 
-Use any date in the future and any three digit CVC number. 
-[Additional Stripe test numbers](https://docs.stripe.com/testing?locale=en-GB) 
+Clicking on the **name** of a folder will update the table to show the templates in that 
+folder. Some folder names are category names and clicks on those names open
+the next level of sub-folders.
+For example, the "Folders" and "Shared Folders" names are category names. 
 
-If you would like to use payments with Focused View, please ask Docusign Customer
-Service to add your company information to bug report C2A-3499.
+Clicking on the **caret symbol** next to a folder name will expand the folder list
+to show another level of sub-folders.
 
+# Source
+The example is an open source product and uses the MIT license.
 
+The source for the example is the self-contained folder 
+[template-edit](https://github.com/docusign/docusign.github.io/tree/master/app-examples/template-edit)
+
+## Installation
+1. Download the folder to a directory served by your web server.
+   Your server must be configured to serve the index.html
+   file when a directory is requested. 
+
+   Your web server does not need Node, PHP, or any other
+   server-side configuration. Since the app is an SPA,
+   any type of web server can be used, including a 
+   files-only server such as S3 or a CDN.
+1. Configure a Client ID (integration key) in Docusign with 
+   **Apps and Keys** settings
+    
+    1. Is your application able to securely store a client secret? **No**
+    1. Select App Type: **Single-Page Web Application**
+    1. Authentication Method for your App **Authorization Code Grant with Proof Key for Code Exchange (PKCE)**
+    1. Additional settings / Redirect URIs: enter the full URL (including the path) to the app on your host. Do not include index.html. Do include the trailing slash.
+    
+       Example: http://localhost/template-edit/
+    1. CORS Origin URL: include the origin (not URL) for the app. 
+
+       Example: http://localhost
+    1. Allow CORS for OAuth calls: **Check** (allow)
+    1. Allowed HTTP Methods: **Check all**
+1. In the source file 
+   [authCodePkce.js](https://github.com/docusign/docusign.github.io/blob/master/app-examples/template-edit/library/authCodePkce.js#L11)
+   update the `oAuthClientIDdemo` constant with your client ID.
+   (Client IDs are not secrets.)
+1. Using your web browser, open the URL for the app's directory.
+
+   Hopefully you'll see the app, same as if you open 
+   [docusign.github.io/app-examples/template-edit/](https://docusign.github.io/app-examples/template-edit/)
+
+   If not, debug and leave a comment (or better, a PR) for this 
+   repo.
