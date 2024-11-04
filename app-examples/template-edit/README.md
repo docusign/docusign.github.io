@@ -124,7 +124,7 @@ The source for the example is the self-contained folder
    file when a directory is requested. 
 
    Your web server does not need Node, PHP, or any other
-   server-side configuration. Since the app is an SPA,
+   server-side configuration. Since the app is a SPA,
    any type of web server can be used, including a 
    files-only server such as S3 or a CDN.
 1. Configure a Client ID (integration key) in Docusign with 
@@ -136,7 +136,7 @@ The source for the example is the self-contained folder
     1. Additional settings / Redirect URIs: enter the full URL (including the path) to the app on your host. Do not include index.html. Do include the trailing slash.
     
        Example: http://localhost/template-edit/
-    1. CORS Origin URL: include the origin (not URL) for the app. 
+    1. CORS Origin URL: include the origin (not the URL) for the app. 
 
        Example: http://localhost
     1. Allow CORS for OAuth calls: **Check** (allow)
@@ -150,5 +150,23 @@ The source for the example is the self-contained folder
    Hopefully you'll see the app, same as if you open 
    [docusign.github.io/app-examples/template-edit/](https://docusign.github.io/app-examples/template-edit/)
 
-   If not, debug and leave a comment (or better, a PR) for this 
-   repo.
+   If not, debug and leave an issue (or better, a PR) for this 
+   repo. 
+
+   # Known Issues
+   The Include / Exclude from Matching actions return an error.
+   The API is planned to be updated to become a public API in 
+   January 2025. At that time the Matching actions should work
+   as expected.
+
+   # Future work
+   The example could be enhanced to:
+   * enable templates to be
+   moved to the user's folders
+   * enable folders to be created or deleted
+   * enable templates to be shared with specific people or groups
+   * enable templated to be favorited
+
+   Your help to add those features would be appreciated.
+   Submit a pull request! All pull request software must
+   use the MIT lcense.
