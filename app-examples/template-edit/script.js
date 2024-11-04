@@ -20,6 +20,7 @@ import {
     LoadingModal,
     storageSet,
     settingsSet,
+    settingsGet,
     userPictureAccountBrand,
     checkAccountSettings,
 } from "./library/utilities.js" 
@@ -91,7 +92,7 @@ $(async function () {
         }
 
         for (const property in configurationProto) {
-            const skip = {mode: true, accountRequest: true, template1: true, template2: true, template3: true};
+            const skip = {};
             if (skip[property]) {continue}
             if (formCheckboxes[property]) {
                 $(`#${property}`).prop('checked', getProperty(property));
@@ -150,12 +151,15 @@ $(async function () {
      * setAccount
      */
     async function setAccount(){
+        let accountEntry;
+        $(`#main`).attr("hidden", "");
         let apiBaseUrl = data.userInfo.defaultBaseUrl;
         if (configuration.accountRequest === "default") {
             accountId = data.userInfo.defaultAccount;
+            accountEntry = data.userInfo.accountsEntry(accountId);
         } else {
             // look for the account
-            const accountEntry = data.userInfo.accounts.find(a => a.accountId === configuration.accountRequest);
+            accountEntry = data.userInfo.accountsEntry(configuration.accountRequest);
             if (accountEntry) {
                 accountId = accountEntry.accountId;
                 apiBaseUrl = accountEntry.accountBaseUrl;
@@ -170,10 +174,11 @@ $(async function () {
                 messageModal({style: "text", title: "No Account Access", 
                     msg: `You don't have access to account ID ${configuration.accountRequest}. Using default account ID`});
                 accountId = data.userInfo.defaultAccount
+                accountEntry = data.userInfo.accountsEntry(accountId);
             }
         }
 
-        data.logger.post('Account Information', `Account ID: ${accountId}, Name: ${data.userInfo.defaultAccountName}`);
+        data.logger.post('Account Information', `Account ID: ${accountId}, Name: ${accountEntry.accountName}`);
         $(`#userInfoAccount`).text(accountId);
         data.callApi = new CallApi({
             accessToken: data.authCodePkce.accessToken,
@@ -185,6 +190,9 @@ $(async function () {
             return false; // EARLY RETURN
         } 
 
+        if (data.templates) {
+            data.templates.destroyTable();
+        }
         data.templates = new Templates({
             showMsg: toast,
             messageModal: messageModal,
@@ -221,6 +229,7 @@ $(async function () {
         loadingModal: new LoadingModal(),
         logger: new Logger(),
         loader: null,
+        templates: null,
     };
     data.loader = new Loader({
         loaderChoice: configuration.loaderChoice, parentEl: "loaderdiv",
@@ -262,6 +271,8 @@ $(async function () {
     // Are we logged in?
     if (data.authCodePkce.checkToken()) {
         // logged in
+        settingsGet(configuration);
+        data.loader.loaderChoice = configuration.loaderChoice; 
         data.loader.show("Completing Login Process")
         if (await completeLogin()) {
             // tooltips: https://getbootstrap.com/docs/5.3/components/tooltips/
@@ -274,8 +285,6 @@ $(async function () {
             $(`#userInfoModal .modal-title`).text(data.userInfo.name);
             $(`#userInfoUser`).text(data.userInfo.userId);
             $(`#userInfoEmail`).text(data.userInfo.email);
-
-            data.loader.loaderChoice = configuration.loaderChoice; 
         } else {
             // couldn't login
             data.loader.hide();

@@ -233,6 +233,14 @@ class UserInfo {
     }
 
     /***
+     * accountName(accountId)
+     */
+    accountName(accountId) {
+        const account = this.accounts.find(a => a.accountId === accountId);
+        return account ? account.accountName : `${accountId} not found!`;
+    }
+
+    /***
      * addAccountOptions(elId)
      * Adds option elements to the select element for switching accounts
      */

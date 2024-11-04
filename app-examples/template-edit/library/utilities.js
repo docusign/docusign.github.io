@@ -4,6 +4,8 @@
 // Local storage account key
 const DSexampleAccountId = "DSCodePenAccountId";
 const CACHE_ACCOUNT_INFO = true; // user picture too
+const SETTINGS_STORAGE = "template edit Settings";
+const SETTINGS = ["accountRequest", "loaderChoice"]; // names of the settings
 
 
 function switchToHttps() {
@@ -28,7 +30,7 @@ function storageSet(name, val) {
 }
 
 function settingsGet(configuration) {
-    const settings = storageGet(EMBEDDED_SIGNING_SETTINGS_STORAGE);
+    const settings = storageGet(SETTINGS_STORAGE);
     if (settings) {
         Object.keys(settings).forEach(item => {
             configuration[item] = settings [item]
@@ -38,10 +40,10 @@ function settingsGet(configuration) {
 
 function settingsSet(configuration) {
     let settings = {};
-    EMBEDDED_SIGNING_SETTINGS.forEach(item => {
+    SETTINGS.forEach(item => {
         settings[item] = configuration [item];
     });
-    storageSet(EMBEDDED_SIGNING_SETTINGS_STORAGE, settings); // save the settings 
+    storageSet(SETTINGS_STORAGE, settings); // save the settings 
 }
 
 function toast (msg, durationSec = 5) {

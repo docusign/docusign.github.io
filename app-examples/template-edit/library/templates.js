@@ -586,6 +586,16 @@ class Templates {
         }
     }
 
+    /***
+     * Destroy the table and any other cleanup
+     */
+    destroyTable() {
+        if (this.dataTableApi) {
+            this.dataTableApi.destroy();
+            $(`#${this.templatesTableElId}`).empty();
+        }
+    }
+
 }
 
 export { Templates };
