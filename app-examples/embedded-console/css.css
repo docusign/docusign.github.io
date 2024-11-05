@@ -1,0 +1,165 @@
+html, #loaderdiv {
+    height: 100%;
+}
+
+body.bg-light {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  min-height: 100vh;
+  height: 100%;
+}
+
+.navbar {height: 63px; }
+.navbar div {height: 63px;}
+
+#signing-ceremony, #main {
+    flex: 1;
+}
+
+.smaller {
+    font-size: smaller;
+}
+
+#tree {
+    width: 210px;
+}
+.bstreeview, .list-group, .list-group-item {
+    background-color: rgb(248, 249, 250);}
+.bstreeview {
+    border-width: 0;
+}
+
+.hide {display: none;}
+.display-inline {display: inline;}
+.w10 {width: 10em;}
+.w19 {width: 19em;}
+.pt8 {padding-top: 8px;}
+.vh-99 {height: 99vh;}
+.baseline {vertical-align: baseline;}
+
+div.navbar-collapse.collapse.show ul {
+    background-color: #fff3cd;
+    margin-bottom: 0 !important;
+    padding-left: 15px;
+}
+div.user-photo {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+img.user-photo {
+    width: 40px;
+    height: 40px;
+}
+
+img.brand-logo {
+    padding-top: 8px;
+    height: 48px;
+}
+
+li#account-info span {
+    font-weight: 400;
+    color: rgba(0, 0, 0, 0.65);
+}
+
+div.error {
+    border-color: maroon;
+    border-width: 6px;
+}
+
+span.user-initials {
+    -webkit-box-align: center;
+    align-items: center;
+    background-color: rgb(188, 187, 200);
+    border: none;
+    border-radius: 50%;
+    color: rgba(25, 24, 35, 0.9);
+    display: inline-flex;
+    flex-shrink: 0;
+    font-family: "DS Indigo", DSIndigo, "Neue Haas Grotesk", NeueHaasGrotesk, Helvetica, Arial, sans-serif;
+    font-weight: 600;
+    -webkit-box-pack: center;
+    justify-content: center;
+    line-height: 1.5;
+    overflow: hidden;
+    padding: 0px;
+    position: relative;
+    transition: box-shadow 0.2s ease 0s;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    vertical-align: middle;
+    word-break: keep-all;
+    font-size: 16px;
+    height: 40px;
+    width: 40px;
+}
+
+/* https://projects.lukehaas.me/css-loaders/ */
+.loader {
+    font-size: 10px;
+    margin: 50px auto;
+    text-indent: -9999em;
+    width: 11em;
+    height: 11em;
+    border-radius: 50%;
+    background:#3114c2; 
+    background: -moz-linear-gradient(left, #3114c2 10%, rgba(49,20,194, 0) 42%);
+    background: -webkit-linear-gradient(left, #3114c2 10%, rgba(49,20,194, 0) 42%);
+    background: -o-linear-gradient(left, #3114c2 10%, rgba(49,20,194, 0) 42%);
+    background: -ms-linear-gradient(left, #3114c2 10%, rgba(49,20,194, 0) 42%);
+    background: linear-gradient(to right, #3114c2 10%, rgba(49,20,194, 0) 42%);
+    position: relative;
+    -webkit-animation: load3 1.4s infinite linear;
+    animation: load3 1.4s infinite linear;
+    -webkit-transform: translateZ(0);
+    -ms-transform: translateZ(0);
+    transform: translateZ(0);
+  }
+  .loader:before {
+    width: 50%;
+    height: 50%;
+    background:#3114c2; 
+    border-radius: 100% 0 0 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    content: '';
+  }
+  .loader:after {
+    background: white;
+    width: 75%;
+    height: 75%;
+    border-radius: 50%;
+    content: '';
+    margin: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+  }
+  @-webkit-keyframes load3 {
+    0% {
+      -webkit-transform: rotate(0deg);
+      transform: rotate(0deg);
+    }
+    100% {
+      -webkit-transform: rotate(360deg);
+      transform: rotate(360deg);
+    }
+  }
+  @keyframes load3 {
+    0% {
+      -webkit-transform: rotate(0deg);
+      transform: rotate(0deg);
+    }
+    100% {
+      -webkit-transform: rotate(360deg);
+      transform: rotate(360deg);
+    }
+  }
+  
