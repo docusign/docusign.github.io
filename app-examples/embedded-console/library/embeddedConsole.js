@@ -1,169 +1,17 @@
 // Copyright © 2024 Docusign, Inc.
 // License: MIT Open Source https://opensource.org/licenses/MIT
 
-import {TemplateActions} from "./templateActions.js" 
-
-const NEW_TEMPLATE = "newTemplate";
-const UPLOAD_TEMPLATE = "uploadTemplate";
-
 /*
- * CLASS Templates
+ * CLASS EmbeddedConsole
  */
 
-class Templates {
+class EmbeddedConsole {
     /***
      * Properties in this.templates
-     *   templateId
-     *   favorite -- boolean
-     *   name
-     *   allShare -- shared with everyone in the account
-     *   description
-     *   owner -- string
-     *   folderId
-     *   folderName
-     *   created -- Date
-     *   lastModified -- Date
-     *   folderId -- the primary folderId
-     *   folderName -- the primary folderName
-     *   folders -- array of {folderId, name}
-     *   matching -- eligible -- "autoMatch": "true" && lastUsed !have year 9999
-     *               included -- lastUsed has year 9999 
-     *               excluded -- "autoMatch": "false" or lastUsed has year 1752
-     * 
+     *   envelopeId 
      */
-    templates = [];
     busy = false;
 
-    /***
-     * Properties for folders
-     *   folderId
-     *   name
-     *   
-     */
-    folders = [];
-    sharedFolders = [];
-    folderHash = {}; // Just the real folders -- id: {name, listType}
-    rootFolderIds = {}; // Unfortunately there is more than one ID for the "Templates" folder
-
-    columns = [ // columns in the table
-        {title: `&nbsp;<i class="fa fa-star"></i>`, data: "favorite",
-            searchable: false,
-            width: "8px",
-            render: function ( datum, type, row ) {
-                if (type === 'display' || type === 'filter') {
-                    if (datum) {
-                        return `&nbsp;<i class="fa fa-star"></i>`
-                    } else {
-                        return ""
-                    }
-                } else {
-                    //debugger;
-                    return datum;
-                }
-            }
-        },
-        {title: "Shared All", data: "allShare",
-            searchable: false,
-            width: "20px",
-            render: function ( datum, type, row ) {
-                if (type === 'display' || type === 'filter') {
-                    if (datum) {
-                        return `&nbsp;<i class="fa fa-check"></i>`
-                    } else {
-                        return ""
-                    }
-                } else return datum
-            }
-        },
-        /**
-         *   matching -- Eligible -- autoMatch": "true" && lastUsed !have year 9999
-         *               Included -- lastUsed has year 9999 
-         *               Excluded - "autoMatch": "false" or lastUsed has year 1752
-         */
-        {title: "Matching", data: "match", width: "30px"},
-        {title: "Name", data: "name", width: "350px"},  
-        {title: "Owner", data: "owner", width: "150px"},
-        {title: "Created Date", data: "created",
-            searchable: false,
-            width: "120px",
-            render: function ( datum, type, row ) {
-                const DateTime = luxon.DateTime;
-                if (type === 'display') {
-                    // https://moment.github.io/luxon/#/formatting
-                    const dt = DateTime.fromMillis(datum);  
-                    return `${dt.toLocaleString(DateTime.DATE_MED)}<br/>` + 
-                        `<span class="smaller">${dt.toLocaleString(DateTime.TIME_WITH_SECONDS)}</span>`
-                } else {
-                    return datum;
-                }
-            }
-        },
-        {title: "Last Change", data: "lastModified",
-            searchable: false,
-            width: "120px",
-            render: function ( datum, type, row ) {
-                const DateTime = luxon.DateTime;
-                if (type === 'display') {
-                    // https://moment.github.io/luxon/#/formatting
-                    const dt = DateTime.fromMillis(datum);  
-                    return `${dt.toLocaleString(DateTime.DATE_MED)}<br/>` + 
-                        `<span class="smaller">${dt.toLocaleString(DateTime.TIME_WITH_SECONDS)}</span>`
-                } else {
-                    return datum;
-                }
-            }
-        },
-        {title: "Folders", data: "folders",
-            render: function ( datum, type, row ) {
-                if (type === 'display') {
-                    if (datum && datum.length > 0) {
-                        const html = datum.reduce((priorV, val) =>
-                            (priorV + `<a class="folderList" href="#"
-                                data-folderId="${val.listType}|${val.folderId}">${val.name}</a>`),
-                            "");
-                        return html;
-                    } else {return ""}
-                } else if (type === 'filter') {
-                    if (datum && datum.length > 0) {
-                        const text = datum.reduce((priorV, val) =>
-                            (priorV + `${val.name} `),
-                            "");
-                        return text
-                    } else {return ""}
-                } else if (type === 'sort') {
-                    if (datum && datum.length > 0) {
-                        const text = datum[0].name;
-                        return text
-                    } else {return ""}
-                } else return datum
-            }
-        },
-        {title: "", data: "templateId",
-            searchable: false,
-            orderable: false,
-            render: function ( datum, type, row ) {
-                if (type === 'display') {
-                    const html = `
-<div class="dropdown templateAction" data-templateId="${datum}" >
-    <button class="btn btn-primary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        Actions
-    </button>
-    <ul class="dropdown-menu">
-        <li><a class="dropdown-item" href="#" data-action="edit">Edit</a></li>
-        <li><a class="dropdown-item" href="#" data-action="copy">Copy</a></li>
-        <li><a class="dropdown-item" href="#" data-action="matchInclude">Include in Matching</a></li>
-        <li><a class="dropdown-item" href="#" data-action="matchExclude">Exclude in Matching</a></li> 
-        <li><a class="dropdown-item" href="#" data-action="delete">Delete</a></li>
-        <li><a class="dropdown-item" href="#" data-action="download">Download</a></li>
-        <li><a class="dropdown-item" href="#" data-action="allShare">Share with All</a></li>
-        <li><a class="dropdown-item" href="#" data-action="allUnshare">Unshare with All</a></li>
-    </ul>
-</div>`
-                        return html;
-                } else return null
-            }
-        },
-    ]
 
     constructor(args) {
         this.showMsg = args.showMsg;
@@ -172,58 +20,18 @@ class Templates {
         this.clientId = args.clientId;
         this.accountId = args.accountId;
         this.callApi = args.callApi;
-        this.mainElId = args.mainElId;
-        this.templatesTitleId = args.templatesTitleId;
-        this.templatesTableElId = args.templatesTableId;
         this.logger = args.logger;
         this.padding = args.padding;
-
-        this.templateActions = new TemplateActions({
-            showMsg: args.showMsg,
-            messageModal: args.messageModal,
-            loader: args.loader,
-            clientId: args.clientId,
-            accountId: args.accountId,
-            callApi: args.callApi,
-            mainElId: args.mainElId,
-            logger: args.logger,  
-        })
-
-        this.dataTableApi = null;
-        this.folderClicked = this.folderClicked.bind(this);
-        $(`#${this.templatesTableElId}`).on ('click', ".folderList", this.folderClicked);
-
-        this.actionClicked = this.actionClicked.bind(this);
-        $(`#${this.templatesTableElId}`).on ('click', ".templateAction a", this.actionClicked);
-        $(`#${NEW_TEMPLATE}, #${UPLOAD_TEMPLATE}`).on ('click', this.actionClicked);
-
-        this.list = this.list.bind(this);
     }
 
     /***
-     * list
-     *   lists the templates; maintains the list in memory; displays in data table
+     * openConsole
+     *   opens the console view
      */
-    async list(args) {
-        /***
-         * listType chart:
-         * 
-         * listType; title; Templates:list options  
-         *   myTemplates; "My Templates" (default list);  ...?user_filter=owned_by_me
-         *   sharedFolder; "{folder_name}" A shared folder; ...?folder_ids=cec6a98a-e900-4b22-9e10-f1988835348a
-         *   subFolder; "{folder_name}" A subfolder; ...?user_filter=owned_by_me&folder_ids=c4a54e3e-601a-40f8-ba8d-4297433a2d23
-         *   favorites; "Favorites"; ...?user_filter=favorited_by_me
-         *   allTemplates; "All Templates"; ... [no filters]
-         *   deleted; "Deleted"; ... ?folder_ids=3a7df8c0-6713-448b-a907-d27ac94d1e02&folder_types=recyclebin 
-         *                  Above is the "recylebin" folderId
-         */
-        if (args && args.listType) {
-            this.listType = args.listType; // see chart:
-            this.folderId = args.folderId; // used for sharedFolder and subFolder listTypes
-            this.title = args.title;
-        } 
-        // else use the prior values
+    async openConsole({envelopeId}) {
 
+        console.log(envelopeId);
+        
         $(`#${this.templatesTitleId}`).text(this.title); // Set the table's title
 
         // Templates:list query parameters
@@ -599,4 +407,4 @@ class Templates {
 
 }
 
-export { Templates };
+export { EmbeddedConsole };

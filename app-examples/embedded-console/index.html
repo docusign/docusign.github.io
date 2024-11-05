@@ -20,7 +20,7 @@
     <nav class="navbar navbar-expand-lg bg-warning-subtle">
         <!-- https://getbootstrap.com/docs/5.3/components/navbar/ -->
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">Template Edit Example</a>
+            <a class="navbar-brand" href="#">Embedded Console Example</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
                 aria-label="Toggle navigation">
@@ -71,45 +71,25 @@
         <h3 class="message mt-3 mb-3 text-center"></h3>
     </div>
     <div id="loaderdiv" hidden></div>
-    <div id="template-edit" hidden></div>
     <div id="main" class="container-fluid mx-20 pt8" hidden>
-        <div class="row">
-            <div class="col-md-auto">
-                <!-- #################################################################### -->
-                <!-- #################################################################### -->
-                <!-- ###                                                               ## -->
-                <!-- ###  Left navigation column                                       ## -->
-                <!-- ###                                                               ## -->
-                <!-- #################################################################### -->
-                <!-- #################################################################### -->
-                <div id="tree"></div>
+        <!-- #################################################################### -->
+        <!-- #################################################################### -->
+        <!-- ###                                                               ## -->
+        <!-- ###  main page content                                            ## -->
+        <!-- ###                                                               ## -->
+        <!-- #################################################################### -->
+        <!-- #################################################################### -->
+        <form>
+            <p>This example opens an Embedded Console in a new tab. No iframe is used. 
+                Some applications use an iframe, and this can cause issues with 
+                aspects of NDSE.
+            </p>
+            <div>
+                <label for="envelopeId" class="form-label">Envelope ID (Optional)</label>
+                <input type="text" class="form-control" id="envelopeId" style="width:25em;"/>
             </div>
-            <div class="col">
-                <!-- #################################################################### -->
-                <!-- #################################################################### -->
-                <!-- ###                                                               ## -->
-                <!-- ###  List templates column                                        ## -->
-                <!-- ###                                                               ## -->
-                <!-- #################################################################### -->
-                <!-- #################################################################### -->
-                <div class="row"> <!-- someday this row's content should be fixed (not scroll) -->
-                    <div class="col">
-                        <h2 class="mt-4">
-                            <span id="templatesTitle"></span> 
-                            <a id="newTemplate"    role="button" data-action="newTemplate"    href="#" class="btn btn-primary btn-sm ms-5">＋ New Template</a>
-                            <a id="uploadTemplate" role="button" data-action="uploadTemplate" href="#" class="btn btn-primary btn-sm ms-5">Upload Template</a> 
-                            <a id="downloadA" hidden></a> <!-- used for downloading a template -->
-                        </h2>
-                    </div>
-                </div>
-                <div class="row"> <!-- Row with the data table -->
-                    <div class="col">
-                        <table hidden id="templatesTable" class="table table-striped" style="width:100%">
-                        </table>
-                    </div>
-                </div>
-            </div> <!-- end of column -->
-        </div> <!-- end of row -->
+            <a id="openConsole" role="button" href="#" class="btn btn-primary btn-sm mt-3">Open Embedded Console</a> 
+        </form>
     </div> <!-- end of main container -->
 
 
@@ -172,52 +152,6 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- UPLOAD TEMPLATE MODAL -->
-    <div id="uploadTemplateModal" class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Upload Template</h5>
-                </div>
-                <div class="modal-body">
-                    <div>Select the template file to upload</div>
-                    <form>
-                        <input id="uploadTemplateFile" name="file" class="form-control" type="file" accept=".zip"/>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button id="cancelUploadButton" type="button" class="btn btn-secondary me-5" data-bs-dismiss="modal">Cancel</button>
-                    <button id="uploadButton" type="button" class="btn btn-primary" data-bs-dismiss="modal">Upload</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- DELETE CONFIRMATION MODAL -->
-    <div id="deleteConfirmModal" class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Confirm Template Deletion</h5>
-                </div>
-                <div class="modal-body">
-                    <form>
-                        <h5>Delete template</h5>
-                        <div>
-                            <select id="deleteConfirm" class="ms-2 form-select" aria-label="Delete Confirm">
-                                <option value="default">Do not delete</option>
-                                <option value="delete">Yes, delete the template!</option>
-                            </select>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Confirm</button>
                 </div>
             </div>
         </div>

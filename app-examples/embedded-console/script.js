@@ -1,7 +1,7 @@
 // Copyright © 2024 Docusign, Inc.
 // License: MIT Open Source https://opensource.org/licenses/MIT
 //
-// Template Editing main JS script
+// Embedded Console main JS script
 
 
 import { AuthCodePkce } from "./library/authCodePkce.js" 
@@ -11,7 +11,7 @@ import {
     CallApi,
     UserInfo
 } from "./library/callapi.js" 
-import { Templates } from "./library/templates.js" 
+import { EmbeddedConsole } from "./library/embeddedConsole.js" 
 
 import {
     switchToHttps,
@@ -25,7 +25,7 @@ import {
     checkAccountSettings,
 } from "./library/utilities.js" 
 
-const CONFIG_STORAGE = "templateEditConfiguration";
+const CONFIG_STORAGE = "embedded console Configuration";
 const STAGE_QP = 'stage'; // if ?stage=1 then use stage
 const PADDING = 70; // padding-top for the signing ceremony.
 
@@ -42,15 +42,15 @@ $(async function () {
     const formCheckboxes = {    }; // The checkboxes in forms
 
     /***
-     * listTemplates 
+     * openConsole 
      */
-    let listTemplates = async function listTemplatesF (e) {
+    let openConsole = async function openConsoleF (e) {
         e.preventDefault();
         formToConfiguration();
         storageSet(CONFIG_STORAGE, configuration);
         if (!checkToken()){return}
         data.logger.post("List Templates");
-        await data.templates.list()
+        await data.embeddedConsole.openConsole({envelopeId: $(`#envelopeId`).val()})
     }.bind(this)
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -193,31 +193,20 @@ $(async function () {
         if (data.templates) {
             data.templates.destroyTable();
         }
-        data.templates = new Templates({
+        data.embeddedConsole = new EmbeddedConsole({
             showMsg: toast,
             messageModal: messageModal,
             clientId: oAuthClientID,
             loader: data.loader,
             accountId: accountId,
             callApi: data.callApi,
-            mainElId: "main",
-            templatesTitleId: "templatesTitle",
-            templatesTableId: "templatesTable",
             logger: data.logger,
             padding: PADDING,
         });
 
-        data.loader.show("Retrieving your photo and the account’s logo")
-        await userPictureAccountBrand({accountId: accountId, userInfo: data.userInfo, callApi: data.callApi});
-        
-        data.loader.show("Retrieving folder data");
-        await data.templates.folderFetch();
-        data.templates.renderTree({treeId: "tree"});
-
-        data.loader.show("Listing templates");
-        await data.templates.list({title: "My Templates", listType: "myTemplates"});
-
         data.loader.hide();
+        $(`#main`).removeAttr("hidden");
+
         return true;
     }
 
@@ -238,7 +227,7 @@ $(async function () {
     })
 
     // Register event handlers
-    $("#listTemplates").click(listTemplates);    
+    $("#openConsole").click(openConsole);    
     $("#modalLogin button").click(login);
     $("#logout").click(logout);
     $(".info").click(e => {$(e.target).text($(e.target).text() === "Information" ? 

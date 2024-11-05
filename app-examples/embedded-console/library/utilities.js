@@ -2,9 +2,8 @@
 // License: MIT Open Source https://opensource.org/licenses/MIT
 
 // Local storage account key
-const DSexampleAccountId = "DSCodePenAccountId";
 const CACHE_ACCOUNT_INFO = true; // user picture too
-const SETTINGS_STORAGE = "template edit Settings";
+const SETTINGS_STORAGE = "Embedded Console Settings";
 const SETTINGS = ["accountRequest", "loaderChoice"]; // names of the settings
 
 
