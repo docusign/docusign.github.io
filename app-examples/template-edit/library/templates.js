@@ -594,6 +594,7 @@ class Templates {
             this.dataTableApi.destroy();
             $(`#${this.templatesTableElId}`).empty();
         }
+        $(`#${this.treeId}`).data("plugin_bstreeview", null).empty();
     }
 
 }
