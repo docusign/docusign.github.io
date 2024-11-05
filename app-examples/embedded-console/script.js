@@ -189,9 +189,12 @@ $(async function () {
             data.logger.post('Account setting error', 'The account does not have a required setting');
             return false; // EARLY RETURN
         } 
+        
+        data.loader.show("Retrieving your photo and the account’s logo")
+        await userPictureAccountBrand({accountId: accountId, userInfo: data.userInfo, callApi: data.callApi});
 
-        if (data.templates) {
-            data.templates.destroyTable();
+        if (data.embeddedConsole) {
+            data.embeddedConsole.destroy();
         }
         data.embeddedConsole = new EmbeddedConsole({
             showMsg: toast,
@@ -202,6 +205,7 @@ $(async function () {
             callApi: data.callApi,
             logger: data.logger,
             padding: PADDING,
+            mainElId: "main",
         });
 
         data.loader.hide();
