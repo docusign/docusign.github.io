@@ -22,6 +22,7 @@ class EmbeddedConsole {
         this.callApi = args.callApi;
         this.logger = args.logger;
         this.padding = args.padding;
+        this.mainElId = args.mainElId;
     }
 
     /***
@@ -29,6 +30,7 @@ class EmbeddedConsole {
      *   opens the console view
      */
     async openConsole({envelopeId}) {
+        $(`#${this.mainElId}`).attr("hidden", "");
         this.loader.show("Calling Console View API");
         let ok;
 
