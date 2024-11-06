@@ -86,7 +86,7 @@ class EmbeddedConsole {
             this.consoleWindow.close()
         }
         this.messageModal({
-            style: 'text', title: "API problem", msg:
+            style: 'text', title: "Response", msg:
                 `<p>Response from the Console Sender window: ${m}</p>`
         });
     }    
