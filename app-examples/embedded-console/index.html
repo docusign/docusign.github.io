@@ -85,11 +85,30 @@
                 aspects of NDSE.
             </p>
             <div>
-                <label for="envelopeId" class="form-label">Envelope ID (Optional)</label>
+                <label for="envelopeId" class="form-label">Draft Envelope ID (Optional)</label>
                 <input type="text" class="form-control" id="envelopeId" style="width:25em;"/>
             </div>
             <a id="openConsole" role="button" href="#" class="btn btn-primary btn-sm mt-3">Open Embedded Console</a> 
         </form>
+
+        <p class="mt-5">Draft Envelope ID: Opens the console in a sender window for the envelope.</p>
+        <p>Create a draft envelope in NDSE, then enter its envelope ID above. After the envelope is sent,
+            the browser is redirected back to the returnUrl.
+        </p>
+        <p><a href="https://developers.docusign.com/docs/esign-rest-api/reference/envelopes/envelopeviews/createconsole/"
+            target="_blank">EnvelopeViews:createConsole documentation</a>.</p>
+
+        <p>Undocumented behavior: if the envelope is sent and you're on the routing
+            list, then the <b>Signing Ceremony</b> is opened for you. After you 
+            complete the signing ceremony, you are brought to the NDSE home page.
+        </p>
+
+        <p>Undocumented behavior: if the envelope is sent and you're not on the routing
+            list, but do have access to the envelope, then a <b>View-only</b> for the envelope is opened for you. After you 
+            finish with it, you are brought to the NDSE home page.
+        </p>
+
+
     </div> <!-- end of main container -->
 
 
