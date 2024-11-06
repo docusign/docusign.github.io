@@ -59,8 +59,6 @@ class Envelopes {
         this.useDisclosure = true;
         this.returnUrl = RETURN_URL;
         this.defaultReturnUrl = RETURN_URL;
-        this.htmlResponsiveNoTabs = false; // false: use HTML_RESPONSIVE
-                                           // true:  use HTML_C2A_RESPONSIVE 
     }
 
     /***
@@ -387,9 +385,9 @@ class Envelopes {
     /***
      * Responsive HTML with smart sections
      */
-    async createHtmlResponsiveRequest() {
+    async createHtmlResponsiveRequest({htmlResponsiveNoTabs = false} = {}) {
         const doc = await this.callApi.getDoc(SUPP_DOCS_URL + 
-            (this.htmlResponsiveNoTabs ? HTML_C2A_RESPONSIVE : HTML_RESPONSIVE));
+            (htmlResponsiveNoTabs ? HTML_C2A_RESPONSIVE : HTML_RESPONSIVE));
         if (!doc) {
             this.showMsg(this.callApi.errMsg); // Error!
             return
@@ -432,7 +430,7 @@ class Envelopes {
                 }
             ]
         }
-        if (!this.htmlResponsiveNoTabs) {
+        if (!htmlResponsiveNoTabs) {
             // include tabs
             req.recipients.signers[0].tabs = 
             {
