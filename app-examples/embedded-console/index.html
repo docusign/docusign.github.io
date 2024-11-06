@@ -98,8 +98,24 @@
         <p><a href="https://developers.docusign.com/docs/esign-rest-api/reference/envelopes/envelopeviews/createconsole/"
             target="_blank">EnvelopeViews:createConsole documentation</a>.</p>
 
+        <p>Note: If the envelope is a draft, then it is much better to use the 
+            <a href="https://developers.docusign.com/docs/esign-rest-api/reference/envelopes/envelopeviews/createsender/"
+            target="_blank">Sender View</a>
+            instead of the Console View. The Sender View is specifically for modifying 
+            and sending envelopes. It enables the developer to control many parts
+            of the Sender View UX. 
+        </p>
+
+        <p>Note: it is best to avoid the Console View if you can. It does not
+            return control to the calling application, so it effectively acts
+            as a one-way exit from your app. (It does redirect back to your app
+            if a draft envelope is supplied, but the Sender View should be used in
+            those cases.)
+        </p>
+        
         <p>Undocumented behavior: if the envelope is sent and you're on the routing
-            list, then the <b>Signing Ceremony</b> is opened for you. After you 
+            list, then the <b>Signing Ceremony</b> is opened for you (even if you are
+            not a captive recipient). After you 
             complete the signing ceremony, you are brought to the NDSE home page.
         </p>
 
