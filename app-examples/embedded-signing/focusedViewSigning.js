@@ -174,6 +174,7 @@ class FocusedViewSigning {
                 },
             }
         }
+        console.log (`\x1B[1mDocusign JS signing configuration\x1B[22m\n${JSON.stringify(signingConfiguration, null, 4)}`);
         this.logger.postLog ({
             apiName: "Docusign JS signing configuration",
             bodyJson: signingConfiguration,

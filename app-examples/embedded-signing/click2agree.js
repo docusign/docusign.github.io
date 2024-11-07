@@ -153,6 +153,7 @@ class Click2Agree {
             apiName: "Docusign JS signing configuration",
             bodyJson: signingConfiguration,
         });
+        console.log (`\x1B[1mDocusign JS signing configuration\x1B[22m\n${JSON.stringify(signingConfiguration, null, 4)}`);
         const signingElId = this.useModal ? "c2aSigningModalBody" : this.signElId;
         const signingModalId = "c2aSigningModal";
         let modal = null;
