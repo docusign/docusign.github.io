@@ -222,6 +222,7 @@
                                     <option value="default">Default</option>
                                     <option value="htmlC2AResponsive">HTML smart sections responsive</option>
                                     <option value="none">Only supplemental documents</option>
+                                    <option value="htmlUpload">Upload an HTML document</option>
                                 </select>
                             </span>
 
@@ -407,6 +408,7 @@
                                 <option value="pdfDoc">PDF file</option>
                                 <option value="payment">Payment example</option>
                                 <option value="approveDecline">Approve/Decline tags</option>
+                                <option value="htmlUpload">Upload an HTML document</option>
                             </select>
                             <label for="template3" class="form-label ms-5">Template:</label>
                             <select id="template3" class="ms-2 form-select display-inline w19"
@@ -568,6 +570,7 @@
                                 <option value="payment">Payment example</option>
                                 <option value="approveDecline">Approve/Decline tags</option>
                                 <option value="none">Only supplemental documents</option>
+                                <option value="htmlUpload">Upload an HTML document</option>
                             </select>
                             <label for="template1" class="form-label ms-5">Template:</label>
                             <select id="template1" class="ms-2 form-select display-inline w19"
@@ -754,6 +757,7 @@
                                 <option value="pdfDoc">PDF file</option>
                                 <option value="payment">Payment example</option>
                                 <option value="approveDecline">Approve/Decline tags</option>
+                                <option value="htmlUpload">Upload an HTML document</option>
                             </select>
                             <label for="template2" class="form-label ms-5">Template:</label>
                             <select id="template2" class="ms-2 form-select display-inline w19"
@@ -915,6 +919,27 @@
                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
                 </div>
                 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- UPLOAD HTML DOC MODAL -->
+    <div id="uploadHtmlDocModal" class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Upload HTML Document</h5>
+                </div>
+                <div class="modal-body">
+                    <div>Select the HTML file to upload</div>
+                    <form>
+                        <input id="uploadHtmlFile" name="file" class="form-control" type="file"/>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button id="cancelUploadButton" type="button" class="btn btn-secondary me-5" data-bs-dismiss="modal">Cancel</button>
+                    <button id="uploadButton" type="button" class="btn btn-primary" data-bs-dismiss="modal">Upload</button>
+                </div>
             </div>
         </div>
     </div>

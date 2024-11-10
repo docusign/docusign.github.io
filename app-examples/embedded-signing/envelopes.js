@@ -34,6 +34,11 @@ const HTML_C2A_RESPONSIVE = "htmlC2ASmartSections.html.txt";
 const PAYMENT_DOC = "payment_order_form.docx";
 const DEFAULT_PHONE_AUTH_ID = "c368e411-1592-4001-a3df-dca94ac539ae"; 
 
+const UPLOAD_MODAL = "uploadHtmlDocModal";
+const UPLOAD_BUTTON = "uploadButton";
+const CANCEL_UPLOAD_BUTTON = "cancelUploadButton";
+const UPLOAD_FILE_PICKER = "uploadHtmlFile";
+
 /***
  * instance variables
  * name
@@ -45,20 +50,50 @@ const DEFAULT_PHONE_AUTH_ID = "c368e411-1592-4001-a3df-dca94ac539ae";
  */
 class Envelopes {
 
+    /***
+     *  When an HTML file is uploaded, look for displayAnchors JSON in the HTML file.
+     *  Format in the file:
+     *  
+    <script type="application/json" data-displayAnchors="true">
+        {
+            displayAnchors: [
+                {
+                    caseSensitive: true,
+                    startAnchor: "responsive_table_start",
+                    endAnchor: "responsive_table_end",
+                    removeEndAnchor: true,
+                    removeStartAnchor: true,
+                    displaySettings: {
+                        cellStyle: "text-align:left;border:3px solid purple;margin:0px;padding:0px;",
+                        display: "responsive_table_single_column",
+                        tableStyle: "margin-bottom: 20px;width:100%;max-width:816px;margin-left:auto;margin-right:auto;"
+                    }
+                }
+            ]
+        }
+    </script>
+    */
+
+
     constructor(args) {
         this.showMsg = args.showMsg;
         this.messageModal = args.messageModal;
         this.loadingModal = args.loadingModal;
+        this.loader = args.loader;
         this.clientId = args.clientId;
         this.accountId = args.accountId;
         this.callApi = args.callApi;
         this.logger = args.logger;
         this.platform = args.platform;
+        this.mainElId = args.mainElId;
         this.clientUserId = CLIENT_USER_ID;
         this.role = ROLE;
         this.useDisclosure = true;
         this.returnUrl = RETURN_URL;
         this.defaultReturnUrl = RETURN_URL;
+
+        this.htmlResponsiveNoTabs = false;
+        this.displayAnchorsRegEx = /<script .*data-displayAnchors="true".*>([\S\s]*?)<\/script>/;
     }
 
     /***
@@ -383,14 +418,98 @@ class Envelopes {
     }
 
     /***
+     * htmlUploadThenResponsive
+     */
+    async htmlUploadThenResponsive({htmlResponsiveNoTabs = false} = {}) {
+        this.htmlResponsiveNoTabs = htmlResponsiveNoTabs;
+        this.loader.hide();
+        //$(`#${this.mainElId}`).removeClass("hide");
+
+        if (!this.uploadModal) {
+            this.uploadModal = new bootstrap.Modal(`#${UPLOAD_MODAL}`);
+        }
+        return await this.showUpload();
+    }
+
+    async showUpload() {
+        const fileEl = document.getElementById(UPLOAD_FILE_PICKER);
+        this.uploadModal.show();
+        let uploadFile;
+        await new Promise(resolve => 
+            $(`#${UPLOAD_BUTTON}, #${CANCEL_UPLOAD_BUTTON}`).off('click').on('click', (evt) => {
+                const uploadButtonClicked = evt.target.id === "uploadButton"
+                uploadFile = uploadButtonClicked && fileEl.files[0];
+                            
+                if (!uploadButtonClicked || !uploadFile) {
+                    this.showMsg("Operation Canceled");
+                    this.logger.post(null, `Operation Canceled`);
+                }
+                resolve();
+                }
+            )
+        )
+        if (!uploadFile) {
+            fileEl.value = ""; // reset the file picker
+            return false; // Early return
+        }
+
+        const fileContents = await uploadFile.text();    
+        this.loader.show("Creating the envelope");
+
+        await this.createHtmlResponsiveRequest({
+            htmlResponsiveNoTabs: this.htmlResponsiveNoTabs,
+            doc: fileContents});
+        this.htmlResponsiveNoTabs = false;
+        fileEl.value = ""; // reset the file picker
+        return true;
+    }
+
+    /***
      * Responsive HTML with smart sections
      */
-    async createHtmlResponsiveRequest({htmlResponsiveNoTabs = false} = {}) {
-        const doc = await this.callApi.getDoc(SUPP_DOCS_URL + 
-            (htmlResponsiveNoTabs ? HTML_C2A_RESPONSIVE : HTML_RESPONSIVE));
-        if (!doc) {
-            this.showMsg(this.callApi.errMsg); // Error!
-            return
+    async createHtmlResponsiveRequest({htmlResponsiveNoTabs = false, doc = false} = {}) {
+        let displayAnchors = null;
+        if (doc) {
+            /***
+             *  Look for displayAnchors JSON in the HTML file.
+             *  Format in the file:
+             *  
+    <script type="application/json" data-displayAnchors="true">
+        {
+            displayAnchors: [
+                {
+                    caseSensitive: true,
+                    startAnchor: "responsive_table_start",
+                    endAnchor: "responsive_table_end",
+                    removeEndAnchor: true,
+                    removeStartAnchor: true,
+                    displaySettings: {
+                        cellStyle: "text-align:left;border:3px solid purple;margin:0px;padding:0px;",
+                        display: "responsive_table_single_column",
+                        tableStyle: "margin-bottom: 20px;width:100%;max-width:816px;margin-left:auto;margin-right:auto;"
+                    }
+                }
+            ]
+        }
+    </script>
+
+             */
+
+            const matches = this.displayAnchorsRegEx.exec(doc);
+            const rawJson = matches && matches.length === 2 && matches[1];
+            let daObj;
+            try {
+                daObj = rawJson && JSON.parse(rawJson)
+            } catch {daObj = null}
+            displayAnchors = (daObj && daObj.displayAnchors) || [];
+
+        } else {
+            doc = await this.callApi.getDoc(SUPP_DOCS_URL + 
+                (htmlResponsiveNoTabs ? HTML_C2A_RESPONSIVE : HTML_RESPONSIVE));
+            if (!doc) {
+                this.showMsg(this.callApi.errMsg); // Error!
+                return
+            }
         }
 
         const req = {
@@ -412,7 +531,8 @@ class Envelopes {
                     documentId: "1",
                     htmlDefinition: {
                         source: doc,
-                        displayAnchors: [
+                        displayAnchors: displayAnchors ? displayAnchors :
+                        [
                             {
                                 caseSensitive: true,
                                 startAnchor: "responsive_table_start",

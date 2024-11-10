@@ -503,6 +503,8 @@ $(async function () {
             callApi: data.callApi,
             logger: data.logger,
             platform: platform,
+            loader: data.loader,
+            mainElId: "main",
         })
         data.click2agree = new Click2Agree({
             showMsg: toast,

@@ -98,7 +98,6 @@ class FocusedViewSigning {
         }
 
         this.signing = true;
-        this.loader.show("Creating the envelope");
 
         this.envelopes.authStyle = this.authStyle;
         this.envelopes.idvConfigId = this.idvConfigId;    
@@ -110,9 +109,24 @@ class FocusedViewSigning {
         this.envelopes.useDisclosure = this.useDisclosure; 
         this.envelopes.locale = this.locale;
         this.envelopes.ersd = this.ersd === false ? null : true; 
-        this.envelopes.responsive = this.documentChoice[this.document].responsive;
         this.envelopes.gatewayId = this.gatewayId;
-        await this.documentChoice[this.document].request();
+
+        let ok = true;
+        if (this.document === "htmlUpload") {
+            this.envelopes.responsive = false;
+            ok = await this.envelopes.htmlUploadThenResponsive({htmlResponsiveNoTabs: false});
+        } else {
+            this.loader.show("Creating the envelope");
+            this.envelopes.responsive = this.documentChoice[this.document].responsive;
+            await this.documentChoice[this.document].request({htmlResponsiveNoTabs: false});
+        }
+        if (!ok) {
+            this.loader.delayedHide("Could not create the envelope");
+            this.signing = false;
+            $(`#${this.mainElId}`).removeClass("hide");
+            return
+        }
+
         // add supplemental docs
         await this.envelopes.updateRequest(this.supplemental)
         this.envelopeId = await this.envelopes.sendEnvelope();

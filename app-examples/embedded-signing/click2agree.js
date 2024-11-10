@@ -75,14 +75,26 @@ class Click2Agree {
         // https://developers.docusign.com/docs/esign-rest-api/reference/envelopes/envelopes/create/#schema__envelopedefinition_documents_signermustacknowledge
 
         this.signing = true;
-        this.loader.show("Creating the envelope");
 
         this.envelopes.name = this.name;
         this.envelopes.email = this.email;
         this.envelopes.locale = this.locale; 
-        this.envelopes.responsive = this.documentChoice[this.document].responsive;
         this.envelopes.ersd = this.ersd === false ? null : true;
-        await this.documentChoice[this.document].request({htmlResponsiveNoTabs: true});
+        let ok = true;
+        if (this.document === "htmlUpload") {
+            this.envelopes.responsive = false;
+            ok = await this.envelopes.htmlUploadThenResponsive({htmlResponsiveNoTabs: true});
+        } else {
+            this.loader.show("Creating the envelope");
+            this.envelopes.responsive = this.documentChoice[this.document].responsive;
+            await this.documentChoice[this.document].request({htmlResponsiveNoTabs: true});
+        }
+        if (!ok) {
+            this.loader.delayedHide("Could not create the envelope");
+            this.signing = false;
+            $(`#${this.mainElId}`).removeClass("hide");
+            return
+        }
         // add supplemental docs
         await this.envelopes.updateRequest(this.supplemental)
         this.envelopeId = await this.envelopes.sendEnvelope();
