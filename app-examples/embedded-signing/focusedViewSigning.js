@@ -47,6 +47,7 @@ class FocusedViewSigning {
             default: {responsive: false, request: this.envelopes.createTemplateRequest.bind(this.envelopes)},
             htmlRegResp: {responsive: true, request: this.envelopes.createHtmlRegRequest.bind(this.envelopes)},
             htmlResponsive: {responsive: false, request: this.envelopes.createHtmlResponsiveRequest.bind(this.envelopes)},
+            htmlResponsiveDocs: {responsive: false, request: this.envelopes.createHtmlResponsiveRequest.bind(this.envelopes)},
             payment: {responsive: false, request: this.envelopes.createPaymentRequest.bind(this.envelopes)},
             approveDecline: {responsive: false, request: this.envelopes.createTemplateRequest.bind(this.envelopes)},
             docxDoc: {responsive: false, request: this.envelopes.createTemplateRequest.bind(this.envelopes)},
@@ -118,7 +119,7 @@ class FocusedViewSigning {
         } else {
             this.loader.show("Creating the envelope");
             this.envelopes.responsive = this.documentChoice[this.document].responsive;
-            await this.documentChoice[this.document].request({htmlResponsiveNoTabs: false});
+            await this.documentChoice[this.document].request({htmlResponsiveNoTabs: false, docReq: this.document});
         }
         if (!ok) {
             this.loader.delayedHide("Could not create the envelope");

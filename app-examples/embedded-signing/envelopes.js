@@ -30,6 +30,7 @@ const SUPP_FILE_NAMES = ["Terms and Conditions 1.pdf", "Terms and Conditions 2.h
 const SUPP_DOC_NAMES = [{name: "Terms and Conditions 1.pdf", ext: "pdf"}, {name: "Terms and Conditions 2.html", ext: "html"}];
 const SIMPLE_HTML = "simple_with_image.html.txt";
 const HTML_RESPONSIVE = "htmlSmartSections.html.txt";
+const HTML_RESPONSIVE_DOCS = "htmlSmartSections_example_1.html.txt";
 const HTML_C2A_RESPONSIVE = "htmlC2ASmartSections.html.txt";
 const PAYMENT_DOC = "payment_order_form.docx";
 const DEFAULT_PHONE_AUTH_ID = "c368e411-1592-4001-a3df-dca94ac539ae"; 
@@ -467,9 +468,9 @@ class Envelopes {
     /***
      * Responsive HTML with smart sections
      */
-    async createHtmlResponsiveRequest({htmlResponsiveNoTabs = false, doc = false} = {}) {
+    async createHtmlResponsiveRequest({htmlResponsiveNoTabs = false, doc = false, docReq=false} = {}) {
         let displayAnchors = null;
-        if (doc) {
+        if (doc || docReq) {
             /***
              *  Look for displayAnchors JSON in the HTML file.
              *  Format in the file:
@@ -494,6 +495,15 @@ class Envelopes {
     </script>
 
              */
+
+            if (docReq === "htmlResponsiveDocs") {
+                doc = await this.callApi.getDoc(SUPP_DOCS_URL + HTML_RESPONSIVE_DOCS);
+                if (!doc) {
+                    this.showMsg(this.callApi.errMsg); // Error!
+                    return
+                }
+    
+            }
 
             const matches = this.displayAnchorsRegEx.exec(doc);
             const rawJson = matches && matches.length === 2 && matches[1];
