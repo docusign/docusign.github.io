@@ -500,7 +500,14 @@ class Envelopes {
             let daObj;
             try {
                 daObj = rawJson && JSON.parse(rawJson)
-            } catch {daObj = null}
+            } catch (e) {
+                console.log("### Could not parse DisplayAnchor JSON. Error:");
+                console.log(e.toString());
+                console.log(`JSON found in HTML file:\nSTART${rawJson}END`);
+                daObj = null
+                this.showMsg(this.callApi.errMsg); // Error!
+                return
+            }
             displayAnchors = (daObj && daObj.displayAnchors) || [];
 
         } else {
