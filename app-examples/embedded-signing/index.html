@@ -137,8 +137,12 @@
                                 <li>The Docusign.js library creates the iframe for you</li>
                                 <li>The events raise a DOM event to your JS app; the redirection page is not used</li>
                             </ul>
+                            <p class="mb-0"> The agreement ceremony can use Responsive Smart Sections HTML documents or 
+                                any type of document supported by Docusign. For a minimal agreement UX, use
+                                supplemental documents only.
+                            </p> 
                             <p class="mb-0"> The agreement ceremony can include supplemental documents with
-                                <a hre="https://developers.docusign.com/docs/esign-rest-api/reference/envelopes/envelopes/create/#schema__envelopedefinition_documents_signermustacknowledge"
+                                <a href="https://developers.docusign.com/docs/esign-rest-api/reference/envelopes/envelopes/create/#schema__envelopedefinition_documents_signermustacknowledge"
                                     target="_blank">different levels of signer acceptance</a>:
                             </p>
                             <ul>
@@ -480,6 +484,10 @@
                                 <li>The events raise a DOM event to your JS app; the redirection page is not used</li>
                             </ul>
                             <p>This demo uploads a template to your account, and then uses it for the envelope.</p>
+                            <p>The signing ceremony can use different document types including Responsive 
+                                Smart Sections HTML documents. You can use the included documents,
+                                upload your own Smart Sections HTML document, or use a template from your account. </p>
+
                             <p class="mb-0"> The signing ceremony can include supplemental documents with
                                 <a hre="https://developers.docusign.com/docs/esign-rest-api/reference/envelopes/envelopes/create/#schema__envelopedefinition_documents_signermustacknowledge"
                                     target="_blank">different levels of signer acceptance</a>:
@@ -496,7 +504,6 @@
                             <h3>Known Issues</h3>
                             <ul>
                                 <li>C2A-3558 SMS/Phone Authentication does not work with Docusign JS</li>
-                                <li>C2A-3477 Responsive layout doesn't work for HTML source documents </li>
                                 <li>C2A-3499 Payment tabs don't work with Focused View</li>
                             </ul>
                         </div>
