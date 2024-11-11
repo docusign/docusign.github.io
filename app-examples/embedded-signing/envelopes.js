@@ -31,6 +31,7 @@ const SUPP_DOC_NAMES = [{name: "Terms and Conditions 1.pdf", ext: "pdf"}, {name:
 const SIMPLE_HTML = "simple_with_image.html.txt";
 const HTML_RESPONSIVE = "htmlSmartSections.html.txt";
 const HTML_RESPONSIVE_DOCS = "htmlSmartSections_example_1.html.txt";
+const HTML_RESPONSIVE_DOCS_CHOICE = "htmlResponsiveDocs";
 const HTML_C2A_RESPONSIVE = "htmlC2ASmartSections.html.txt";
 const PAYMENT_DOC = "payment_order_form.docx";
 const DEFAULT_PHONE_AUTH_ID = "c368e411-1592-4001-a3df-dca94ac539ae"; 
@@ -468,9 +469,9 @@ class Envelopes {
     /***
      * Responsive HTML with smart sections
      */
-    async createHtmlResponsiveRequest({htmlResponsiveNoTabs = false, doc = false, docReq=false} = {}) {
+    async createHtmlResponsiveRequest({htmlResponsiveNoTabs = false, doc = false, docReq = false} = {}) {
         let displayAnchors = null;
-        if (doc || docReq) {
+        if (doc || docReq === HTML_RESPONSIVE_DOCS_CHOICE) {
             /***
              *  Look for displayAnchors JSON in the HTML file.
              *  Format in the file:
@@ -496,7 +497,7 @@ class Envelopes {
 
              */
 
-            if (docReq === "htmlResponsiveDocs") {
+            if (docReq) {
                 doc = await this.callApi.getDoc(SUPP_DOCS_URL + HTML_RESPONSIVE_DOCS);
                 if (!doc) {
                     this.showMsg(this.callApi.errMsg); // Error!
