@@ -132,4 +132,11 @@ Use any date in the future and any three digit CVC number.
 If you would like to use payments with Focused View, please ask Docusign Customer
 Service to add your company information to bug report C2A-3499.
 
+# Source
+The source for this example is in the 
+[/embedded-signing](https://github.com/docusign/docusign.github.io/tree/master/app-examples/embedded-signing) 
+and in the 
+[/library](https://github.com/docusign/docusign.github.io/tree/master/app-examples/library)
+directories
+
 
