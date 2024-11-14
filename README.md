@@ -14,6 +14,12 @@ embedding the signing ceremony into your application including Click to Agree an
     * embedded correct view, including UX customization options
     * embedded template edit view
 
+* [Template Edit example](https://docusign.github.io/app-examples/template-edit/) demonstrates
+    * listing template folders
+    * listing templates 
+    * Editing templates by using the [embedded template edit view](https://developers.docusign.com/docs/esign-rest-api/reference/templates/templateviews/createedit/)
+    * Creating, Uploading, and Downloading templates
+
 ### Individual Consent Thank You page
 A [generic consent thank you page](https://docusign.github.io/thankyou) can be used
 as the redirectUrl for people who have granted consent to an application.
