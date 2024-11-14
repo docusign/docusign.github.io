@@ -131,7 +131,7 @@ $(function () {
             apiMethod: `/accounts/${accountId}/brands`,
             httpMethod: "GET",
         });
-        if (results !== false) {
+        if (results !== false && results.brands) {
             results.brands.forEach(brand => {
                 brands[brand.brandId] = brand.brandName
             })
