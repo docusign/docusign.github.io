@@ -18,6 +18,7 @@ const TEMPLATE_UPLOAD_MODAL = "uploadTemplateModal";
 const TEMPLATE_UPLOAD_BUTTON = "uploadButton";
 const TEMPLATE_CANCEL_UPLOAD_BUTTON = "cancelUploadButton";
 const TEMPLATE_UPLOAD_FILE_PICKER = "uploadTemplateFile";
+const SUPP_VIS_TEMPLATE_PUT = true; // okay to use put to update the template recipient?
 
 class TemplateActions {
     editModal;
@@ -480,7 +481,7 @@ class TemplateActions {
             const excludedDocuments = this.template.recipients[recipientType][rIndex].excludedDocuments;
             let exclude = false;
             if (excludedDocuments) {
-                exclude ||= excludedDocuments.find(dID => dId === docId)
+                exclude ||= excludedDocuments.find(dId => dId === docId)
             }
             let result;
             if (excluded) {result = exclude} else {result = !exclude} 
@@ -494,7 +495,7 @@ class TemplateActions {
                 `Name: ${recipient.name}, eMail: ${recipient.email}`;
             html += `</b></p>`;
             this.suppDocs.forEach(doc => {
-                html += `<p class="mt-2"><b>Supplemental document ${doc.name}</b>
+                html += `<p class="mt-2 ms-3"><b>Supplemental document «${doc.name}»</b>
                     <select class="ms-2 form-select display-inline w19"
                         data-recipientId="${recipient.recipientId}"
                         data-documentId="${doc.documentId}">
@@ -503,7 +504,7 @@ class TemplateActions {
                             Not visible</option>
                         <option value="false"
                             ${check({excluded: false, docId: doc.documentId, rIndex: i})}>
-                            &nbsp;</option>
+                            Visible</option>
                     </select>
                     <span class="ms-3" data-recipientId="${recipient.recipientId}"
                         data-documentId="${doc.documentId}"></span>
@@ -523,17 +524,32 @@ class TemplateActions {
     }
 
     async excludeDocChange(e) {
-        $(`#enforceSignerVisibility`).attr("disabled", "");
-        $(`#enforceSignerVisibilityFeedback`).text("Working...");
-        await this.updateTemplate(
-            {enforceSignerVisibility: e.target.value === "true" ? "true" : "false"}); // always check inputs! 
-        $(`#enforceSignerVisibility`).removeAttr("disabled");
-        $(`#enforceSignerVisibilityFeedback`).text("");
+        const select = e.target;
+        const recipientId = $(select).attr("data-recipientId");
+        const documentId = $(select).attr("data-documentId");
+        const excludedDocuments = [];
+        $(`select[data-recipientId="${recipientId}"]`).attr("disabled", "");
+        $(`span[data-recipientId="${recipientId}"][data-documentId="${documentId}"]`).text("Working...");
+        
+        // Build up excludedDocuments for this recipient
+        $(`select[data-recipientId="${recipientId}"]`).each(function (i){
+            if ($(this).find(":selected").val() === "true") {
+                excludedDocuments.push($(this).attr("data-documentId")) 
+            }
+        });
+        
+        await this.updateTemplateRecipient({recipientId: recipientId, excludedDocuments: excludedDocuments});
+        
+        $(`select[data-recipientId="${recipientId}"]`).removeAttr("disabled");
+        $(`span[data-recipientId="${recipientId}"][data-documentId="${documentId}"]`).text("");
     }
 
     async fetchTemplateInfo(){
         let apiMethod = `/accounts/${this.accountId}/templates/` + 
         `${this.templateId}/?include=documents`;
+        if (!SUPP_VIS_TEMPLATE_PUT) {
+            apiMethod += ",tabs"
+        }
         const results = await this.callApi.callApiJson({
             apiMethod: apiMethod,
             httpMethod: "GET",
@@ -568,7 +584,77 @@ class TemplateActions {
         }
     }
 
+    async updateTemplateRecipient({recipientId, excludedDocuments}){
+        // Update just the one recipient.
+        const {recipient, recipientType} = this.findRecipient(recipientId);
+        recipient.excludedDocuments = excludedDocuments;
+        const req = {};
+        req[recipientType] = [recipient];
+        let results;
 
+        if (SUPP_VIS_TEMPLATE_PUT) {
+            // Unfortunately we can't currently update the excludedDocuments property
+            let apiMethod = `/accounts/${this.accountId}/templates/` + 
+            `${this.templateId}/recipients`;
+            results = await this.callApi.callApiJson({
+                apiMethod: apiMethod,
+                httpMethod: "PUT",
+                req: req
+            });
+        } else {
+            // Since we can't update just the excludedDocuments property,
+            // we first delete the recipient (and tabs) then add back in
+            let apiMethod2 = `/accounts/${this.accountId}/templates/` + 
+            `${this.templateId}/recipients/${recipientId}`;
+            results = await this.callApi.callApiJson({
+                apiMethod: apiMethod2,
+                httpMethod: "DELETE",
+            });
+            if (results === false) {
+                $("#suppVisStatus").text(`Error message: ${this.callApi.errMsg}`);
+                this.logger.post("TemplateRecipients:delete Problem: Operation Canceled", `<p>Error message: ${this.callApi.errMsg}</p>`);    
+                return false
+            }
+            let apiMethod3 = `/accounts/${this.accountId}/templates/` + 
+            `${this.templateId}/recipients`;
+            results = await this.callApi.callApiJson({
+                apiMethod: apiMethod3,
+                httpMethod: "POST",
+                req: req
+            });
+        }
+        if (results !== false) { // good result
+            return true;
+        } else {
+            this.loader.hide();
+            $("#suppVisStatus").text(`Error message: ${this.callApi.errMsg}`);
+            if (SUPP_VIS_TEMPLATE_PUT) {
+                this.logger.post("TemplateRecipients:update Problem: Operation Canceled", `<p>Error message: ${this.callApi.errMsg}</p>`);
+            } else {
+                this.logger.post("TemplateRecipients:create Problem: Operation Canceled", `<p>Error message: ${this.callApi.errMsg}</p>`);
+            }
+            return false; 
+        }
+    }
+
+    findRecipient(recipientId) {
+        const recpTypes = Object.keys(this.template.recipients).filter(v => v !== 'recipientCount');
+        let recipient;
+        let recipientType;
+
+        recpTypes.forEach(rType => {
+            if (this.template.recipients[rType].length === 0) {
+                return
+            }
+            this.template.recipients[rType].forEach(r => {
+                if (r.recipientId === recipientId) {
+                    recipient = JSON.parse(JSON.stringify(r));
+                    recipientType = rType;
+                }
+            })
+        })
+        return({recipient: recipient, recipientType: recipientType})
+    }
 
 }
 

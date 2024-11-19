@@ -214,7 +214,7 @@ $(function () {
             klass = "pill put"
         } else if (op === "DELETE") {
             klass = "pill delete";
-            newVal = "DEL"
+            //newVal = "DEL"
         }
         return `<span class="${klass}">${op}</span>`
     }
