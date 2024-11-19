@@ -157,6 +157,7 @@ class Templates {
         <li><a class="dropdown-item" href="#" data-action="download">Download</a></li>
         <li><a class="dropdown-item" href="#" data-action="allShare">Share with All</a></li>
         <li><a class="dropdown-item" href="#" data-action="allUnshare">Unshare with All</a></li>
+        <li><a class="dropdown-item" href="#" data-action="suppVisibility">Supplemental Doc Visibility</a></li>
     </ul>
 </div>`
                         return html;
@@ -191,11 +192,11 @@ class Templates {
 
         this.dataTableApi = null;
         this.folderClicked = this.folderClicked.bind(this);
-        $(`#${this.templatesTableElId}`).on ('click', ".folderList", this.folderClicked);
+        $(`#${this.templatesTableElId}`).off('click').on ('click', ".folderList", this.folderClicked);
 
         this.actionClicked = this.actionClicked.bind(this);
-        $(`#${this.templatesTableElId}`).on ('click', ".templateAction a", this.actionClicked);
-        $(`#${NEW_TEMPLATE}, #${UPLOAD_TEMPLATE}`).on ('click', this.actionClicked);
+        $(`#${this.templatesTableElId}`).off('click').on ('click', ".templateAction a", this.actionClicked);
+        $(`#${NEW_TEMPLATE}, #${UPLOAD_TEMPLATE}`).off('click').on ('click', this.actionClicked);
 
         this.list = this.list.bind(this);
     }
@@ -498,6 +499,7 @@ class Templates {
      *  data-action="download"
      *  data-action="allShare"
      *  data-action="allUnshare"
+     *  data-action="suppVisibility"
      * 
      *  And buttons:
      *  data-action="newTemplate" 

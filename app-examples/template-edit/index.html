@@ -260,6 +260,56 @@
         </div>
     </div>
 
+     <!-- SUPP VISIBILITY BASE MODAL -->
+     <div id="suppVisBaseModal" class="modal fade" tabindex="-1">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Supplemental Document Visibility</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h2>Template: <span id="suppVisName"></span></h2>
+                    <h3 id="suppVisStatus"></h3>
+                    <p>
+                        Use this modal to set each recipient: are they excluded from seeing a supplemental document?</p>
+                    <p>
+                        For supplemental documents that are visible to signers, use the Docusign WebApp to
+                        set the signers' requirements: do they need to view the supplemental document?
+                        View it and click Agree? Etc. 
+                    </p>
+                    <form>
+                        <h5>Template: Enforce Signer Visibility</h5>
+                        <p>To exclude a recipient from viewing a supplemental document, the 
+                            <a href="https://developers.docusign.com/docs/esign-rest-api/reference/templates/templates/update/#schema__envelopetemplate_enforcesignervisibility" 
+                                target="_blank">Enforce Signer Visibility</a>
+                            setting must be on</p>
+                        
+                        <div>
+                            <label for="enforceSignerVisibility" class="form-label">Enforce Signer Visibility:</label>
+                            <select id="enforceSignerVisibility" class="ms-2 form-select display-inline w19"
+                                aria-label="Enforce Signer Visibility">
+                                <option value="true">On</option>
+                                <option value="false">Off</option>
+                            </select>
+                            <p id="enforceSignerVisibilityFeedback"></p>
+                        </div>
+
+                        <h5>Regular documents</h5>
+                        <div id="regDocsList"></div> 
+                        <h5>Supplemental documents</h5>
+                        <div id="suppDocsList"></div>
+
+                        <div id="recipientsSV"></div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>   
+
     <!-- USER INFO MODAL -->
     <div id="userInfoModal" class="modal fade" tabindex="-1">
         <div class="modal-dialog">

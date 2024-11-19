@@ -10,6 +10,8 @@ const IFRAME_RETURN_ORIGIN = "https://docusign.github.io";
 const IFRAME_RETURN = IFRAME_RETURN_ORIGIN + "/jsfiddleDsResponse.html";
 const TEMPLATE_EDIT_MODAL = "templateEditModal"; // the ID
 const TEMPLATE_DELETE_MODAL = "deleteConfirmModal";
+const SUPP_VIS_BASE_MODAL = "suppVisBaseModal";
+const SUPP_VIS_STATUS = "suppVisStatus";
 const TEMPLATE_DELETE_SELECT = "deleteConfirm";
 const DOWNLOAD_ANCHOR = "downloadA";
 const TEMPLATE_UPLOAD_MODAL = "uploadTemplateModal";
@@ -40,7 +42,15 @@ class TemplateActions {
         $(`#${TEMPLATE_DELETE_MODAL}`).on('hide.bs.modal', this.deleteListener);
 
         this.uploadTemplateListener = this.uploadTemplateListener.bind(this);
-        $(`#${TEMPLATE_UPLOAD_BUTTON}, #${TEMPLATE_CANCEL_UPLOAD_BUTTON}`).on('click', this.uploadTemplateListener);
+        $(`#${TEMPLATE_UPLOAD_BUTTON}, #${TEMPLATE_CANCEL_UPLOAD_BUTTON}`).off('click').on('click', this.uploadTemplateListener);
+    
+        this.suppVisBaseModal = new bootstrap.Modal(`#${SUPP_VIS_BASE_MODAL}`, 
+            {keyboard: false, backdrop: false});
+
+        this.enforceSignerVisibilityChange = this.enforceSignerVisibilityChange.bind(this);
+        $(`#enforceSignerVisibility`).off('change').on('change', this.enforceSignerVisibilityChange);
+
+        this.excludeDocChange = this.excludeDocChange.bind(this);
     }
 
     /***
@@ -418,6 +428,144 @@ class TemplateActions {
 
     async allUnshare() {
         return await this.allShare({not_shared: true})
+    }
+
+    async suppVisibility() {
+        const nameSort = (a, b) => {
+            if (a.name < b.name) {return -1}
+            if (a.name > b.name) {return  1}
+            return 0
+        }
+        this.loader.show(`Fetching Template ${this.templateName}`);
+        $("#suppVisStatus").text("");
+        $("#regDocsList, #suppDocsList, #recipientsSV").empty();
+        let ok = await this.fetchTemplateInfo();
+        if (!ok) {return}
+        
+        $("#suppVisName").text(this.templateName);
+        $("#enforceSignerVisibility").val(this.template.enforceSignerVisibility); // The API returns "true" / "false" strings
+        this.template.documents.sort(nameSort);
+        this.template.documents.forEach(d => {
+            const id =  d.display === "inline" ? "regDocsList" : "suppDocsList";
+            $(`#${id}`).append(`<p>${d.name}</p>`);
+        })
+        this.suppDocs = this.template.documents.filter(d => d.display === "modal");
+        if (this.suppDocs.length === 0) {
+            $(`#suppDocsList`).append(`<h4>No Supplemental documents!</h4>`);
+            this.loader.hide();
+            this.suppVisBaseModal.show();
+            return
+        }
+
+        const recpTypes = Object.keys(this.template.recipients).filter(v => v !== 'recipientCount');
+        recpTypes.forEach(recipientType => {
+            if (this.template.recipients[recipientType].length === 0) {
+                return
+            }
+            $("#recipientsSV")
+                .append(`<h5>${recipientType}</h5>`)
+                .append(this.addRecipients(recipientType));
+            $("#recipientsSV").off("change").on("change", this.excludeDocChange);
+        });
+        
+
+        this.loader.hide()
+        this.suppVisBaseModal.show();
+    }
+
+    addRecipients(recipientType) {
+        const check = (args) => {
+            // is this doc currently excluded?
+            const { excluded, docId, rIndex } = args;
+            const excludedDocuments = this.template.recipients[recipientType][rIndex].excludedDocuments;
+            let exclude = false;
+            if (excludedDocuments) {
+                exclude ||= excludedDocuments.find(dID => dId === docId)
+            }
+            let result;
+            if (excluded) {result = exclude} else {result = !exclude} 
+            return result ? "selected" : ""
+        }
+        
+        let html = "";
+        this.template.recipients[recipientType].forEach((recipient, i) => {
+            html += `<p><b>`;
+            html += recipient.roleName ? `Role name: ${recipient.roleName}` :
+                `Name: ${recipient.name}, eMail: ${recipient.email}`;
+            html += `</b></p>`;
+            this.suppDocs.forEach(doc => {
+                html += `<p class="mt-2"><b>Supplemental document ${doc.name}</b>
+                    <select class="ms-2 form-select display-inline w19"
+                        data-recipientId="${recipient.recipientId}"
+                        data-documentId="${doc.documentId}">
+                        <option value="true" 
+                            ${check({excluded: true, docId: doc.documentId, rIndex: i})}>
+                            Not visible</option>
+                        <option value="false"
+                            ${check({excluded: false, docId: doc.documentId, rIndex: i})}>
+                            &nbsp;</option>
+                    </select>
+                    <span class="ms-3" data-recipientId="${recipient.recipientId}"
+                        data-documentId="${doc.documentId}"></span>
+                </p>`;
+            })
+        })
+        return html 
+    }
+
+    async enforceSignerVisibilityChange(e) {
+        $(`#enforceSignerVisibility`).attr("disabled", "");
+        $(`#enforceSignerVisibilityFeedback`).text("Working...");
+        await this.updateTemplate(
+            {enforceSignerVisibility: e.target.value === "true" ? "true" : "false"}); // always check inputs! 
+        $(`#enforceSignerVisibility`).removeAttr("disabled");
+        $(`#enforceSignerVisibilityFeedback`).text("");
+    }
+
+    async excludeDocChange(e) {
+        $(`#enforceSignerVisibility`).attr("disabled", "");
+        $(`#enforceSignerVisibilityFeedback`).text("Working...");
+        await this.updateTemplate(
+            {enforceSignerVisibility: e.target.value === "true" ? "true" : "false"}); // always check inputs! 
+        $(`#enforceSignerVisibility`).removeAttr("disabled");
+        $(`#enforceSignerVisibilityFeedback`).text("");
+    }
+
+    async fetchTemplateInfo(){
+        let apiMethod = `/accounts/${this.accountId}/templates/` + 
+        `${this.templateId}/?include=documents`;
+        const results = await this.callApi.callApiJson({
+            apiMethod: apiMethod,
+            httpMethod: "GET",
+        });
+        if (results !== false) { // good result
+            this.template = results;
+            return true;
+        } else {
+            this.loader.hide();
+            $("#suppVisStatus").text(`Error message: ${this.callApi.errMsg}`);
+            this.logger.post("Templates:get Problem: Operation Canceled", `<p>Error message: ${this.callApi.errMsg}</p>`);
+            return false; 
+        }
+    }
+
+    async updateTemplate(req){
+        let apiMethod = `/accounts/${this.accountId}/templates/` + 
+        `${this.templateId}/`;
+        const results = await this.callApi.callApiJson({
+            apiMethod: apiMethod,
+            httpMethod: "PUT",
+            req: req
+        });
+        if (results !== false) { // good result
+            this.template = results;
+            return true;
+        } else {
+            this.loader.hide();
+            $("#suppVisStatus").text(`Error message: ${this.callApi.errMsg}`);
+            this.logger.post("Templates:update Problem: Operation Canceled", `<p>Error message: ${this.callApi.errMsg}</p>`);
+            return false; 
+        }
     }
 
 
