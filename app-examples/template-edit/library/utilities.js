@@ -9,10 +9,12 @@ const SETTINGS = ["accountRequest", "loaderChoice"]; // names of the settings
 
 
 function switchToHttps() {
-    if (location.protocol !== "https:" && location.origin !== "http://localhost") {
-        location.protocol = "https:"
-        location.replace(location.href())
-    }
+    // switch if not using localhost. 
+    // The localhost check is not bullet proof, but that's fine
+    if (location.protocol === "https:") {return}
+    if (location.origin.indexOf("//localhost") >= 0) {return} // localhost is ok 
+    location.protocol = "https:";
+    location.replace(location.href());
 }
 
 function storageGet(name, dflt=null) {
