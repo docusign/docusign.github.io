@@ -192,10 +192,8 @@ class Templates {
 
         this.dataTableApi = null;
         this.folderClicked = this.folderClicked.bind(this);
-        $(`#${this.templatesTableElId}`).off('click').on ('click', ".folderList", this.folderClicked);
 
         this.actionClicked = this.actionClicked.bind(this);
-        $(`#${this.templatesTableElId}`).off('click').on ('click', ".templateAction a", this.actionClicked);
         $(`#${NEW_TEMPLATE}, #${UPLOAD_TEMPLATE}`).off('click').on ('click', this.actionClicked);
 
         this.list = this.list.bind(this);
@@ -331,6 +329,9 @@ class Templates {
 
         this.loader.show("Creating the templates table");
         if (this.dataTableApi) {
+            $(`#${this.templatesTableElId}`).off('click', ".folderList");
+            $(`#${this.templatesTableElId}`).off('click', ".templateAction a");
+
             // reload the table with new data
             this.dataTableApi
                 .clear()
@@ -359,6 +360,8 @@ class Templates {
                 }                
             );
         }
+        $(`#${this.templatesTableElId}`).on ('click', ".folderList", this.folderClicked);
+        $(`#${this.templatesTableElId}`).on ('click', ".templateAction a", this.actionClicked);
         this.loader.hide();
         $(`#${this.mainElId}`).removeAttr("hidden");
         $(`#${this.templatesTableElId}`).removeAttr("hidden");
