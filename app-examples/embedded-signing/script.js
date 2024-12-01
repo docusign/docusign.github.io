@@ -152,6 +152,13 @@ $(async function () {
             templateId: null,
             docChoice: "approveDecline",
         },
+        {
+            url:  "https://docusign.github.io/examples/templates/51_page_document",
+            name: "DevCenter example: 51 page document",
+            description: "",
+            templateId: null,
+            docChoice: "longDoc",
+        },
     ];
 
     /***

@@ -53,6 +53,7 @@ class FocusedViewSigning {
             docxDoc: {responsive: false, request: this.envelopes.createTemplateRequest.bind(this.envelopes)},
             pdfDoc: {responsive: false, request: this.envelopes.createTemplateRequest.bind(this.envelopes)},
             none: {responsive: false, request: this.envelopes.noDocument.bind(this.envelopes)},
+            longDoc: {responsive: false, request: this.envelopes.createTemplateRequest.bind(this.envelopes)},
         }
     }
 
