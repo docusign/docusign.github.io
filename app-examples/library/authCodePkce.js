@@ -10,7 +10,7 @@ const tokenPath = "/oauth/token";
 // https://www.rfc-editor.org/rfc/rfc6749.html#section-2.2
 const oAuthClientIDdemo = "DOCU-d63d0bdb-75ee-41b7-9005-e574a8aeb0ce"; // demo
 const oAuthClientIDstage = "ec5769e4-ec17-494c-98a7-bcc0a289e214"; // stage
-const oAuthClientIDprod = "e422244e-d15d-46ee-938b-6333f3a5869e"; // prod
+const oAuthClientIDprod = ""; // prod
 
 const oAuthScopes = "signature cors";
 const defaltOAuthReturnUrl =
