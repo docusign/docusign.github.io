@@ -39,7 +39,7 @@ $(async function () {
                 },
                 /** High-level components we allow specific overrides for */
                 signingNavigationButton: {
-                    finishText: "Signed!", // default is Submit
+                    finishText: "署名されました", // default is Submit
                     // 'bottom-left'|'bottom-center'|'bottom-right',  default: bottom-right
                     position: "bottom-right"
                 },
@@ -60,7 +60,7 @@ $(async function () {
                 $(`#${signElId} > iframe`).css('height', `${window.innerHeight - padding}px`);
                 window.scroll(0, 0); // for iOS
 
-                console.log('UI is rendered');
+                console.log('UIがレンダリングされました');
             });
             signing.on('sessionEnd', (event) => {
                 /** The event here denotes what caused the sessionEnd to trigger, such as signing_complete, ttl_expired etc../ */
@@ -72,7 +72,7 @@ $(async function () {
             signing.mount(`#${signElId}`);
         } catch (error) {
             // Any configuration or API limits will be caught here
-            console.log ("### Error calling docusign.js");
+            console.log ("### docusign.jsの呼び出し時にエラーが発生しました");
             console.log (error);              
         }
     }
